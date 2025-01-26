@@ -1,7 +1,9 @@
 package example.utils.password.imp;
 
 import example.utils.password.PasswordGenerator;
+import org.springframework.stereotype.Component;
 
+@Component
 public class SimplePasswordGenerator implements PasswordGenerator {
     private final static String CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+-=[]{}|;:',.<>?/\\";
     private final static int PASSWORD_LENGTH = 10;

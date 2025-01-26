@@ -3,6 +3,7 @@ package example.services.imp;
 import example.daos.TrainerDAO;
 import example.entities.Trainer;
 import example.services.TrainerService;
+import example.utils.password.imp.SimplePasswordGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,6 +13,12 @@ import java.util.Optional;
 public class TrainerServiceImp implements TrainerService {
     @Autowired
     private TrainerDAO trainerDAO;
+    private SimplePasswordGenerator simplePasswordGenerator;
+
+    @Autowired
+    public void setSimplePasswordGenerator(SimplePasswordGenerator simplePasswordGenerator) {
+        this.simplePasswordGenerator = simplePasswordGenerator;
+    }
 
     @Override
     public Trainer createTrainer(Trainer trainer) {
