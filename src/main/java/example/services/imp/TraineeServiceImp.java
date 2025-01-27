@@ -31,26 +31,27 @@ public class TraineeServiceImp implements TraineeService {
     @Override
     public Trainee createTrainee(Trainee trainee) {
         trainee.setPassword(passwordGenerator.generatePassword());
-        return null;
+        trainee.setUsername(usernameGenerator.generateUsername(trainee));
+        return traineeDAO.save(trainee);
     }
 
     @Override
     public Trainee updateTrainee(Trainee trainee) {
-        return null;
+        return traineeDAO.save(trainee);
     }
 
     @Override
     public void deleteTraineeById(Long id) {
-
+        traineeDAO.deleteById(id);
     }
 
     @Override
     public Iterable<Trainee> getAllTrainees() {
-        return null;
+        return traineeDAO.findAll();
     }
 
     @Override
     public Optional<Trainee> getTraineeById(Long id) {
-        return Optional.empty();
+        return traineeDAO.findById(id);
     }
 }

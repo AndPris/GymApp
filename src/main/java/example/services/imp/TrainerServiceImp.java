@@ -30,21 +30,23 @@ public class TrainerServiceImp implements TrainerService {
 
     @Override
     public Trainer createTrainer(Trainer trainer) {
-        return null;
+        trainer.setPassword(passwordGenerator.generatePassword());
+        trainer.setUsername(usernameGenerator.generateUsername(trainer));
+        return trainerDAO.save(trainer);
     }
 
     @Override
     public Trainer updateTrainer(Trainer trainer) {
-        return null;
+        return trainerDAO.save(trainer);
     }
 
     @Override
     public Iterable<Trainer> getAllTrainers() {
-        return null;
+        return trainerDAO.findAll();
     }
 
     @Override
     public Optional<Trainer> getTrainerById(Long id) {
-        return Optional.empty();
+        return trainerDAO.findById(id);
     }
 }

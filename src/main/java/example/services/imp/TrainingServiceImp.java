@@ -13,18 +13,19 @@ public class TrainingServiceImp implements TrainingService {
     @Autowired
     private TrainingDAO trainingDAO;
 
+
     @Override
     public Training createTraining(Training training) {
-        return null;
+        return trainingDAO.save(training);
     }
 
     @Override
     public Iterable<Training> getAllTrainings() {
-        return null;
+        return trainingDAO.findAll();
     }
 
     @Override
     public Optional<Training> getTrainingById(Long id) {
-        return Optional.empty();
+        return trainingDAO.findById(id);
     }
 }
