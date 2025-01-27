@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
-@AllArgsConstructor
 public abstract class User {
     private Long id;
     private String firstName;
@@ -12,4 +11,10 @@ public abstract class User {
     private String username;
     private String password;
     private boolean isActive;
+
+    public User(String firstName, String lastName) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.isActive = true;
+    }
 }

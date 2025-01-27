@@ -11,8 +11,8 @@ public class Trainee extends User {
     private String address;
     private Date dateOfBirth;
 
-    public Trainee(Long id, String firstName, String lastName, String username, String password, boolean isActive, String address, Date dateOfBirth) {
-        super(id, firstName, lastName, username, password, isActive);
+    public Trainee(String firstName, String lastName, String address, Date dateOfBirth) {
+        super(firstName, lastName);
         this.address = address;
         this.dateOfBirth = dateOfBirth;
     }
