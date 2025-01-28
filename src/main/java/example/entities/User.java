@@ -16,4 +16,15 @@ public abstract class User {
         this.lastName = lastName;
         this.isActive = true;
     }
+
+
+    @Override
+    public String toString() {
+        return "ID: " + id + "\n" +
+                "First name: " + firstName + "\n" +
+                "Last name: " + lastName + "\n" +
+                "Username: " + username + "\n" +
+                "Password: " + password + "\n" +
+                "Is active: " + isActive + "\n";
+    }
 }

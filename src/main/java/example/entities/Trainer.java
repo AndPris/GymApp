@@ -12,4 +12,10 @@ public class Trainer extends User {
         super(firstName, lastName);
         this.specialization = specialization;
     }
+
+    @Override
+    public String toString() {
+        return super.toString() +
+                "Specialization: " + specialization;
+    }
 }

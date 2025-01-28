@@ -16,4 +16,12 @@ public class Trainee extends User {
         this.address = address;
         this.dateOfBirth = dateOfBirth;
     }
+
+
+    @Override
+    public String toString() {
+        return super.toString() +
+                "Address: " + address + "\n" +
+                "Date of birth: " + dateOfBirth;
+    }
 }

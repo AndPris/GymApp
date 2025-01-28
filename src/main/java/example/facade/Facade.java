@@ -75,6 +75,15 @@ public class Facade {
             case 6:
                 deleteTrainee();
                 break;
+            case 7:
+                selectAllTrainees();
+                break;
+            case 8:
+                selectAllTrainers();
+                break;
+            case 9:
+                selectAllTrainings();
+                break;
             default:
                 run = false;
                 break;
@@ -200,5 +209,26 @@ public class Facade {
             System.out.println("Trainee has been successfully deleted");
         else
             System.out.println("There is no trainee with such id");
+    }
+
+
+    private void selectAllTrainees() {
+        System.out.println("Trainees:");
+        traineeService.getAllTrainees().forEach(System.out::println);
+        System.out.println("================================");
+    }
+
+
+    private void selectAllTrainers() {
+        System.out.println("Trainers:");
+        trainerService.getAllTrainers().forEach(System.out::println);
+        System.out.println("================================");
+    }
+
+
+    private void selectAllTrainings() {
+        System.out.println("Trainings:");
+        trainingService.getAllTrainings().forEach(System.out::println);
+        System.out.println("================================");
     }
 }

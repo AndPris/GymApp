@@ -22,4 +22,16 @@ public class Training {
         this.trainingDate = trainingDate;
         this.trainingDuration = trainingDuration;
     }
+
+
+    @Override
+    public String toString() {
+        return "ID: " + id + "\n" +
+                "Trainee:\n\t " + trainee + "\n" +
+                "Trainer:\n\t " + trainer + "\n" +
+                "Training name: " + trainingName + "\n" +
+                "Training type: " + trainingType + "\n" +
+                "Training date: " + trainingDate + "\n" +
+                "Training duration: " + trainingDuration + "\n";
+    }
 }
