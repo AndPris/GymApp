@@ -10,4 +10,5 @@ public interface TraineeService {
     void deleteTraineeById(Long id);
     Iterable<Trainee> getAllTrainees();
     Optional<Trainee> getTraineeById(Long id);
+    boolean existsTrainee(Long id);
 }

@@ -54,4 +54,9 @@ public class TraineeServiceImp implements TraineeService {
     public Optional<Trainee> getTraineeById(Long id) {
         return traineeDAO.findById(id);
     }
+
+    @Override
+    public boolean existsTrainee(Long id) {
+        return traineeDAO.existsById(id);
+    }
 }

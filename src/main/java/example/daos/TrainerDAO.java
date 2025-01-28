@@ -55,4 +55,8 @@ public class TrainerDAO {
 
         return trainerMap.containsKey(id) ? Optional.of(trainerMap.get(id)) : Optional.empty();
     }
+
+    public boolean existsById(Long id) {
+        return trainerMap.containsKey(id);
+    }
 }

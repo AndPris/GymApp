@@ -66,6 +66,12 @@ public class Facade {
             case 3:
                 createTraining();
                 break;
+            case 4:
+                updateTrainee();
+                break;
+            case 5:
+                updateTrainer();
+                break;
             default:
                 run = false;
                 break;
@@ -154,4 +160,26 @@ public class Facade {
     }
 
 
+    private void updateTrainee() {
+        System.out.print("Trainee id: ");
+        Long traineeId = inputHandler.getLong();
+        if(!traineeService.existsTrainee(traineeId)) {
+            System.out.println("There's no trainee with such ID");
+            return;
+        }
+
+        traineeService.updateTrainee(getTraineeData());
+    }
+
+
+    private void updateTrainer() {
+        System.out.print("Trainer id: ");
+        Long trainerId = inputHandler.getLong();
+        if(!trainerService.existsTrainer(trainerId)) {
+            System.out.println("There's no trainer with such ID");
+            return;
+        }
+
+        trainerService.updateTrainer(getTrainerData());
+    }
 }

@@ -9,4 +9,5 @@ public interface TrainerService {
     Trainer updateTrainer(Trainer trainer);
     Iterable<Trainer> getAllTrainers();
     Optional<Trainer> getTrainerById(Long id);
+    boolean existsTrainer(Long id);
 }

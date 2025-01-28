@@ -62,4 +62,8 @@ public class TraineeDAO {
 
         return traineeMap.containsKey(id) ? Optional.of(traineeMap.get(id)) : Optional.empty();
     }
+
+    public boolean existsById(Long id) {
+        return traineeMap.containsKey(id);
+    }
 }
