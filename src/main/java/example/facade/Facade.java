@@ -72,6 +72,9 @@ public class Facade {
             case 5:
                 updateTrainer();
                 break;
+            case 6:
+                deleteTrainee();
+                break;
             default:
                 run = false;
                 break;
@@ -81,6 +84,7 @@ public class Facade {
 
     private void createTrainee() {
         traineeService.createTrainee(getTraineeData());
+        System.out.println("Trainee has been successfully created");
     }
 
     private Trainee getTraineeData() {
@@ -99,6 +103,7 @@ public class Facade {
 
     private void createTrainer() {
         trainerService.createTrainer(getTrainerData());
+        System.out.println("Trainer has been successfully created");
     }
 
     private Trainer getTrainerData() {
@@ -129,6 +134,7 @@ public class Facade {
 
     private void createTraining() {
         trainingService.createTraining(getTrainingData());
+        System.out.println("Training has been successfully created");
     }
 
     private Training getTrainingData() {
@@ -169,6 +175,7 @@ public class Facade {
         }
 
         traineeService.updateTrainee(getTraineeData());
+        System.out.println("Trainee has been successfully updated");
     }
 
 
@@ -181,5 +188,17 @@ public class Facade {
         }
 
         trainerService.updateTrainer(getTrainerData());
+        System.out.println("Trainer has been successfully updated");
+    }
+
+
+    private void deleteTrainee() {
+        System.out.print("Trainee id: ");
+        Long traineeId = inputHandler.getLong();
+
+        if(traineeService.deleteTraineeById(traineeId))
+            System.out.println("Trainee has been successfully deleted");
+        else
+            System.out.println("There is no trainee with such id");
     }
 }

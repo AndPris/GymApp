@@ -41,8 +41,8 @@ public class TraineeServiceImp implements TraineeService {
     }
 
     @Override
-    public void deleteTraineeById(Long id) {
-        traineeDAO.deleteById(id);
+    public boolean deleteTraineeById(Long id) {
+        return traineeDAO.deleteById(id);
     }
 
     @Override

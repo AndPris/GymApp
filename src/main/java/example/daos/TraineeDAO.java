@@ -45,11 +45,11 @@ public class TraineeDAO {
         return trainee;
     }
 
-    public void deleteById(Long id) {
+    public boolean deleteById(Long id) {
         if(id == null)
             throw new IllegalArgumentException("Can not perform deleteById: id is null");
 
-        traineeMap.remove(id);
+        return traineeMap.remove(id) != null;
     }
 
     public Iterable<Trainee> findAll() {
