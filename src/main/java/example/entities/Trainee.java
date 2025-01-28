@@ -25,6 +25,6 @@ public class Trainee extends User {
     public String toString() {
         return super.toString() +
                 "Address: " + address + "\n" +
-                "Date of birth: " + dateOfBirth;
+                "Date of birth: " + dateOfBirth + "\n";
     }
 }

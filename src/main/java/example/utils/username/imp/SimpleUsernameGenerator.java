@@ -48,12 +48,15 @@ public class SimpleUsernameGenerator implements UsernameGenerator {
         int serialNumber = -1;
 
         for(User currentUser : users.values()) {
-            if(areFullNameEquals(currentUser, user))
+            if(!areFullNameEquals(currentUser, user))
                 continue;
 
             String actualUsername = currentUser.getUsername();
             String expectedUsername = currentUser.getFirstName() + "." + currentUser.getLastName();
             String stringSerialNumber = actualUsername.substring(expectedUsername.length());
+
+            if(stringSerialNumber.isEmpty())
+                stringSerialNumber = "0";
 
             if(Integer.parseInt(stringSerialNumber) > serialNumber)
                 serialNumber = Integer.parseInt(stringSerialNumber);
