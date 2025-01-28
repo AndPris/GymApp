@@ -28,4 +28,9 @@ public class TrainingServiceImp implements TrainingService {
     public Optional<Training> getTrainingById(Long id) {
         return trainingDAO.findById(id);
     }
+
+    @Override
+    public boolean existsTraining(Long id) {
+        return trainingDAO.existsById(id);
+    }
 }
