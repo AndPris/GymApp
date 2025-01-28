@@ -17,6 +17,9 @@ public class Trainee extends User {
         this.dateOfBirth = dateOfBirth;
     }
 
+    public Trainee() {
+        super();
+    }
 
     @Override
     public String toString() {

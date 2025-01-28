@@ -24,6 +24,8 @@ public class Menu {
         System.out.println("\t12 -> Select a training\n");
 
         System.out.println("\t13 -> Exit\n");
+
+        System.out.print("->");
     }
 
     public void displayTrainingTypeMenu() {

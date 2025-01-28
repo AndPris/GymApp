@@ -259,7 +259,7 @@ public class Facade {
         if(traineeId == null)
             return;
 
-        System.out.println(traineeService.getTraineeById(traineeId));
+        System.out.println(traineeService.getTraineeById(traineeId).get());
         System.out.println("================================");
     }
 
@@ -269,7 +269,7 @@ public class Facade {
         if(trainerId == null)
             return;
 
-        System.out.println(trainerService.getTrainerById(trainerId));
+        System.out.println(trainerService.getTrainerById(trainerId).get());
         System.out.println("================================");
     }
 
@@ -279,7 +279,7 @@ public class Facade {
         if(trainingId == null)
             return;
 
-        System.out.println(trainingService.getTrainingById(trainingId));
+        System.out.println(trainingService.getTrainingById(trainingId).get());
         System.out.println("================================");
     }
 

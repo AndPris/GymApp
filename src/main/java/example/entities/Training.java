@@ -23,6 +23,7 @@ public class Training {
         this.trainingDuration = trainingDuration;
     }
 
+    public Training() {}
 
     @Override
     public String toString() {
