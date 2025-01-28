@@ -1,6 +1,5 @@
 package example.entities;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
