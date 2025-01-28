@@ -13,4 +13,13 @@ public class Training {
     private TrainingType trainingType;
     private Date trainingDate;
     private float trainingDuration;
+
+    public Training(Trainee trainee, Trainer trainer, String trainingName, TrainingType trainingType, Date trainingDate, float trainingDuration) {
+        this.trainee = trainee;
+        this.trainer = trainer;
+        this.trainingName = trainingName;
+        this.trainingType = trainingType;
+        this.trainingDate = trainingDate;
+        this.trainingDuration = trainingDuration;
+    }
 }
