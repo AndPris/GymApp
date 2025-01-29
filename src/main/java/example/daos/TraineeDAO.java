@@ -3,6 +3,7 @@ package example.daos;
 import example.entities.Trainee;
 import example.storages.TraineeStorage;
 import example.utils.storages.IdGenerator;
+import example.utils.string.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -54,21 +55,21 @@ public class TraineeDAO {
             throw new IllegalArgumentException("Can not perform update: trainee is null");
 
 
-        if(trainee.getFirstName() != null)
+        if(StringUtils.isNotEmpty(trainee.getFirstName()))
             oldTrainee.setFirstName(trainee.getFirstName());
 
-        if(trainee.getLastName() != null)
+        if(StringUtils.isNotEmpty(trainee.getLastName()))
             oldTrainee.setLastName(trainee.getLastName());
 
-        if(trainee.getUsername() != null)
+        if(StringUtils.isNotEmpty(trainee.getUsername()))
             oldTrainee.setUsername(trainee.getUsername());
 
-        if(trainee.getPassword() != null)
+        if(StringUtils.isNotEmpty(trainee.getPassword()))
             oldTrainee.setPassword(trainee.getPassword());
 
         oldTrainee.setActive(trainee.isActive());
 
-        if(trainee.getAddress() != null)
+        if(StringUtils.isNotEmpty(trainee.getAddress()))
             oldTrainee.setAddress(trainee.getAddress());
 
         if(trainee.getDateOfBirth() != null)
