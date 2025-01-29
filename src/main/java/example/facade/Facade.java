@@ -13,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
-import java.util.Optional;
 import java.util.Scanner;
 
 @Component
@@ -50,7 +49,7 @@ public class Facade {
 
         while (run) {
             menu.displayMenu();
-            userInput = inputHandler.getUserInput(1, 13);
+            userInput = inputHandler.getInputInRange(1, 13);
             handleUserInput(userInput);
         }
     }
@@ -101,43 +100,39 @@ public class Facade {
 
 
     private void createTrainee() {
-        traineeService.createTrainee(getTraineeData());
+        traineeService.createTrainee(getTraineeData(false));
         System.out.println("Trainee has been successfully created");
     }
 
-    private Trainee getTraineeData() {
-        Scanner scanner = new Scanner(System.in);
-
+    private Trainee getTraineeData(boolean allowEmpty) {
         System.out.print("First name: ");
-        String firstName = scanner.nextLine();
+        String firstName = inputHandler.getLine(allowEmpty);
         System.out.print("Last name: ");
-        String lastName = scanner.nextLine();
+        String lastName = inputHandler.getLine(allowEmpty);
         System.out.print("Address: ");
-        String address = scanner.nextLine();
+        String address = inputHandler.getLine(allowEmpty);
 
         return new Trainee(firstName, lastName, address, inputHandler.getDate("Birthday (dd-MM-yyyy): "));
     }
 
 
     private void createTrainer() {
-        trainerService.createTrainer(getTrainerData());
+        trainerService.createTrainer(getTrainerData(false));
         System.out.println("Trainer has been successfully created");
     }
 
-    private Trainer getTrainerData() {
-        Scanner scanner = new Scanner(System.in);
-
+    private Trainer getTrainerData(boolean allowEmpty) {
         System.out.print("First name: ");
-        String firstName = scanner.nextLine();
+        String firstName = inputHandler.getLine(allowEmpty);
         System.out.print("Last name: ");
-        String lastName = scanner.nextLine();
+        String lastName = inputHandler.getLine(allowEmpty);
 
         return new Trainer(firstName, lastName, getTrainingType());
     }
 
     private TrainingType getTrainingType() {
         menu.displayTrainingTypeMenu();
-        int choice = inputHandler.getUserInput(1, 3);
+        int choice = inputHandler.getInputInRange(1, 3);
 
         switch (choice) {
             case 1:
@@ -190,7 +185,7 @@ public class Facade {
         if(id == null)
             return;
 
-        traineeService.updateTrainee(id, getTraineeData());
+        traineeService.updateTrainee(id, getTraineeData(true));
         System.out.println("Trainee has been successfully updated");
     }
 
@@ -210,7 +205,7 @@ public class Facade {
         if(id == null)
             return;
 
-        trainerService.updateTrainer(id, getTrainerData());
+        trainerService.updateTrainer(id, getTrainerData(true));
         System.out.println("Trainer has been successfully updated");
     }
 

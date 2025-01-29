@@ -1,5 +1,6 @@
 package example.utils.input;
 
+import example.utils.string.StringUtils;
 import org.springframework.stereotype.Component;
 
 import java.text.ParseException;
@@ -28,7 +29,7 @@ public class InputHandler {
         return birthday;
     }
 
-    public int getUserInput(int minimalValue, int maximalValue) {
+    public int getInputInRange(int minimalValue, int maximalValue) {
         Scanner scanner = new Scanner(System.in);
         int userInput = 0;
 
@@ -67,5 +68,20 @@ public class InputHandler {
         }
 
         return scanner.nextFloat();
+    }
+
+    public String getLine(boolean allowEmpty) {
+        Scanner scanner = new Scanner(System.in);
+        String line = scanner.nextLine();
+
+        if(allowEmpty)
+            return line;
+
+        while (!StringUtils.isNotEmpty(line)) {
+            System.out.println("Please enter a non empty line");
+            line = scanner.nextLine();
+        }
+
+        return line;
     }
 }
