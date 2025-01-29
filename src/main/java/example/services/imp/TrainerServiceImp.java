@@ -36,8 +36,8 @@ public class TrainerServiceImp implements TrainerService {
     }
 
     @Override
-    public Trainer updateTrainer(Trainer trainer) {
-        return trainerDAO.save(trainer);
+    public Trainer updateTrainer(Long id, Trainer trainer) {
+        return trainerDAO.update(id, trainer);
     }
 
     @Override

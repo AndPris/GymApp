@@ -1,8 +1,10 @@
 package example.daos;
 
+import example.entities.Trainee;
 import example.entities.Trainer;
 import example.storages.TrainerStorage;
 import example.utils.storages.IdGenerator;
+import example.utils.string.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -43,6 +45,33 @@ public class TrainerDAO {
         trainerMap.put(id, trainer);
 
         return trainer;
+    }
+
+    public Trainer update(Long id, Trainer trainer) {
+        Trainer oldTrainer = trainerMap.get(id);
+        if(oldTrainer == null)
+            throw new IllegalArgumentException("Can not perform update: no trainer with such id: " + id);
+
+        if(trainer == null)
+            throw new IllegalArgumentException("Can not perform update: trainer is null");
+
+
+        if(StringUtils.isNotEmpty(trainer.getFirstName()))
+            oldTrainer.setFirstName(trainer.getFirstName());
+
+        if(StringUtils.isNotEmpty(trainer.getLastName()))
+            oldTrainer.setLastName(trainer.getLastName());
+
+        if(StringUtils.isNotEmpty(trainer.getUsername()))
+            oldTrainer.setUsername(trainer.getUsername());
+
+        if(StringUtils.isNotEmpty(trainer.getPassword()))
+            oldTrainer.setPassword(trainer.getPassword());
+
+        oldTrainer.setActive(trainer.isActive());
+        oldTrainer.setSpecialization(trainer.getSpecialization());
+
+        return oldTrainer;
     }
 
     public Iterable<Trainer> findAll() {

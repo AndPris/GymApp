@@ -206,10 +206,11 @@ public class Facade {
     }
 
     private void updateTrainer() {
-        if(getTrainerId() == null)
+        Long id = getTrainerId();
+        if(id == null)
             return;
 
-        trainerService.updateTrainer(getTrainerData());
+        trainerService.updateTrainer(id, getTrainerData());
         System.out.println("Trainer has been successfully updated");
     }
 
