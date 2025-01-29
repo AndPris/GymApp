@@ -185,10 +185,11 @@ public class Facade {
 
 
     private void updateTrainee() {
-        if(getTraineeId() == null)
+        Long id = getTraineeId();
+        if(id == null)
             return;
 
-        traineeService.updateTrainee(getTraineeData());
+        traineeService.updateTrainee(id, getTraineeData());
         System.out.println("Trainee has been successfully updated");
     }
 

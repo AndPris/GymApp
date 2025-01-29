@@ -36,8 +36,9 @@ public class TraineeServiceImp implements TraineeService {
     }
 
     @Override
-    public Trainee updateTrainee(Trainee trainee) {
-        return traineeDAO.save(trainee);
+    public Trainee updateTrainee(Long id, Trainee trainee) {
+//        trainee.setUsername(usernameGenerator.generateUsername(trainee));
+        return traineeDAO.update(id, trainee);
     }
 
     @Override

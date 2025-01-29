@@ -9,12 +9,12 @@ public abstract class User {
     private String lastName;
     private String username;
     private String password;
-    private boolean isActive;
+    private boolean active;
 
     public User(String firstName, String lastName) {
         this.firstName = firstName;
         this.lastName = lastName;
-        this.isActive = true;
+        this.active = true;
     }
 
     public User() {}
@@ -26,6 +26,6 @@ public abstract class User {
                 "Last name: " + lastName + "\n" +
                 "Username: " + username + "\n" +
                 "Password: " + password + "\n" +
-                "Is active: " + isActive + "\n";
+                "Is active: " + active + "\n";
     }
 }

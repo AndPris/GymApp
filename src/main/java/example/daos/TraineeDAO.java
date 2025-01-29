@@ -45,6 +45,38 @@ public class TraineeDAO {
         return trainee;
     }
 
+    public Trainee update(Long id, Trainee trainee) {
+        Trainee oldTrainee = traineeMap.get(id);
+        if(oldTrainee == null)
+            throw new IllegalArgumentException("Can not perform update: no trainee with such id: " + id);
+
+        if(trainee == null)
+            throw new IllegalArgumentException("Can not perform update: trainee is null");
+
+
+        if(trainee.getFirstName() != null)
+            oldTrainee.setFirstName(trainee.getFirstName());
+
+        if(trainee.getLastName() != null)
+            oldTrainee.setLastName(trainee.getLastName());
+
+        if(trainee.getUsername() != null)
+            oldTrainee.setUsername(trainee.getUsername());
+
+        if(trainee.getPassword() != null)
+            oldTrainee.setPassword(trainee.getPassword());
+
+        oldTrainee.setActive(trainee.isActive());
+
+        if(trainee.getAddress() != null)
+            oldTrainee.setAddress(trainee.getAddress());
+
+        if(trainee.getDateOfBirth() != null)
+            oldTrainee.setDateOfBirth(trainee.getDateOfBirth());
+
+        return oldTrainee;
+    }
+
     public boolean deleteById(Long id) {
         if(id == null)
             throw new IllegalArgumentException("Can not perform deleteById: id is null");
