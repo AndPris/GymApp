@@ -151,8 +151,10 @@ public class Facade {
 
 
     private void createTraining() {
-        trainingService.createTraining(getTrainingData());
-        System.out.println("Training has been successfully created");
+        try {
+            trainingService.createTraining(getTrainingData());
+            System.out.println("Training has been successfully created");
+        } catch (Exception e) {}
     }
 
     private Training getTrainingData() {
@@ -160,16 +162,14 @@ public class Facade {
 
         System.out.print("Trainee id: ");
         Long traineeId = inputHandler.getLong();
-        Optional<Trainee> trainee = traineeService.getTraineeById(traineeId);
-        if(!trainee.isPresent()) {
+        if(!traineeService.existsTrainee(traineeId)) {
             System.out.println("No such trainee");
             return null;
         }
 
         System.out.print("Trainer id: ");
         Long trainerId = inputHandler.getLong();
-        Optional<Trainer> trainer = trainerService.getTrainerById(trainerId);
-        if(!trainer.isPresent()) {
+        if(!trainerService.existsTrainer(trainerId)) {
             System.out.println("No such trainer");
             return null;
         }
@@ -178,9 +178,10 @@ public class Facade {
         String trainingName = scanner.nextLine();
         TrainingType trainingType = getTrainingType();
         Date trainingDate = inputHandler.getDate("Training date (dd-MM-yyyy): ");
+        System.out.print("Training duration: ");
         float trainingDuration = inputHandler.getFloat();
 
-        return new Training(trainee.get(), trainer.get(), trainingName, trainingType, trainingDate, trainingDuration);
+        return new Training(traineeId, trainerId, trainingName, trainingType, trainingDate, trainingDuration);
     }
 
 

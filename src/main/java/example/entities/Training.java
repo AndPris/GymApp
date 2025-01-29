@@ -7,16 +7,16 @@ import java.util.Date;
 @Data
 public class Training {
     private Long id;
-    private Trainee trainee;
-    private Trainer trainer;
+    private Long traineeId;
+    private Long trainerId;
     private String trainingName;
     private TrainingType trainingType;
     private Date trainingDate;
     private float trainingDuration;
 
-    public Training(Trainee trainee, Trainer trainer, String trainingName, TrainingType trainingType, Date trainingDate, float trainingDuration) {
-        this.trainee = trainee;
-        this.trainer = trainer;
+    public Training(Long traineeId, Long trainerId, String trainingName, TrainingType trainingType, Date trainingDate, float trainingDuration) {
+        this.traineeId = traineeId;
+        this.trainerId = trainerId;
         this.trainingName = trainingName;
         this.trainingType = trainingType;
         this.trainingDate = trainingDate;
@@ -28,8 +28,8 @@ public class Training {
     @Override
     public String toString() {
         return "ID: " + id + "\n" +
-                "Trainee:\n\t " + trainee + "\n" +
-                "Trainer:\n\t " + trainer + "\n" +
+                "Trainee Id: " + traineeId + "\n" +
+                "Trainer Id: " + trainerId + "\n" +
                 "Training name: " + trainingName + "\n" +
                 "Training type: " + trainingType + "\n" +
                 "Training date: " + trainingDate + "\n" +
