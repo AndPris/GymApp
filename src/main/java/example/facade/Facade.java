@@ -9,6 +9,8 @@ import example.services.TraineeService;
 import example.services.TrainerService;
 import example.services.TrainingService;
 import example.utils.input.InputHandler;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -17,6 +19,8 @@ import java.util.Scanner;
 
 @Component
 public class Facade {
+    private static final Logger logger = LogManager.getLogger(Facade.class);
+
     private final TraineeService traineeService;
     private final TrainerService trainerService;
     private final TrainingService trainingService;
@@ -50,6 +54,7 @@ public class Facade {
         while (run) {
             menu.displayMenu();
             userInput = inputHandler.getInputInRange(1, 13);
+            logger.info("User selected option '{}'", userInput);
             handleUserInput(userInput);
         }
     }
