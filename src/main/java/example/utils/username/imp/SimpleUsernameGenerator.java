@@ -1,5 +1,7 @@
 package example.utils.username.imp;
 
+import example.entities.Trainee;
+import example.entities.Trainer;
 import example.entities.User;
 import example.storages.Storage;
 import example.storages.imp.TrainerStorage;
@@ -11,16 +13,16 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class SimpleUsernameGenerator implements UsernameGenerator {
-    private TrainerStorage trainerStorage;
-    private TraineeStorage traineeStorage;
+    private Storage<Trainer> trainerStorage;
+    private Storage<Trainee> traineeStorage;
 
     @Autowired
-    public void setTrainerStorage(TrainerStorage trainerStorage) {
+    public void setTrainerStorage(Storage<Trainer> trainerStorage) {
         this.trainerStorage = trainerStorage;
     }
 
     @Autowired
-    public void setTraineeStorage(TraineeStorage traineeStorage) {
+    public void setTraineeStorage(Storage<Trainee> traineeStorage) {
         this.traineeStorage = traineeStorage;
     }
 

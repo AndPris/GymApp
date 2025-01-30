@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class SimplePasswordGeneratorTest {
-    PasswordGenerator passwordGenerator = new SimplePasswordGenerator();
+    private PasswordGenerator passwordGenerator = new SimplePasswordGenerator();
     private final static String CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+-=[]{}|;:',.<>?/\\";
 
     @Test
