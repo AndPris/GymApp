@@ -8,7 +8,6 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.Map;
 import java.util.Optional;
 
 @Component
@@ -17,12 +16,10 @@ public class TrainingDAO {
 
     private Storage<Training> trainingStorage;
     private IdGenerator idGenerator;
-    private Map<Long, Training> trainingMap;
 
     @Autowired
     public void setTrainingStorage(final Storage<Training> trainingStorage) {
         this.trainingStorage = trainingStorage;
-        this.trainingMap = trainingStorage.getData();
     }
 
     @Autowired
@@ -40,13 +37,13 @@ public class TrainingDAO {
         Long id;
 
         if (training.getId() == null) {
-            id = idGenerator.generateId(trainingMap.keySet());
+            id = idGenerator.generateId(trainingStorage.keySet());
             training.setId(id);
         } else {
             id = training.getId();
         }
 
-        trainingMap.put(id, training);
+        trainingStorage.put(id, training);
 
         logger.info("Create new training: {}", training);
         return training;
@@ -54,7 +51,7 @@ public class TrainingDAO {
 
     public Iterable<Training> findAll() {
         logger.info("Get info about all trainings");
-        return trainingMap.values();
+        return trainingStorage.values();
     }
 
     public Optional<Training> findById(Long id) {
@@ -65,11 +62,11 @@ public class TrainingDAO {
         }
 
         logger.info("Get info about training with id {}", id);
-        return trainingMap.containsKey(id) ? Optional.of(trainingMap.get(id)) : Optional.empty();
+        return trainingStorage.containsKey(id) ? Optional.of(trainingStorage.get(id)) : Optional.empty();
     }
 
     public boolean existsById(Long id) {
         logger.info("Check existence of training with id {}", id);
-        return trainingMap.containsKey(id);
+        return trainingStorage.containsKey(id);
     }
 }

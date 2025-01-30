@@ -9,7 +9,6 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.Map;
 import java.util.Optional;
 
 @Component
@@ -18,12 +17,10 @@ public class TraineeDAO {
 
     private Storage<Trainee> traineeStorage;
     private IdGenerator idGenerator;
-    private Map<Long, Trainee> traineeMap;
 
     @Autowired
     public void setTraineeStorage(final Storage<Trainee> traineeStorage) {
         this.traineeStorage = traineeStorage;
-        this.traineeMap = traineeStorage.getData();
     }
 
     @Autowired
@@ -42,20 +39,20 @@ public class TraineeDAO {
         Long id;
 
         if(trainee.getId() == null) {
-            id = idGenerator.generateId(traineeMap.keySet());
+            id = idGenerator.generateId(traineeStorage.keySet());
             trainee.setId(id);
         } else {
             id = trainee.getId();
         }
 
-        traineeMap.put(id, trainee);
+        traineeStorage.put(id, trainee);
 
         logger.info("Create new trainee: {}", trainee);
         return trainee;
     }
 
     public Trainee update(Long id, Trainee trainee) {
-        Trainee oldTrainee = traineeMap.get(id);
+        Trainee oldTrainee = traineeStorage.get(id);
 
         if(oldTrainee == null) {
             String message = "Can not perform update: no trainee with such id: " + id;
@@ -102,12 +99,12 @@ public class TraineeDAO {
         }
 
         logger.info("Delete a trainee with id {}", id);
-        return traineeMap.remove(id) != null;
+        return traineeStorage.remove(id) != null;
     }
 
     public Iterable<Trainee> findAll() {
         logger.info("Get info about all trainees");
-        return traineeMap.values();
+        return traineeStorage.values();
     }
 
     public Optional<Trainee> findById(Long id) {
@@ -118,11 +115,11 @@ public class TraineeDAO {
         }
 
         logger.info("Get info about trainee with id {}", id);
-        return traineeMap.containsKey(id) ? Optional.of(traineeMap.get(id)) : Optional.empty();
+        return traineeStorage.containsKey(id) ? Optional.of(traineeStorage.get(id)) : Optional.empty();
     }
 
     public boolean existsById(Long id) {
         logger.info("Check existence of trainee with id {}", id);
-        return traineeMap.containsKey(id);
+        return traineeStorage.containsKey(id);
     }
 }

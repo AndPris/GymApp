@@ -10,8 +10,10 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 public abstract class Storage<T> {
     private static final Logger logger = LogManager.getLogger(Storage.class);
@@ -48,5 +50,29 @@ public abstract class Storage<T> {
         ObjectMapper mapper = new ObjectMapper();
         mapper.writeValue(file, data);
         logger.info("Save data to {}", filePath);
+    }
+
+    public void put(Long key, T value) {
+        data.put(key, value);
+    }
+
+    public Set<Long> keySet() {
+        return data.keySet();
+    }
+
+    public T get(Long key) {
+        return data.get(key);
+    }
+
+    public boolean containsKey(Long key) {
+        return data.containsKey(key);
+    }
+
+    public Collection<T> values() {
+        return data.values();
+    }
+
+    public T remove(Long key) {
+        return data.remove(key);
     }
 }

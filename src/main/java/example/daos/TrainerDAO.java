@@ -9,7 +9,6 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.Map;
 import java.util.Optional;
 
 @Component
@@ -18,12 +17,10 @@ public class TrainerDAO {
 
     private Storage<Trainer> trainerStorage;
     private IdGenerator idGenerator;
-    private Map<Long, Trainer> trainerMap;
 
     @Autowired
     public void setTrainerStorage(final Storage<Trainer> trainerStorage) {
         this.trainerStorage = trainerStorage;
-        this.trainerMap = trainerStorage.getData();
     }
 
     @Autowired
@@ -40,19 +37,19 @@ public class TrainerDAO {
 
         Long id;
         if (trainer.getId() == null) {
-            id = idGenerator.generateId(trainerMap.keySet());
+            id = idGenerator.generateId(trainerStorage.keySet());
             trainer.setId(id);
         } else {
             id = trainer.getId();
         }
 
-        trainerMap.put(id, trainer);
+        trainerStorage.put(id, trainer);
         logger.info("Create new trainer: {}", trainer);
         return trainer;
     }
 
     public Trainer update(Long id, Trainer trainer) {
-        Trainer oldTrainer = trainerMap.get(id);
+        Trainer oldTrainer = trainerStorage.get(id);
 
         if (oldTrainer == null) {
             String message = "Can not perform update: no trainer with such id: " + id;
@@ -93,12 +90,12 @@ public class TrainerDAO {
         }
 
         logger.info("Delete a trainer with id {}", id);
-        return trainerMap.remove(id) != null;
+        return trainerStorage.remove(id) != null;
     }
 
     public Iterable<Trainer> findAll() {
         logger.info("Get info about all trainers");
-        return trainerMap.values();
+        return trainerStorage.values();
     }
 
     public Optional<Trainer> findById(Long id) {
@@ -109,11 +106,11 @@ public class TrainerDAO {
         }
 
         logger.info("Get info about trainer with id {}", id);
-        return trainerMap.containsKey(id) ? Optional.of(trainerMap.get(id)) : Optional.empty();
+        return trainerStorage.containsKey(id) ? Optional.of(trainerStorage.get(id)) : Optional.empty();
     }
 
     public boolean existsById(Long id) {
         logger.info("Check existence of trainer with id {}", id);
-        return trainerMap.containsKey(id);
+        return trainerStorage.containsKey(id);
     }
 }

@@ -151,10 +151,11 @@ public class Facade {
 
 
     private void createTraining() {
-        try {
-            trainingService.createTraining(getTrainingData());
-            System.out.println("Training has been successfully created");
-        } catch (Exception e) {}
+        Training data = getTrainingData();
+        if(data == null)
+            return;
+        trainingService.createTraining(data);
+        System.out.println("Training has been successfully created");
     }
 
     private Training getTrainingData() {
