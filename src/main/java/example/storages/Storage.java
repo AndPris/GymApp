@@ -2,36 +2,39 @@ package example.storages;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import example.entities.Training;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
 import lombok.Getter;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-@Component
-public class TrainingStorage {
-    @Getter
-    private Map<Long, Training> trainings;
-
-    @Value("${training.storage.filepath}")
+public abstract class Storage<T> {
     private String filePath;
+    private final TypeReference<Map<Long, T>> typeReference;
+
+    @Getter
+    protected Map<Long, T> data;
+
+    protected Storage(String filePath, TypeReference<Map<Long, T>> typeReference) {
+        this.filePath = filePath;
+        this.typeReference = typeReference;
+    }
+
 
     @PostConstruct
     public void init() throws IOException {
+        System.out.println(filePath);
         File file = new File(filePath);
         if(!file.exists()) {
-            trainings = new HashMap<>();
+            data = new HashMap<>();
             return;
         }
 
         ObjectMapper mapper = new ObjectMapper();
-        trainings = mapper.readValue(file, new TypeReference<Map<Long, Training>>() {});
+        data = new HashMap<>(mapper.readValue(file, typeReference));
     }
 
     @PreDestroy
@@ -40,6 +43,6 @@ public class TrainingStorage {
         file.createNewFile();
 
         ObjectMapper mapper = new ObjectMapper();
-        mapper.writeValue(file, trainings);
+        mapper.writeValue(file, data);
     }
 }

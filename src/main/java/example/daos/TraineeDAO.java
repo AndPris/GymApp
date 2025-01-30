@@ -1,7 +1,7 @@
 package example.daos;
 
 import example.entities.Trainee;
-import example.storages.TraineeStorage;
+import example.storages.Storage;
 import example.utils.storages.IdGenerator;
 import example.utils.string.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,14 +12,14 @@ import java.util.Optional;
 
 @Component
 public class TraineeDAO {
-    private TraineeStorage traineeStorage;
+    private Storage<Trainee> traineeStorage;
     private IdGenerator idGenerator;
     private Map<Long, Trainee> traineeMap;
 
     @Autowired
-    public void setTraineeStorage(final TraineeStorage traineeStorage) {
+    public void setTraineeStorage(final Storage<Trainee> traineeStorage) {
         this.traineeStorage = traineeStorage;
-        this.traineeMap = traineeStorage.getTrainees();
+        this.traineeMap = traineeStorage.getData();
     }
 
     @Autowired

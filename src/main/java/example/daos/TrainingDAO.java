@@ -1,7 +1,7 @@
 package example.daos;
 
 import example.entities.Training;
-import example.storages.TrainingStorage;
+import example.storages.Storage;
 import example.utils.storages.IdGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -11,14 +11,14 @@ import java.util.Optional;
 
 @Component
 public class TrainingDAO {
-    private TrainingStorage trainingStorage;
+    private Storage<Training> trainingStorage;
     private IdGenerator idGenerator;
     private Map<Long, Training> trainingMap;
 
     @Autowired
-    public void setTrainingStorage(final TrainingStorage trainingStorage) {
+    public void setTrainingStorage(final Storage<Training> trainingStorage) {
         this.trainingStorage = trainingStorage;
-        this.trainingMap = trainingStorage.getTrainings();
+        this.trainingMap = trainingStorage.getData();
     }
 
     @Autowired

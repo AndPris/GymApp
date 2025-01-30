@@ -1,8 +1,8 @@
 package example.utils.username.imp;
 
 import example.entities.User;
-import example.storages.TrainerStorage;
-import example.storages.TraineeStorage;
+import example.storages.imp.TrainerStorage;
+import example.storages.imp.TraineeStorage;
 import example.utils.username.UsernameGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -40,8 +40,8 @@ public class SimpleUsernameGenerator implements UsernameGenerator {
     }
 
     private int getUsernameSerialNumber(User user) {
-        return Math.max(getUsernameSerialNumber(traineeStorage.getTrainees(), user),
-                getUsernameSerialNumber(trainerStorage.getTrainers(), user));
+        return Math.max(getUsernameSerialNumber(traineeStorage.getData(), user),
+                getUsernameSerialNumber(trainerStorage.getData(), user));
     }
 
     private <T extends User> int getUsernameSerialNumber(Map<Long, T> users, User user) {
