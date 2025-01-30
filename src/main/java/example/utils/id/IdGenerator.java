@@ -1,4 +1,4 @@
-package example.utils.storages;
+package example.utils.id;
 
 
 import java.util.Set;

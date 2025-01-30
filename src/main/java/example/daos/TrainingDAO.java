@@ -2,7 +2,7 @@ package example.daos;
 
 import example.entities.Training;
 import example.storages.Storage;
-import example.utils.storages.IdGenerator;
+import example.utils.id.IdGenerator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;

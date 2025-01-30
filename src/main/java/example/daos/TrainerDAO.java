@@ -2,7 +2,7 @@ package example.daos;
 
 import example.entities.Trainer;
 import example.storages.Storage;
-import example.utils.storages.IdGenerator;
+import example.utils.id.IdGenerator;
 import example.utils.string.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -80,17 +80,6 @@ public class TrainerDAO {
 
         logger.info("Update a trainer: {}", oldTrainer);
         return oldTrainer;
-    }
-
-    public boolean deleteById(Long id) {
-        if (id == null) {
-            String message = "Can not perform deleteById: id is null";
-            logger.warn(message);
-            throw new IllegalArgumentException(message);
-        }
-
-        logger.info("Delete a trainer with id {}", id);
-        return trainerStorage.remove(id) != null;
     }
 
     public Iterable<Trainer> findAll() {

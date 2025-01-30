@@ -1,6 +1,6 @@
-package example.utils.storages.imp;
+package example.utils.id.imp;
 
-import example.utils.storages.IdGenerator;
+import example.utils.id.IdGenerator;
 import org.springframework.stereotype.Component;
 
 import java.util.Set;

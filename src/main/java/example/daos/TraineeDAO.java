@@ -2,7 +2,7 @@ package example.daos;
 
 import example.entities.Trainee;
 import example.storages.Storage;
-import example.utils.storages.IdGenerator;
+import example.utils.id.IdGenerator;
 import example.utils.string.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
