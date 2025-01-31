@@ -5,6 +5,7 @@ import example.entities.Trainee;
 import example.services.TraineeService;
 import example.utils.password.PasswordGenerator;
 import example.utils.username.UsernameGenerator;
+import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +14,7 @@ import java.util.Optional;
 @Service
 public class TraineeServiceImp implements TraineeService {
     @Autowired
+    @Setter
     private TraineeDAO traineeDAO;
     private PasswordGenerator passwordGenerator;
     private UsernameGenerator usernameGenerator;
@@ -30,6 +32,9 @@ public class TraineeServiceImp implements TraineeService {
 
     @Override
     public Trainee createTrainee(Trainee trainee) {
+        if(trainee == null)
+            throw new IllegalArgumentException("Can not perform createTrainee: trainee is null");
+
         trainee.setPassword(passwordGenerator.generatePassword());
         trainee.setUsername(usernameGenerator.generateUsername(trainee));
         return traineeDAO.save(trainee);
