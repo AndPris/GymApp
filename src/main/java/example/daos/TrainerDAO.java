@@ -89,7 +89,7 @@ public class TrainerDAO {
 
     public Optional<Trainer> findById(Long id) {
         if (id == null) {
-            String message = "Can not find trainer by id: id is null";
+            String message = "Can not find trainer by Id: id is null";
             logger.warn(message);
             throw new IllegalArgumentException(message);
         }

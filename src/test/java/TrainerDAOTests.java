@@ -71,7 +71,7 @@ public class TrainerDAOTests {
         trainerDAO.save(testTrainer);
 
         String message = assertThrows(IllegalArgumentException.class, () -> trainerDAO.findById(null)).getMessage();
-        assertEquals("Can not find trainer by id: id is null", message);
+        assertEquals("Can not find trainer by Id: id is null", message);
 
         Optional<Trainer> result = trainerDAO.findById(2L);
         assertFalse(result.isPresent());
