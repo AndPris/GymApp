@@ -1,6 +1,5 @@
 import example.daos.TrainingDAO;
 import example.entities.Training;
-import example.services.TrainingService;
 import example.services.imp.TrainingServiceImp;
 import example.storages.Storage;
 import example.storages.imp.TrainingStorage;
@@ -17,17 +16,15 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class TrainingServiceTests {
     private Storage<Training> storage;
-    private IdGenerator idGenerator;
-    private TrainingDAO trainingDAO;
     private Training testTraining;
     private TrainingServiceImp trainingService;
 
     @BeforeEach
     public void init() throws IOException {
-        idGenerator = new SimpleIdGenerator();
+        IdGenerator idGenerator = new SimpleIdGenerator();
         storage = new TrainingStorage("t");
         storage.init();
-        trainingDAO = new TrainingDAO();
+        TrainingDAO trainingDAO = new TrainingDAO();
 
         trainingDAO.setIdGenerator(idGenerator);
         trainingDAO.setTrainingStorage(storage);
@@ -38,13 +35,13 @@ public class TrainingServiceTests {
     }
 
     @Test
-    public void saveNullTest() {
+    public void createTrainingNullTest() {
         String message = assertThrows(IllegalArgumentException.class, () -> trainingService.createTraining(null)).getMessage();
         assertEquals("Can not perform save: training is null", message);
     }
 
     @Test
-    public void saveNoIdTest() {
+    public void createTrainingNoIdTest() {
         Training result = trainingService.createTraining(testTraining);
         assertNotNull(result);
         assertEquals(1L, result.getId());
@@ -53,7 +50,7 @@ public class TrainingServiceTests {
     }
 
     @Test
-    public void saveWithIdTest() {
+    public void createTrainingWithIdTest() {
         testTraining.setId(5L);
         Training result = trainingService.createTraining(testTraining);
         assertNotNull(result);
@@ -63,7 +60,7 @@ public class TrainingServiceTests {
     }
 
     @Test
-    public void findAllTest() {
+    public void getAllTrainingsTest() {
         Collection<Training> trainings = (Collection<Training>) trainingService.getAllTrainings();
         assertTrue(trainings.isEmpty());
         trainingService.createTraining(testTraining);
@@ -72,7 +69,7 @@ public class TrainingServiceTests {
     }
 
     @Test
-    public void findByIdTest() {
+    public void getTrainingByIdTest() {
         trainingService.createTraining(testTraining);
 
         String message = assertThrows(IllegalArgumentException.class, () -> trainingService.getTrainingById(null)).getMessage();
@@ -86,7 +83,7 @@ public class TrainingServiceTests {
     }
 
     @Test
-    public void existsByIdTest() {
+    public void existsTrainingTest() {
         assertFalse(trainingService.existsTraining(10L));
         assertFalse(trainingService.existsTraining(null));
         trainingService.createTraining(testTraining);

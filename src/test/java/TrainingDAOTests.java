@@ -15,13 +15,12 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class TrainingDAOTests {
     private Storage<Training> storage;
-    private IdGenerator idGenerator;
     private TrainingDAO trainingDAO;
     private Training testTraining;
 
     @BeforeEach
     public void init() throws IOException {
-        idGenerator = new SimpleIdGenerator();
+        IdGenerator idGenerator = new SimpleIdGenerator();
         storage = new TrainingStorage("t");
         storage.init();
         trainingDAO = new TrainingDAO();
