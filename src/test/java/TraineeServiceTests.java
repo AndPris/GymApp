@@ -52,7 +52,7 @@ public class TraineeServiceTests {
     @Test
     public void createTraineeNullTest() {
         String message = assertThrows(IllegalArgumentException.class, () -> traineeService.createTrainee(null)).getMessage();
-        assertEquals("Can not perform createTrainee: trainee is null", message);
+        assertEquals("Cannot perform createTrainee: trainee is null", message);
     }
 
     @Test
@@ -87,15 +87,15 @@ public class TraineeServiceTests {
     @Test
     public void updateTraineeInvalidParamsTest() {
         String message = assertThrows(IllegalArgumentException.class, () -> traineeService.updateTrainee(null, null)).getMessage();
-        assertEquals("Can not perform update: no trainee with such id: null", message);
+        assertEquals("Cannot perform update: no trainee with such id: null", message);
 
         message = assertThrows(IllegalArgumentException.class, () -> traineeService.updateTrainee(10L, null)).getMessage();
-        assertEquals("Can not perform update: no trainee with such id: 10", message);
+        assertEquals("Cannot perform update: no trainee with such id: 10", message);
 
         traineeService.createTrainee(testTrainee);
 
         message = assertThrows(IllegalArgumentException.class, () -> traineeService.updateTrainee(1L, null)).getMessage();
-        assertEquals("Can not perform update: trainee is null", message);
+        assertEquals("Cannot perform update: trainee is null", message);
     }
 
     @Test
@@ -135,7 +135,7 @@ public class TraineeServiceTests {
         traineeService.createTrainee(testTrainee);
 
         String message = assertThrows(IllegalArgumentException.class, () -> traineeService.getTraineeById(null)).getMessage();
-        assertEquals("Can not find trainee by Id: id is null", message);
+        assertEquals("Cannot find trainee by Id: id is null", message);
 
         Optional<Trainee> result = traineeService.getTraineeById(2L);
         assertFalse(result.isPresent());
@@ -155,7 +155,7 @@ public class TraineeServiceTests {
     @Test
     public void deleteTraineeByIdTest() {
         String message = assertThrows(IllegalArgumentException.class, () -> traineeService.deleteTraineeById(null)).getMessage();
-        assertEquals("Can not perform deleteById: id is null", message);
+        assertEquals("Cannot perform deleteById: id is null", message);
 
         assertFalse(traineeService.deleteTraineeById(1L));
 

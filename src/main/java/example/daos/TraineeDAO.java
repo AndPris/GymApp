@@ -30,76 +30,69 @@ public class TraineeDAO {
 
 
     public Trainee save(Trainee trainee) {
-        if (trainee == null) {
-            String message = "Can not perform save: trainee is null";
-            logger.warn(message);
-            throw new IllegalArgumentException(message);
-        }
+        checkTraineeForNull(trainee, "Cannot perform save: trainee is null");
+        assignIdIfNecessary(trainee);
+        traineeStorage.put(trainee.getId(), trainee);
 
-        Long id;
-
-        if (trainee.getId() == null) {
-            id = idGenerator.generateId(traineeStorage.keySet());
-            trainee.setId(id);
-        } else {
-            id = trainee.getId();
-        }
-
-        traineeStorage.put(id, trainee);
-
-        logger.info("Create new trainee: {}", trainee);
+        logger.info("Created new trainee: {}", trainee);
         return trainee;
     }
 
-    public Trainee update(Long id, Trainee trainee) {
-        Trainee oldTrainee = traineeStorage.get(id);
-
-        if (oldTrainee == null) {
-            String message = "Can not perform update: no trainee with such id: " + id;
-            logger.warn(message);
-            throw new IllegalArgumentException(message);
-        }
-
+    private void checkTraineeForNull(Trainee trainee, String errorMessage) {
         if (trainee == null) {
-            String message = "Can not perform update: trainee is null";
+            logger.warn(errorMessage);
+            throw new IllegalArgumentException(errorMessage);
+        }
+    }
+
+    private void assignIdIfNecessary(Trainee trainee) {
+        if (trainee.getId() == null) {
+            Long id = idGenerator.generateId(traineeStorage.keySet());
+            trainee.setId(id);
+        }
+    }
+
+
+    public Trainee update(Long id, Trainee trainee) {
+        checkTraineeExists(id);
+        checkTraineeForNull(trainee, "Cannot perform update: trainee is null");
+
+        Trainee existingTrainee = traineeStorage.get(id);
+        updateTraineeFields(existingTrainee, trainee);
+
+        logger.info("Updated trainee: {}", existingTrainee);
+        return existingTrainee;
+    }
+
+    private void checkTraineeExists(Long id) {
+        if (!traineeStorage.containsKey(id)) {
+            String message = "Cannot perform update: no trainee with such id: " + id;
             logger.warn(message);
             throw new IllegalArgumentException(message);
         }
-
-
-        if (StringUtils.isNoneBlank(trainee.getFirstName()))
-            oldTrainee.setFirstName(trainee.getFirstName());
-
-        if (StringUtils.isNoneBlank(trainee.getLastName()))
-            oldTrainee.setLastName(trainee.getLastName());
-
-        if (StringUtils.isNoneBlank(trainee.getUsername()))
-            oldTrainee.setUsername(trainee.getUsername());
-
-        if (StringUtils.isNoneBlank(trainee.getPassword()))
-            oldTrainee.setPassword(trainee.getPassword());
-
-        oldTrainee.setActive(trainee.isActive());
-
-        if (StringUtils.isNoneBlank(trainee.getAddress()))
-            oldTrainee.setAddress(trainee.getAddress());
-
-        if (trainee.getDateOfBirth() != null)
-            oldTrainee.setDateOfBirth(trainee.getDateOfBirth());
-
-        logger.info("Update a trainee: {}", oldTrainee);
-        return oldTrainee;
     }
+
+    private void updateTraineeFields(Trainee existing, Trainee updates) {
+        Optional.ofNullable(updates.getFirstName()).filter(StringUtils::isNoneBlank).ifPresent(existing::setFirstName);
+        Optional.ofNullable(updates.getLastName()).filter(StringUtils::isNoneBlank).ifPresent(existing::setLastName);
+        Optional.ofNullable(updates.getUsername()).filter(StringUtils::isNoneBlank).ifPresent(existing::setUsername);
+        Optional.ofNullable(updates.getPassword()).filter(StringUtils::isNoneBlank).ifPresent(existing::setPassword);
+        Optional.ofNullable(updates.getAddress()).filter(StringUtils::isNoneBlank).ifPresent(existing::setAddress);
+        Optional.ofNullable(updates.getDateOfBirth()).ifPresent(existing::setDateOfBirth);
+
+        existing.setActive(updates.isActive());
+    }
+
 
     public boolean deleteById(Long id) {
         if (id == null) {
-            String message = "Can not perform deleteById: id is null";
+            String message = "Cannot perform deleteById: id is null";
             logger.warn(message);
             throw new IllegalArgumentException(message);
         }
 
         logger.info("Delete a trainee with id {}", id);
-        return traineeStorage.remove(id) != null;
+        return Optional.ofNullable(traineeStorage.remove(id)).isPresent();
     }
 
     public Iterable<Trainee> findAll() {
@@ -109,13 +102,13 @@ public class TraineeDAO {
 
     public Optional<Trainee> findById(Long id) {
         if (id == null) {
-            String message = "Can not find trainee by Id: id is null";
+            String message = "Cannot find trainee by Id: id is null";
             logger.warn(message);
             throw new IllegalArgumentException(message);
         }
 
         logger.info("Get info about trainee with id {}", id);
-        return traineeStorage.containsKey(id) ? Optional.of(traineeStorage.get(id)) : Optional.empty();
+        return Optional.ofNullable(traineeStorage.get(id));
     }
 
     public boolean existsById(Long id) {

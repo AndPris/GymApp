@@ -34,7 +34,7 @@ public class TraineeDAOTests {
     @Test
     public void saveNullTest() {
         String message = assertThrows(IllegalArgumentException.class, () -> traineeDAO.save(null)).getMessage();
-        assertEquals("Can not perform save: trainee is null", message);
+        assertEquals("Cannot perform save: trainee is null", message);
     }
 
     @Test
@@ -70,7 +70,7 @@ public class TraineeDAOTests {
         traineeDAO.save(testTrainee);
 
         String message = assertThrows(IllegalArgumentException.class, () -> traineeDAO.findById(null)).getMessage();
-        assertEquals("Can not find trainee by Id: id is null", message);
+        assertEquals("Cannot find trainee by Id: id is null", message);
 
         Optional<Trainee> result = traineeDAO.findById(2L);
         assertFalse(result.isPresent());
@@ -90,15 +90,15 @@ public class TraineeDAOTests {
     @Test
     public void updateInvalidParamsTest() {
         String message = assertThrows(IllegalArgumentException.class, () -> traineeDAO.update(null, null)).getMessage();
-        assertEquals("Can not perform update: no trainee with such id: null", message);
+        assertEquals("Cannot perform update: no trainee with such id: null", message);
 
         message = assertThrows(IllegalArgumentException.class, () -> traineeDAO.update(10L, null)).getMessage();
-        assertEquals("Can not perform update: no trainee with such id: 10", message);
+        assertEquals("Cannot perform update: no trainee with such id: 10", message);
 
         traineeDAO.save(testTrainee);
 
         message = assertThrows(IllegalArgumentException.class, () -> traineeDAO.update(1L, null)).getMessage();
-        assertEquals("Can not perform update: trainee is null", message);
+        assertEquals("Cannot perform update: trainee is null", message);
     }
 
     @Test
@@ -129,7 +129,7 @@ public class TraineeDAOTests {
     @Test
     public void deleteTest() {
         String message = assertThrows(IllegalArgumentException.class, () -> traineeDAO.deleteById(null)).getMessage();
-        assertEquals("Can not perform deleteById: id is null", message);
+        assertEquals("Cannot perform deleteById: id is null", message);
 
         assertFalse(traineeDAO.deleteById(1L));
 
