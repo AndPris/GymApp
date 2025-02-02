@@ -53,7 +53,7 @@ public class TrainerServiceTests {
     @Test
     public void createTrainerNullTest() {
         String message = assertThrows(IllegalArgumentException.class, () -> trainerService.createTrainer(null)).getMessage();
-        assertEquals("Can not perform createTrainer: trainer is null", message);
+        assertEquals("Cannot perform createTrainer: trainer is null", message);
     }
 
     @Test
@@ -88,15 +88,15 @@ public class TrainerServiceTests {
     @Test
     public void updateTrainerInvalidParamsTest() {
         String message = assertThrows(IllegalArgumentException.class, () -> trainerService.updateTrainer(null, null)).getMessage();
-        assertEquals("Can not perform update: no trainer with such id: null", message);
+        assertEquals("Cannot perform update: no trainer with such id: null", message);
 
         message = assertThrows(IllegalArgumentException.class, () -> trainerService.updateTrainer(10L, null)).getMessage();
-        assertEquals("Can not perform update: no trainer with such id: 10", message);
+        assertEquals("Cannot perform update: no trainer with such id: 10", message);
 
         trainerService.createTrainer(testTrainer);
 
         message = assertThrows(IllegalArgumentException.class, () -> trainerService.updateTrainer(1L, null)).getMessage();
-        assertEquals("Can not perform update: trainer is null", message);
+        assertEquals("Cannot perform update: trainer is null", message);
     }
 
     @Test
@@ -135,7 +135,7 @@ public class TrainerServiceTests {
         trainerService.createTrainer(testTrainer);
 
         String message = assertThrows(IllegalArgumentException.class, () -> trainerService.getTrainerById(null)).getMessage();
-        assertEquals("Can not find trainer by Id: id is null", message);
+        assertEquals("Cannot find trainer by Id: id is null", message);
 
         Optional<Trainer> result = trainerService.getTrainerById(2L);
         assertFalse(result.isPresent());

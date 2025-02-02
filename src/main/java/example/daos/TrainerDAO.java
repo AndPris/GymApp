@@ -29,60 +29,51 @@ public class TrainerDAO {
     }
 
     public Trainer save(Trainer trainer) {
-        if (trainer == null) {
-            String message = "Can not perform save: trainer is null";
-            logger.warn(message);
-            throw new IllegalArgumentException(message);
-        }
+        checkForNull(trainer, "Cannot perform save: trainer is null");
 
-        Long id;
-        if (trainer.getId() == null) {
-            id = idGenerator.generateId(trainerStorage.keySet());
-            trainer.setId(id);
-        } else {
-            id = trainer.getId();
-        }
+        assignIdIfNecessary(trainer);
+        trainerStorage.put(trainer.getId(), trainer);
 
-        trainerStorage.put(id, trainer);
-        logger.info("Create new trainer: {}", trainer);
+        logger.info("Created new trainer: {}", trainer);
         return trainer;
     }
 
-    public Trainer update(Long id, Trainer trainer) {
-        Trainer oldTrainer = trainerStorage.get(id);
-
-        if (oldTrainer == null) {
-            String message = "Can not perform update: no trainer with such id: " + id;
-            logger.warn(message);
-            throw new IllegalArgumentException(message);
+    private void checkForNull(Object obj, String errorMessage) {
+        if (obj == null) {
+            logger.warn(errorMessage);
+            throw new IllegalArgumentException(errorMessage);
         }
-
-        if (trainer == null) {
-            String message = "Can not perform update: trainer is null";
-            logger.warn(message);
-            throw new IllegalArgumentException(message);
-        }
-
-        if (StringUtils.isNoneBlank(trainer.getFirstName()))
-            oldTrainer.setFirstName(trainer.getFirstName());
-
-        if (StringUtils.isNoneBlank(trainer.getLastName()))
-            oldTrainer.setLastName(trainer.getLastName());
-
-        if (StringUtils.isNoneBlank(trainer.getUsername()))
-            oldTrainer.setUsername(trainer.getUsername());
-
-        if (StringUtils.isNoneBlank(trainer.getPassword()))
-            oldTrainer.setPassword(trainer.getPassword());
-
-        oldTrainer.setActive(trainer.isActive());
-
-        if (trainer.getSpecialization() != null)
-            oldTrainer.setSpecialization(trainer.getSpecialization());
-
-        logger.info("Update a trainer: {}", oldTrainer);
-        return oldTrainer;
     }
+
+    private void assignIdIfNecessary(Trainer trainer) {
+        if (trainer.getId() == null) {
+            Long id = idGenerator.generateId(trainerStorage.keySet());
+            trainer.setId(id);
+        }
+    }
+
+    public Trainer update(Long id, Trainer trainer) {
+        Trainer existingTrainer = trainerStorage.get(id);
+        checkForNull(existingTrainer, "Cannot perform update: no trainer with such id: " + id);
+        checkForNull(id, "Cannot perform update: id is null");
+        checkForNull(trainer, "Cannot perform update: trainer is null");
+
+        updateTrainerFields(existingTrainer, trainer);
+
+        logger.info("Updated trainer: {}", existingTrainer);
+        return existingTrainer;
+    }
+
+    private void updateTrainerFields(Trainer existing, Trainer updates) {
+        Optional.ofNullable(updates.getFirstName()).filter(StringUtils::isNoneBlank).ifPresent(existing::setFirstName);
+        Optional.ofNullable(updates.getLastName()).filter(StringUtils::isNoneBlank).ifPresent(existing::setLastName);
+        Optional.ofNullable(updates.getUsername()).filter(StringUtils::isNoneBlank).ifPresent(existing::setUsername);
+        Optional.ofNullable(updates.getPassword()).filter(StringUtils::isNoneBlank).ifPresent(existing::setPassword);
+        Optional.ofNullable(updates.getSpecialization()).ifPresent(existing::setSpecialization);
+
+        existing.setActive(updates.isActive());
+    }
+
 
     public Iterable<Trainer> findAll() {
         logger.info("Get info about all trainers");
@@ -90,14 +81,9 @@ public class TrainerDAO {
     }
 
     public Optional<Trainer> findById(Long id) {
-        if (id == null) {
-            String message = "Can not find trainer by Id: id is null";
-            logger.warn(message);
-            throw new IllegalArgumentException(message);
-        }
-
+        checkForNull(id, "Cannot find trainer by Id: id is null");
         logger.info("Get info about trainer with id {}", id);
-        return trainerStorage.containsKey(id) ? Optional.of(trainerStorage.get(id)) : Optional.empty();
+        return Optional.ofNullable(trainerStorage.get(id));
     }
 
     public boolean existsById(Long id) {

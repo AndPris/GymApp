@@ -30,7 +30,7 @@ public class TraineeDAO {
 
 
     public Trainee save(Trainee trainee) {
-        checkTraineeForNull(trainee, "Cannot perform save: trainee is null");
+        checkForNull(trainee, "Cannot perform save: trainee is null");
         assignIdIfNecessary(trainee);
         traineeStorage.put(trainee.getId(), trainee);
 
@@ -38,8 +38,8 @@ public class TraineeDAO {
         return trainee;
     }
 
-    private void checkTraineeForNull(Trainee trainee, String errorMessage) {
-        if (trainee == null) {
+    private void checkForNull(Object obj, String errorMessage) {
+        if (obj == null) {
             logger.warn(errorMessage);
             throw new IllegalArgumentException(errorMessage);
         }
@@ -54,22 +54,14 @@ public class TraineeDAO {
 
 
     public Trainee update(Long id, Trainee trainee) {
-        checkTraineeExists(id);
-        checkTraineeForNull(trainee, "Cannot perform update: trainee is null");
-
         Trainee existingTrainee = traineeStorage.get(id);
+        checkForNull(existingTrainee, "Cannot perform update: no trainee with such id: " + id);
+        checkForNull(trainee, "Cannot perform update: trainee is null");
+
         updateTraineeFields(existingTrainee, trainee);
 
         logger.info("Updated trainee: {}", existingTrainee);
         return existingTrainee;
-    }
-
-    private void checkTraineeExists(Long id) {
-        if (!traineeStorage.containsKey(id)) {
-            String message = "Cannot perform update: no trainee with such id: " + id;
-            logger.warn(message);
-            throw new IllegalArgumentException(message);
-        }
     }
 
     private void updateTraineeFields(Trainee existing, Trainee updates) {
@@ -85,12 +77,7 @@ public class TraineeDAO {
 
 
     public boolean deleteById(Long id) {
-        if (id == null) {
-            String message = "Cannot perform deleteById: id is null";
-            logger.warn(message);
-            throw new IllegalArgumentException(message);
-        }
-
+        checkForNull(id, "Cannot perform deleteById: id is null");
         logger.info("Delete a trainee with id {}", id);
         return Optional.ofNullable(traineeStorage.remove(id)).isPresent();
     }
@@ -101,12 +88,7 @@ public class TraineeDAO {
     }
 
     public Optional<Trainee> findById(Long id) {
-        if (id == null) {
-            String message = "Cannot find trainee by Id: id is null";
-            logger.warn(message);
-            throw new IllegalArgumentException(message);
-        }
-
+        checkForNull(id, "Cannot find trainee by Id: id is null");
         logger.info("Get info about trainee with id {}", id);
         return Optional.ofNullable(traineeStorage.get(id));
     }

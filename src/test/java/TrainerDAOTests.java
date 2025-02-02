@@ -34,7 +34,7 @@ public class TrainerDAOTests {
     @Test
     public void saveNullTest() {
         String message = assertThrows(IllegalArgumentException.class, () -> trainerDAO.save(null)).getMessage();
-        assertEquals("Can not perform save: trainer is null", message);
+        assertEquals("Cannot perform save: trainer is null", message);
     }
 
     @Test
@@ -70,7 +70,7 @@ public class TrainerDAOTests {
         trainerDAO.save(testTrainer);
 
         String message = assertThrows(IllegalArgumentException.class, () -> trainerDAO.findById(null)).getMessage();
-        assertEquals("Can not find trainer by Id: id is null", message);
+        assertEquals("Cannot find trainer by Id: id is null", message);
 
         Optional<Trainer> result = trainerDAO.findById(2L);
         assertFalse(result.isPresent());
@@ -90,15 +90,15 @@ public class TrainerDAOTests {
     @Test
     public void updateInvalidParamsTest() {
         String message = assertThrows(IllegalArgumentException.class, () -> trainerDAO.update(null, null)).getMessage();
-        assertEquals("Can not perform update: no trainer with such id: null", message);
+        assertEquals("Cannot perform update: no trainer with such id: null", message);
 
         message = assertThrows(IllegalArgumentException.class, () -> trainerDAO.update(10L, null)).getMessage();
-        assertEquals("Can not perform update: no trainer with such id: 10", message);
+        assertEquals("Cannot perform update: no trainer with such id: 10", message);
 
         trainerDAO.save(testTrainer);
 
         message = assertThrows(IllegalArgumentException.class, () -> trainerDAO.update(1L, null)).getMessage();
-        assertEquals("Can not perform update: trainer is null", message);
+        assertEquals("Cannot perform update: trainer is null", message);
     }
 
     @Test
