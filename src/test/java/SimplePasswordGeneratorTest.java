@@ -2,6 +2,8 @@ import example.utils.password.PasswordGenerator;
 import example.utils.password.imp.SimplePasswordGenerator;
 import org.junit.jupiter.api.Test;
 
+import java.util.regex.Pattern;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -13,7 +15,6 @@ public class SimplePasswordGeneratorTest {
     public void generatePasswordTest() {
         String password = passwordGenerator.generatePassword();
         assertEquals(10, password.length());
-        for (String ch : password.split(""))
-            assertTrue(CHARS.contains(ch));
+        assertTrue(password.matches("[" + Pattern.quote(CHARS) + "]{10}"));
     }
 }

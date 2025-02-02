@@ -58,12 +58,12 @@ public class StorageTests {
     }
 
     @Test
-    public void initFileExists() {
+    public void initFileExistsTest() {
         assertTrue(map.containsKey(1L));
     }
 
     @Test
-    public void initFileDoesntExist() throws IOException {
+    public void initFileDoesntExistTest() throws IOException {
         storage = new TraineeStorage("no_file.json");
         storage.init();
         Map<Long, Trainee> data = storage.getData();

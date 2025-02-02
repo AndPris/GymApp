@@ -17,14 +17,14 @@ public class SimpleIdGeneratorTests {
     }
 
     @Test
-    public void generateIdTestEmptySet() {
+    public void generateIdEmptySetTest() {
         Set<Long> ids = new HashSet<>();
         assertEquals(1L, idGenerator.generateId(ids));
         assertEquals(1L, idGenerator.generateId(null));
     }
 
     @Test
-    public void generateIdTestNonEmptySet() {
+    public void generateIdNonEmptySetTest() {
         Set<Long> ids = new HashSet<>();
         ids.add(1L);
         assertEquals(2L, idGenerator.generateId(ids));
