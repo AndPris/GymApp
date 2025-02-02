@@ -1,6 +1,6 @@
 package example.utils.input;
 
-import example.utils.string.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
 import java.text.ParseException;
@@ -77,7 +77,7 @@ public class InputHandler {
         if (allowEmpty)
             return line;
 
-        while (!StringUtils.isNotEmpty(line)) {
+        while (!StringUtils.isNoneBlank(line)) {
             System.out.println("Please enter a non empty line");
             line = scanner.nextLine();
         }

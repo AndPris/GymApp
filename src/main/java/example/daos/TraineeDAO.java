@@ -3,7 +3,7 @@ package example.daos;
 import example.entities.Trainee;
 import example.storages.Storage;
 import example.utils.id.IdGenerator;
-import example.utils.string.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,21 +67,21 @@ public class TraineeDAO {
         }
 
 
-        if (StringUtils.isNotEmpty(trainee.getFirstName()))
+        if (StringUtils.isNoneBlank(trainee.getFirstName()))
             oldTrainee.setFirstName(trainee.getFirstName());
 
-        if (StringUtils.isNotEmpty(trainee.getLastName()))
+        if (StringUtils.isNoneBlank(trainee.getLastName()))
             oldTrainee.setLastName(trainee.getLastName());
 
-        if (StringUtils.isNotEmpty(trainee.getUsername()))
+        if (StringUtils.isNoneBlank(trainee.getUsername()))
             oldTrainee.setUsername(trainee.getUsername());
 
-        if (StringUtils.isNotEmpty(trainee.getPassword()))
+        if (StringUtils.isNoneBlank(trainee.getPassword()))
             oldTrainee.setPassword(trainee.getPassword());
 
         oldTrainee.setActive(trainee.isActive());
 
-        if (StringUtils.isNotEmpty(trainee.getAddress()))
+        if (StringUtils.isNoneBlank(trainee.getAddress()))
             oldTrainee.setAddress(trainee.getAddress());
 
         if (trainee.getDateOfBirth() != null)

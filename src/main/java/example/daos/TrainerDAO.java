@@ -3,7 +3,7 @@ package example.daos;
 import example.entities.Trainer;
 import example.storages.Storage;
 import example.utils.id.IdGenerator;
-import example.utils.string.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,16 +63,16 @@ public class TrainerDAO {
             throw new IllegalArgumentException(message);
         }
 
-        if (StringUtils.isNotEmpty(trainer.getFirstName()))
+        if (StringUtils.isNoneBlank(trainer.getFirstName()))
             oldTrainer.setFirstName(trainer.getFirstName());
 
-        if (StringUtils.isNotEmpty(trainer.getLastName()))
+        if (StringUtils.isNoneBlank(trainer.getLastName()))
             oldTrainer.setLastName(trainer.getLastName());
 
-        if (StringUtils.isNotEmpty(trainer.getUsername()))
+        if (StringUtils.isNoneBlank(trainer.getUsername()))
             oldTrainer.setUsername(trainer.getUsername());
 
-        if (StringUtils.isNotEmpty(trainer.getPassword()))
+        if (StringUtils.isNoneBlank(trainer.getPassword()))
             oldTrainer.setPassword(trainer.getPassword());
 
         oldTrainer.setActive(trainer.isActive());
