@@ -11,6 +11,7 @@ import java.util.Map;
 @Component
 public class TrainerStorage extends Storage<Trainer> {
     public TrainerStorage(@Value("${trainer.storage.filepath}") String filePath) {
-        super(filePath, new TypeReference<Map<Long, Trainer>>() {});
+        super(filePath, new TypeReference<Map<Long, Trainer>>() {
+        });
     }
 }

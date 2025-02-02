@@ -12,7 +12,7 @@ public class SimplePasswordGenerator implements PasswordGenerator {
     public String generatePassword() {
         StringBuilder password = new StringBuilder();
 
-        for(int i = 0; i < PASSWORD_LENGTH; i++)
+        for (int i = 0; i < PASSWORD_LENGTH; i++)
             password.append(CHARS.charAt((int) (Math.random() * CHARS.length())));
 
         return password.toString();

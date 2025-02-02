@@ -16,7 +16,7 @@ public class InputHandler {
         Scanner scanner = new Scanner(System.in);
         Date birthday = null;
 
-        while(run) {
+        while (run) {
             try {
                 System.out.print(message);
                 birthday = format.parse(scanner.nextLine());
@@ -51,7 +51,7 @@ public class InputHandler {
     public Long getLong() {
         Scanner scanner = new Scanner(System.in);
 
-        while(!scanner.hasNextLong()) {
+        while (!scanner.hasNextLong()) {
             System.out.println("Please enter an integer");
             scanner.next();
         }
@@ -62,7 +62,7 @@ public class InputHandler {
     public float getFloat() {
         Scanner scanner = new Scanner(System.in);
 
-        while(!scanner.hasNextFloat()) {
+        while (!scanner.hasNextFloat()) {
             System.out.println("Please enter a float number");
             scanner.next();
         }
@@ -74,7 +74,7 @@ public class InputHandler {
         Scanner scanner = new Scanner(System.in);
         String line = scanner.nextLine();
 
-        if(allowEmpty)
+        if (allowEmpty)
             return line;
 
         while (!StringUtils.isNotEmpty(line)) {

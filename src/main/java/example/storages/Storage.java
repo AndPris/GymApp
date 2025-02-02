@@ -32,7 +32,7 @@ public abstract class Storage<T> {
     @PostConstruct
     public void init() throws IOException {
         File file = new File(filePath);
-        if(!file.exists()) {
+        if (!file.exists()) {
             data = new HashMap<>();
             return;
         }

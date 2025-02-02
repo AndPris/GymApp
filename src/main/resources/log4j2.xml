@@ -2,13 +2,13 @@
 <Configuration status="WARN">
     <Appenders>
         <File name="FileAppender" fileName="logs/app.log" append="false">
-            <PatternLayout pattern="%d{HH:mm:ss} %-5level %logger{36} - %msg%n" />
+            <PatternLayout pattern="%d{HH:mm:ss} %-5level %logger{36} - %msg%n"/>
         </File>
     </Appenders>
 
     <Loggers>
         <Root level="debug">
-            <AppenderRef ref="FileAppender" />
+            <AppenderRef ref="FileAppender"/>
         </Root>
     </Loggers>
 </Configuration>

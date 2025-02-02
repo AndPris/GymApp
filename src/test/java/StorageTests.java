@@ -1,7 +1,6 @@
 import example.entities.Trainee;
 import example.storages.Storage;
 import example.storages.imp.TraineeStorage;
-import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -12,6 +11,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 public class StorageTests {
     private Storage<Trainee> storage;
@@ -28,12 +29,12 @@ public class StorageTests {
 
     private void createInitialFile() throws IOException {
         File file = new File(filePath);
-        if(file.exists())
+        if (file.exists())
             file.delete();
 
         file.createNewFile();
 
-        try(BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
             writer.write("{\"1\":{\"id\":1,\"firstName\":\"new first\",\"lastName\":\"new last\",\"username\":\"test.test\",\"password\":\"%ym)r&oP}.\",\"active\":true,\"address\":\"test addr\",\"dateOfBirth\":1607724000000}}");
         }
     }
@@ -135,7 +136,7 @@ public class StorageTests {
         storage.destroy();
 
         String expected = "{\"1\":{\"id\":1,\"firstName\":\"new first\",\"lastName\":\"new last\",\"username\":\"test.test\",\"password\":\"%ym)r&oP}.\",\"active\":true,\"address\":\"test addr\",\"dateOfBirth\":1607724000000},\"2\":{\"id\":2,\"firstName\":\"test first name\",\"lastName\":\"test last name\",\"username\":\"test username\",\"password\":\"test password\",\"active\":true,\"address\":null,\"dateOfBirth\":-30269815200000}}";
-        try(BufferedReader br = new BufferedReader(new FileReader(filePath))) {
+        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
             String actual = br.readLine();
             assertEquals(expected, actual);
         }

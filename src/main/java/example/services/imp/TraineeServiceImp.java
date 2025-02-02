@@ -32,7 +32,7 @@ public class TraineeServiceImp implements TraineeService {
 
     @Override
     public Trainee createTrainee(Trainee trainee) {
-        if(trainee == null)
+        if (trainee == null)
             throw new IllegalArgumentException("Can not perform createTrainee: trainee is null");
 
         trainee.setPassword(passwordGenerator.generatePassword());

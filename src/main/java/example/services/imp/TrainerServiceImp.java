@@ -32,7 +32,7 @@ public class TrainerServiceImp implements TrainerService {
 
     @Override
     public Trainer createTrainer(Trainer trainer) {
-        if(trainer == null)
+        if (trainer == null)
             throw new IllegalArgumentException("Can not perform createTrainer: trainer is null");
 
         trainer.setPassword(passwordGenerator.generatePassword());

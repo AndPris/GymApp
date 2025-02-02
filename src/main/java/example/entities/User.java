@@ -17,7 +17,8 @@ public abstract class User {
         this.active = true;
     }
 
-    public User() {}
+    public User() {
+    }
 
     @Override
     public String toString() {

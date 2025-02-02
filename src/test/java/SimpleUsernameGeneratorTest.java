@@ -3,14 +3,13 @@ import example.entities.Trainer;
 import example.storages.Storage;
 import example.storages.imp.TraineeStorage;
 import example.storages.imp.TrainerStorage;
-import example.utils.username.UsernameGenerator;
 import example.utils.username.imp.SimpleUsernameGenerator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class SimpleUsernameGeneratorTest {
     private Storage<Trainee> traineeStorage;

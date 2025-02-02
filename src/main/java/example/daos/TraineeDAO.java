@@ -30,7 +30,7 @@ public class TraineeDAO {
 
 
     public Trainee save(Trainee trainee) {
-        if(trainee == null) {
+        if (trainee == null) {
             String message = "Can not perform save: trainee is null";
             logger.warn(message);
             throw new IllegalArgumentException(message);
@@ -38,7 +38,7 @@ public class TraineeDAO {
 
         Long id;
 
-        if(trainee.getId() == null) {
+        if (trainee.getId() == null) {
             id = idGenerator.generateId(traineeStorage.keySet());
             trainee.setId(id);
         } else {
@@ -54,37 +54,37 @@ public class TraineeDAO {
     public Trainee update(Long id, Trainee trainee) {
         Trainee oldTrainee = traineeStorage.get(id);
 
-        if(oldTrainee == null) {
+        if (oldTrainee == null) {
             String message = "Can not perform update: no trainee with such id: " + id;
             logger.warn(message);
             throw new IllegalArgumentException(message);
         }
 
-        if(trainee == null) {
+        if (trainee == null) {
             String message = "Can not perform update: trainee is null";
             logger.warn(message);
             throw new IllegalArgumentException(message);
         }
 
 
-        if(StringUtils.isNotEmpty(trainee.getFirstName()))
+        if (StringUtils.isNotEmpty(trainee.getFirstName()))
             oldTrainee.setFirstName(trainee.getFirstName());
 
-        if(StringUtils.isNotEmpty(trainee.getLastName()))
+        if (StringUtils.isNotEmpty(trainee.getLastName()))
             oldTrainee.setLastName(trainee.getLastName());
 
-        if(StringUtils.isNotEmpty(trainee.getUsername()))
+        if (StringUtils.isNotEmpty(trainee.getUsername()))
             oldTrainee.setUsername(trainee.getUsername());
 
-        if(StringUtils.isNotEmpty(trainee.getPassword()))
+        if (StringUtils.isNotEmpty(trainee.getPassword()))
             oldTrainee.setPassword(trainee.getPassword());
 
         oldTrainee.setActive(trainee.isActive());
 
-        if(StringUtils.isNotEmpty(trainee.getAddress()))
+        if (StringUtils.isNotEmpty(trainee.getAddress()))
             oldTrainee.setAddress(trainee.getAddress());
 
-        if(trainee.getDateOfBirth() != null)
+        if (trainee.getDateOfBirth() != null)
             oldTrainee.setDateOfBirth(trainee.getDateOfBirth());
 
         logger.info("Update a trainee: {}", oldTrainee);
@@ -92,7 +92,7 @@ public class TraineeDAO {
     }
 
     public boolean deleteById(Long id) {
-        if(id == null) {
+        if (id == null) {
             String message = "Can not perform deleteById: id is null";
             logger.warn(message);
             throw new IllegalArgumentException(message);
@@ -108,7 +108,7 @@ public class TraineeDAO {
     }
 
     public Optional<Trainee> findById(Long id) {
-        if(id == null) {
+        if (id == null) {
             String message = "Can not find trainee by Id: id is null";
             logger.warn(message);
             throw new IllegalArgumentException(message);

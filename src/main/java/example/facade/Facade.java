@@ -152,7 +152,7 @@ public class Facade {
 
     private void createTraining() {
         Training data = getTrainingData();
-        if(data == null)
+        if (data == null)
             return;
         trainingService.createTraining(data);
         System.out.println("Training has been successfully created");
@@ -163,14 +163,14 @@ public class Facade {
 
         System.out.print("Trainee id: ");
         Long traineeId = inputHandler.getLong();
-        if(!traineeService.existsTrainee(traineeId)) {
+        if (!traineeService.existsTrainee(traineeId)) {
             System.out.println("No such trainee");
             return null;
         }
 
         System.out.print("Trainer id: ");
         Long trainerId = inputHandler.getLong();
-        if(!trainerService.existsTrainer(trainerId)) {
+        if (!trainerService.existsTrainer(trainerId)) {
             System.out.println("No such trainer");
             return null;
         }
@@ -188,7 +188,7 @@ public class Facade {
 
     private void updateTrainee() {
         Long id = getTraineeId();
-        if(id == null)
+        if (id == null)
             return;
 
         traineeService.updateTrainee(id, getTraineeData(true));
@@ -198,7 +198,7 @@ public class Facade {
     private Long getTraineeId() {
         System.out.print("Trainee id: ");
         Long traineeId = inputHandler.getLong();
-        if(!traineeService.existsTrainee(traineeId)) {
+        if (!traineeService.existsTrainee(traineeId)) {
             System.out.println("There's no trainee with such ID");
             return null;
         }
@@ -208,7 +208,7 @@ public class Facade {
 
     private void updateTrainer() {
         Long id = getTrainerId();
-        if(id == null)
+        if (id == null)
             return;
 
         trainerService.updateTrainer(id, getTrainerData(true));
@@ -218,7 +218,7 @@ public class Facade {
     private Long getTrainerId() {
         System.out.print("Trainer id: ");
         Long trainerId = inputHandler.getLong();
-        if(!trainerService.existsTrainer(trainerId)) {
+        if (!trainerService.existsTrainer(trainerId)) {
             System.out.println("There's no trainer with such ID");
             return null;
         }
@@ -230,7 +230,7 @@ public class Facade {
         System.out.print("Trainee id: ");
         Long traineeId = inputHandler.getLong();
 
-        if(traineeService.deleteTraineeById(traineeId))
+        if (traineeService.deleteTraineeById(traineeId))
             System.out.println("Trainee has been successfully deleted");
         else
             System.out.println("There is no trainee with such id");
@@ -260,7 +260,7 @@ public class Facade {
 
     private void selectTrainee() {
         Long traineeId = getTraineeId();
-        if(traineeId == null)
+        if (traineeId == null)
             return;
 
         System.out.println(traineeService.getTraineeById(traineeId).get());
@@ -270,7 +270,7 @@ public class Facade {
 
     private void selectTrainer() {
         Long trainerId = getTrainerId();
-        if(trainerId == null)
+        if (trainerId == null)
             return;
 
         System.out.println(trainerService.getTrainerById(trainerId).get());
@@ -280,7 +280,7 @@ public class Facade {
 
     private void selectTraining() {
         Long trainingId = getTrainingId();
-        if(trainingId == null)
+        if (trainingId == null)
             return;
 
         System.out.println(trainingService.getTrainingById(trainingId).get());
@@ -290,7 +290,7 @@ public class Facade {
     private Long getTrainingId() {
         System.out.print("Training id: ");
         Long trainingId = inputHandler.getLong();
-        if(!trainingService.existsTraining(trainingId)) {
+        if (!trainingService.existsTraining(trainingId)) {
             System.out.println("There's no training with such ID");
             return null;
         }

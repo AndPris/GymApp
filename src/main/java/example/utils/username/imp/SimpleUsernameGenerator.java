@@ -4,8 +4,6 @@ import example.entities.Trainee;
 import example.entities.Trainer;
 import example.entities.User;
 import example.storages.Storage;
-import example.storages.imp.TrainerStorage;
-import example.storages.imp.TraineeStorage;
 import example.utils.username.UsernameGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -35,7 +33,7 @@ public class SimpleUsernameGenerator implements UsernameGenerator {
         username.append(user.getLastName());
 
         int serialNumber = getUsernameSerialNumber(user);
-        if(serialNumber != 0)
+        if (serialNumber != 0)
             username.append(serialNumber);
 
         return username.toString();
@@ -49,18 +47,18 @@ public class SimpleUsernameGenerator implements UsernameGenerator {
     private <T extends User> int getUsernameSerialNumber(Storage<T> storage, User user) {
         int serialNumber = -1;
 
-        for(User currentUser : storage.values()) {
-            if(!areFullNameEquals(currentUser, user))
+        for (User currentUser : storage.values()) {
+            if (!areFullNameEquals(currentUser, user))
                 continue;
 
             String actualUsername = currentUser.getUsername();
             String expectedUsername = currentUser.getFirstName() + "." + currentUser.getLastName();
             String stringSerialNumber = actualUsername.substring(expectedUsername.length());
 
-            if(stringSerialNumber.isEmpty())
+            if (stringSerialNumber.isEmpty())
                 stringSerialNumber = "0";
 
-            if(Integer.parseInt(stringSerialNumber) > serialNumber)
+            if (Integer.parseInt(stringSerialNumber) > serialNumber)
                 serialNumber = Integer.parseInt(stringSerialNumber);
         }
 

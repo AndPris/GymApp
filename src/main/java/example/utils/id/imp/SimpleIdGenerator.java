@@ -9,7 +9,7 @@ import java.util.Set;
 public class SimpleIdGenerator implements IdGenerator {
     @Override
     public Long generateId(Set<Long> ids) {
-        if(ids == null || ids.isEmpty())
+        if (ids == null || ids.isEmpty())
             return 1L;
 
         return ids.stream().max(Long::compare).get() + 1;

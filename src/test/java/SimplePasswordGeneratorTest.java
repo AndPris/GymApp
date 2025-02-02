@@ -2,7 +2,8 @@ import example.utils.password.PasswordGenerator;
 import example.utils.password.imp.SimplePasswordGenerator;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class SimplePasswordGeneratorTest {
     private PasswordGenerator passwordGenerator = new SimplePasswordGenerator();
@@ -12,7 +13,7 @@ public class SimplePasswordGeneratorTest {
     public void generatePasswordTest() {
         String password = passwordGenerator.generatePassword();
         assertEquals(10, password.length());
-        for(String ch : password.split(""))
+        for (String ch : password.split(""))
             assertTrue(CHARS.contains(ch));
     }
 }

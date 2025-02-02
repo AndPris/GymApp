@@ -77,7 +77,7 @@ public class TrainerDAO {
 
         oldTrainer.setActive(trainer.isActive());
 
-        if(trainer.getSpecialization() != null)
+        if (trainer.getSpecialization() != null)
             oldTrainer.setSpecialization(trainer.getSpecialization());
 
         logger.info("Update a trainer: {}", oldTrainer);
