@@ -34,7 +34,7 @@ public class TrainingDAOTests {
     @Test
     public void saveNullTest() {
         String message = assertThrows(IllegalArgumentException.class, () -> trainingDAO.save(null)).getMessage();
-        assertEquals("Can not perform save: training is null", message);
+        assertEquals("Cannot perform save: training is null", message);
     }
 
     @Test
@@ -70,7 +70,7 @@ public class TrainingDAOTests {
         trainingDAO.save(testTraining);
 
         String message = assertThrows(IllegalArgumentException.class, () -> trainingDAO.findById(null)).getMessage();
-        assertEquals("Can not find training by Id: id is null", message);
+        assertEquals("Cannot find training by Id: id is null", message);
 
         Optional<Training> result = trainingDAO.findById(2L);
         assertFalse(result.isPresent());

@@ -28,26 +28,29 @@ public class TrainingDAO {
     }
 
     public Training save(Training training) {
-        if (training == null) {
-            String message = "Can not perform save: training is null";
-            logger.warn(message);
-            throw new IllegalArgumentException(message);
-        }
+        checkForNull(training, "Cannot perform save: training is null");
 
-        Long id;
-
-        if (training.getId() == null) {
-            id = idGenerator.generateId(trainingStorage.keySet());
-            training.setId(id);
-        } else {
-            id = training.getId();
-        }
-
-        trainingStorage.put(id, training);
+        assignIdIfNecessary(training);
+        trainingStorage.put(training.getId(), training);
 
         logger.info("Create new training: {}", training);
         return training;
     }
+
+    private void checkForNull(Object obj, String errorMessage) {
+        if (obj == null) {
+            logger.warn(errorMessage);
+            throw new IllegalArgumentException(errorMessage);
+        }
+    }
+
+    private void assignIdIfNecessary(Training training) {
+        if (training.getId() == null) {
+            Long id = idGenerator.generateId(trainingStorage.keySet());
+            training.setId(id);
+        }
+    }
+
 
     public Iterable<Training> findAll() {
         logger.info("Get info about all trainings");
@@ -55,14 +58,9 @@ public class TrainingDAO {
     }
 
     public Optional<Training> findById(Long id) {
-        if (id == null) {
-            String message = "Can not find training by Id: id is null";
-            logger.warn(message);
-            throw new IllegalArgumentException(message);
-        }
-
+        checkForNull(id, "Cannot find training by Id: id is null");
         logger.info("Get info about training with id {}", id);
-        return trainingStorage.containsKey(id) ? Optional.of(trainingStorage.get(id)) : Optional.empty();
+        return Optional.ofNullable(trainingStorage.get(id));
     }
 
     public boolean existsById(Long id) {

@@ -37,7 +37,7 @@ public class TrainingServiceTests {
     @Test
     public void createTrainingNullTest() {
         String message = assertThrows(IllegalArgumentException.class, () -> trainingService.createTraining(null)).getMessage();
-        assertEquals("Can not perform save: training is null", message);
+        assertEquals("Cannot perform save: training is null", message);
     }
 
     @Test
@@ -73,7 +73,7 @@ public class TrainingServiceTests {
         trainingService.createTraining(testTraining);
 
         String message = assertThrows(IllegalArgumentException.class, () -> trainingService.getTrainingById(null)).getMessage();
-        assertEquals("Can not find training by Id: id is null", message);
+        assertEquals("Cannot find training by Id: id is null", message);
 
         Optional<Training> result = trainingService.getTrainingById(2L);
         assertFalse(result.isPresent());
