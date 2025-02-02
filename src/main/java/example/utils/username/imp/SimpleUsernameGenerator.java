@@ -27,16 +27,13 @@ public class SimpleUsernameGenerator implements UsernameGenerator {
 
     @Override
     public String generateUsername(User user) {
-        StringBuilder username = new StringBuilder();
-        username.append(user.getFirstName());
-        username.append(".");
-        username.append(user.getLastName());
-
+        String baseUsername = formatUsername(user);
         int serialNumber = getUsernameSerialNumber(user);
-        if (serialNumber != 0)
-            username.append(serialNumber);
+        return serialNumber == 0 ? baseUsername : baseUsername + serialNumber;
+    }
 
-        return username.toString();
+    private String formatUsername(User user) {
+        return user.getFirstName() + "." + user.getLastName();
     }
 
     private int getUsernameSerialNumber(User user) {
@@ -45,27 +42,43 @@ public class SimpleUsernameGenerator implements UsernameGenerator {
     }
 
     private <T extends User> int getUsernameSerialNumber(Storage<T> storage, User user) {
-        int serialNumber = -1;
+        int maxSerial = -1;
 
         for (User currentUser : storage.values()) {
-            if (!areFullNameEquals(currentUser, user))
+            if (!hasSameFullName(currentUser, user)) {
                 continue;
+            }
 
             String actualUsername = currentUser.getUsername();
-            String expectedUsername = currentUser.getFirstName() + "." + currentUser.getLastName();
-            String stringSerialNumber = actualUsername.substring(expectedUsername.length());
+            String expectedUsername = formatUsername(user);
 
-            if (stringSerialNumber.isEmpty())
-                stringSerialNumber = "0";
+            if (!actualUsername.startsWith(expectedUsername)) {
+                continue;
+            }
 
-            if (Integer.parseInt(stringSerialNumber) > serialNumber)
-                serialNumber = Integer.parseInt(stringSerialNumber);
+            int serial = extractSerialNumber(actualUsername, expectedUsername);
+            maxSerial = Math.max(maxSerial, serial);
         }
 
-        return serialNumber + 1;
+        return maxSerial + 1;
     }
 
-    private boolean areFullNameEquals(User user1, User user2) {
-        return user1.getFirstName().equals(user2.getFirstName()) && user1.getLastName().equals(user2.getLastName());
+    private boolean hasSameFullName(User user1, User user2) {
+        boolean hasSameFirstName = user1.getFirstName().equals(user2.getFirstName());
+        boolean hasSameLastName = user1.getLastName().equals(user2.getLastName());
+        return hasSameFirstName && hasSameLastName;
+    }
+
+    private int extractSerialNumber(String actualUsername, String expectedUsername) {
+        String serialPart = actualUsername.substring(expectedUsername.length()).trim();
+        return serialPart.isEmpty() ? 0 : parseSerialNumber(serialPart);
+    }
+
+    private int parseSerialNumber(String serialPart) {
+        try {
+            return Integer.parseInt(serialPart);
+        } catch (NumberFormatException e) {
+            return 0;
+        }
     }
 }
