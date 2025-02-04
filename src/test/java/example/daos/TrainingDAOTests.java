@@ -1,4 +1,5 @@
-import example.daos.TrainingDAO;
+package example.daos;
+
 import example.entities.Training;
 import example.storages.Storage;
 import example.storages.imp.TrainingStorage;

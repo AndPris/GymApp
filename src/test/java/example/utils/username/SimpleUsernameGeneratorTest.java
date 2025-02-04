@@ -1,3 +1,5 @@
+package example.utils.username;
+
 import example.entities.Trainee;
 import example.entities.Trainer;
 import example.storages.Storage;

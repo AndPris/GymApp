@@ -1,4 +1,5 @@
-import example.utils.password.PasswordGenerator;
+package example.utils.password;
+
 import example.utils.password.imp.SimplePasswordGenerator;
 import org.junit.jupiter.api.Test;
 

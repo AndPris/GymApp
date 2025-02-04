@@ -1,4 +1,5 @@
-import example.daos.TraineeDAO;
+package example.daos;
+
 import example.entities.Trainee;
 import example.storages.Storage;
 import example.storages.imp.TraineeStorage;

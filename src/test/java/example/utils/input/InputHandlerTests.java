@@ -1,4 +1,5 @@
-import example.utils.input.InputHandler;
+package example.utils.input;
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

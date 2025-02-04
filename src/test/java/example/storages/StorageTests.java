@@ -1,5 +1,6 @@
+package example.storages;
+
 import example.entities.Trainee;
-import example.storages.Storage;
 import example.storages.imp.TraineeStorage;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

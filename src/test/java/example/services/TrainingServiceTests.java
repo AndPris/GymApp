@@ -1,3 +1,5 @@
+package example.services;
+
 import example.daos.TrainingDAO;
 import example.entities.Training;
 import example.services.imp.TrainingServiceImp;

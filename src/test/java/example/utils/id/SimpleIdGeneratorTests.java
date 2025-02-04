@@ -1,4 +1,5 @@
-import example.utils.id.IdGenerator;
+package example.utils.id;
+
 import example.utils.id.imp.SimpleIdGenerator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
