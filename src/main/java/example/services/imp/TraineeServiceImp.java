@@ -1,0 +1,68 @@
+package example.services.imp;
+
+import example.daos.TraineeDAO;
+import example.entities.Trainee;
+import example.services.TraineeService;
+import example.utils.password.PasswordGenerator;
+import example.utils.username.UsernameGenerator;
+import lombok.Setter;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.Optional;
+
+@Service
+public class TraineeServiceImp implements TraineeService {
+    @Autowired
+    @Setter
+    private TraineeDAO traineeDAO;
+    private PasswordGenerator passwordGenerator;
+    private UsernameGenerator usernameGenerator;
+
+    @Autowired
+    public void setPasswordGenerator(PasswordGenerator passwordGenerator) {
+        this.passwordGenerator = passwordGenerator;
+    }
+
+    @Autowired
+    public void setUsernameGenerator(UsernameGenerator usernameGenerator) {
+        this.usernameGenerator = usernameGenerator;
+    }
+
+
+    @Override
+    public Trainee createTrainee(Trainee trainee) {
+        if (trainee == null)
+            throw new IllegalArgumentException("Cannot perform createTrainee: trainee is null");
+
+        trainee.setPassword(passwordGenerator.generatePassword());
+        trainee.setUsername(usernameGenerator.generateUsername(trainee));
+        return traineeDAO.save(trainee);
+    }
+
+    @Override
+    public Trainee updateTrainee(Long id, Trainee trainee) {
+//        trainee.setUsername(usernameGenerator.generateUsername(trainee));
+        return traineeDAO.update(id, trainee);
+    }
+
+    @Override
+    public boolean deleteTraineeById(Long id) {
+        return traineeDAO.deleteById(id);
+    }
+
+    @Override
+    public Iterable<Trainee> getAllTrainees() {
+        return traineeDAO.findAll();
+    }
+
+    @Override
+    public Optional<Trainee> getTraineeById(Long id) {
+        return traineeDAO.findById(id);
+    }
+
+    @Override
+    public boolean existsTrainee(Long id) {
+        return traineeDAO.existsById(id);
+    }
+}
