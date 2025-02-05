@@ -15,4 +15,6 @@ public interface TraineeRepository {
     Optional<Trainee> findByUsernameAndPassword(String username, String password);
 
     boolean deleteByUsername(String username);
+
+    boolean toggleIsActiveStatus(Long id);
 }

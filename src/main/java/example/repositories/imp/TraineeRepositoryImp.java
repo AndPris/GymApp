@@ -94,4 +94,19 @@ public class TraineeRepositoryImp implements TraineeRepository {
             return false;
         }
     }
+
+    @Override
+    public boolean toggleIsActiveStatus(Long id) {
+        Trainee trainee = entityManager.find(Trainee.class, id);
+        if(trainee == null) {
+            String message = "No trainee with such id";
+            logger.error("toggleIsActiveStatus: {}", message);
+            throw new IllegalArgumentException(message);
+        }
+
+        trainee.setActive(!trainee.isActive());
+        boolean isActive = trainee.isActive();
+        logger.info("Toggle isActive status of trainee with id {}. Current status: {}", id, isActive);
+        return isActive;
+    }
 }

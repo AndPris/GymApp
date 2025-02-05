@@ -96,4 +96,9 @@ public class TraineeServiceImp implements TraineeService {
             throw new RuntimeException("User not found");
         }
     }
+
+    @Override
+    public boolean toggleTraineeIsActiveStatus(Long id) {
+        return traineeRepository.toggleIsActiveStatus(id);
+    }
 }

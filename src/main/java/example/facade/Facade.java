@@ -54,7 +54,7 @@ public class Facade {
 
         while (run) {
             menu.displayMenu();
-            userInput = inputHandler.getInputInRange(1, 16);
+            userInput = inputHandler.getInputInRange(1, 17);
             logger.info("User selected option '{}'", userInput);
             handleUserInput(userInput);
         }
@@ -106,6 +106,9 @@ public class Facade {
                 break;
             case 15:
                 changeTraineePassword();
+                break;
+            case 16:
+                toggleTraineeIsActiveStatus();
                 break;
             default:
                 run = false;
@@ -348,6 +351,18 @@ public class Facade {
         try {
             traineeService.changeTraineePassword(username, oldPassword, newPassword);
             System.out.println("Password successfully changed");
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    private void toggleTraineeIsActiveStatus() {
+        System.out.print("Trainee id: ");
+        Long id = inputHandler.getLong();
+
+        try {
+            boolean result = traineeService.toggleTraineeIsActiveStatus(id);
+            System.out.println("Status was successfully changed. Current value: " + result);
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
