@@ -35,10 +35,10 @@ public class TrainerServiceTests {
         TrainerDAO trainerDAO = new TrainerDAO();
 
         storage = new TrainerStorage("t");
-        storage.init();
+//        storage.init();
 
         Storage<Trainee> traineeStorage = new TraineeStorage("t");
-        traineeStorage.init();
+//        traineeStorage.init();
         usernameGenerator.setTraineeStorage(traineeStorage);
         usernameGenerator.setTrainerStorage(storage);
 

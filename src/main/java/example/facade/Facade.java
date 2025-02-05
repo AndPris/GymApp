@@ -192,7 +192,9 @@ public class Facade {
         if (id == null)
             return;
 
-        traineeService.updateTrainee(id, getTraineeData(true));
+        Trainee trainee = getTraineeData(true);
+        trainee.setId(id);
+        traineeService.updateTrainee(trainee);
         System.out.println("Trainee has been successfully updated");
     }
 

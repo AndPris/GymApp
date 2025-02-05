@@ -7,7 +7,7 @@ import java.util.Optional;
 public interface TraineeService {
     Trainee createTrainee(Trainee trainee);
 
-    Trainee updateTrainee(Long id, Trainee trainee);
+    Trainee updateTrainee(Trainee trainee);
 
     boolean deleteTraineeById(Long id);
 

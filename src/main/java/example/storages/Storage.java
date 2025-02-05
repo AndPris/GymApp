@@ -29,8 +29,9 @@ public abstract class Storage<T> {
     }
 
 
-//    @PostConstruct
-//    public void init() throws IOException {
+    @PostConstruct
+    public void init() throws IOException {
+        data = new HashMap<>();
 //        File file = new File(filePath);
 //        if (!file.exists()) {
 //            data = new HashMap<>();
@@ -40,7 +41,7 @@ public abstract class Storage<T> {
 //        ObjectMapper mapper = new ObjectMapper();
 //        data = new HashMap<>(mapper.readValue(file, typeReference));
 //        logger.info("Read data from {}", filePath);
-//    }
+    }
 
     @PreDestroy
     public void destroy() throws IOException {

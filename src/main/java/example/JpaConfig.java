@@ -1,5 +1,6 @@
 package example;
 
+import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -41,5 +42,10 @@ public class JpaConfig {
         dbProperties.put("javax.persistence.jdbc.password", password);
 
         return dbProperties;
+    }
+
+    @Bean
+    public EntityManager entityManager(EntityManagerFactory entityManagerFactory) {
+        return entityManagerFactory.createEntityManager();
     }
 }

@@ -2,6 +2,7 @@ package example.services.imp;
 
 import example.daos.TraineeDAO;
 import example.entities.Trainee;
+import example.repositories.TraineeRepository;
 import example.services.TraineeService;
 import example.utils.password.PasswordGenerator;
 import example.utils.username.UsernameGenerator;
@@ -13,6 +14,10 @@ import java.util.Optional;
 
 @Service
 public class TraineeServiceImp implements TraineeService {
+    @Autowired
+    @Setter
+    private TraineeRepository traineeRepository;
+
     @Autowired
     @Setter
     private TraineeDAO traineeDAO;
@@ -37,13 +42,12 @@ public class TraineeServiceImp implements TraineeService {
 
         trainee.setPassword(passwordGenerator.generatePassword());
         trainee.setUsername(usernameGenerator.generateUsername(trainee));
-        return traineeDAO.save(trainee);
+        return traineeRepository.save(trainee);
     }
 
     @Override
-    public Trainee updateTrainee(Long id, Trainee trainee) {
-//        trainee.setUsername(usernameGenerator.generateUsername(trainee));
-        return traineeDAO.update(id, trainee);
+    public Trainee updateTrainee(Trainee trainee) {
+        return traineeRepository.save(trainee);
     }
 
     @Override
