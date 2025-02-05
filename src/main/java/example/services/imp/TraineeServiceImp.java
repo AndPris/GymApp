@@ -82,17 +82,18 @@ public class TraineeServiceImp implements TraineeService {
 
     @Override
     public void changeTraineePassword(String username, String oldPassword, String newPassword) {
-        Optional<Trainee> optionalTrainee = traineeRepository.findByUsername(username);
-        if(!optionalTrainee.isPresent()) {
-            throw new RuntimeException("There's no trainee with such username");
-        }
-
-        Trainee trainee = optionalTrainee.get();
-        if(!trainee.getPassword().equals(oldPassword)) {
-            throw new RuntimeException("Wrong password");
-        }
-
+        Trainee trainee = authenticateTrainee(username, oldPassword);
         trainee.setPassword(newPassword);
         traineeRepository.save(trainee);
+    }
+
+    @Override
+    public Trainee authenticateTrainee(String username, String password) {
+        Optional<Trainee> optionalTrainee = traineeRepository.findByUsernameAndPassword(username, password);
+        if(optionalTrainee.isPresent()) {
+            return optionalTrainee.get();
+        } else {
+            throw new RuntimeException("User not found");
+        }
     }
 }

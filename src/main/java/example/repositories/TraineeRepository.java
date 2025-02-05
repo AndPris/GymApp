@@ -12,5 +12,7 @@ public interface TraineeRepository {
 
     Optional<Trainee> findByUsername(String username);
 
+    Optional<Trainee> findByUsernameAndPassword(String username, String password);
+
     boolean deleteByUsername(String username);
 }

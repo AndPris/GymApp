@@ -22,4 +22,6 @@ public interface TraineeService {
     boolean existsTrainee(Long id);
 
     void changeTraineePassword(String username, String oldPassword, String newPassword);
+
+    Trainee authenticateTrainee(String username, String password);
 }

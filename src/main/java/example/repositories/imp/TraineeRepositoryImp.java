@@ -58,6 +58,17 @@ public class TraineeRepositoryImp implements TraineeRepository {
     }
 
     @Override
+    public Optional<Trainee> findByUsernameAndPassword(String username, String password) {
+        Query query = entityManager.createQuery("select t from Trainee t where t.username=:username and t.password=:password");
+        query.setParameter("username", username);
+        query.setParameter("password", password);
+
+        List<Trainee> result = query.getResultList();
+        logger.info("Find trainee with username " + username + " and password " + password + ". Result: " + result);
+        return Optional.ofNullable(result.isEmpty() ? null : result.get(0));
+    }
+
+    @Override
     public List<Trainee> findAll() {
         logger.info("Find all trainees");
         return entityManager.createQuery("select t from Trainee t")
