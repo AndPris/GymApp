@@ -15,5 +15,7 @@ public interface TraineeService {
 
     Optional<Trainee> getTraineeById(Long id);
 
+    Optional<Trainee> getTraineeByUsername(String username);
+
     boolean existsTrainee(Long id);
 }

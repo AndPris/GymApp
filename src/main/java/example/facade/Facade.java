@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
+import java.util.Optional;
 import java.util.Scanner;
 
 @Component
@@ -53,7 +54,7 @@ public class Facade {
 
         while (run) {
             menu.displayMenu();
-            userInput = inputHandler.getInputInRange(1, 13);
+            userInput = inputHandler.getInputInRange(1, 14);
             logger.info("User selected option '{}'", userInput);
             handleUserInput(userInput);
         }
@@ -96,6 +97,9 @@ public class Facade {
                 break;
             case 12:
                 selectTraining();
+                break;
+            case 13:
+                selectTraineeByUsername();
                 break;
             default:
                 run = false;
@@ -299,5 +303,17 @@ public class Facade {
         }
 
         return trainingId;
+    }
+
+    private void selectTraineeByUsername() {
+        System.out.print("Trainee username: ");
+        String username = inputHandler.getLine(false);
+        Optional<Trainee> optionalTrainee = traineeService.getTraineeByUsername(username);
+
+        if(optionalTrainee.isPresent()) {
+            System.out.println(optionalTrainee.get());
+        } else {
+            System.out.println("There is no trainee with such username");
+        }
     }
 }

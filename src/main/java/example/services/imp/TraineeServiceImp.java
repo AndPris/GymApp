@@ -66,6 +66,11 @@ public class TraineeServiceImp implements TraineeService {
     }
 
     @Override
+    public Optional<Trainee> getTraineeByUsername(String username) {
+        return traineeRepository.findByUsername(username);
+    }
+
+    @Override
     public boolean existsTrainee(Long id) {
         return traineeDAO.existsById(id);
     }
