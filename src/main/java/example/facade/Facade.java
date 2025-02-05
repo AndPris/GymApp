@@ -54,7 +54,7 @@ public class Facade {
 
         while (run) {
             menu.displayMenu();
-            userInput = inputHandler.getInputInRange(1, 15);
+            userInput = inputHandler.getInputInRange(1, 16);
             logger.info("User selected option '{}'", userInput);
             handleUserInput(userInput);
         }
@@ -103,6 +103,9 @@ public class Facade {
                 break;
             case 14:
                 deleteTraineeByUsername();
+                break;
+            case 15:
+                changeTraineePassword();
                 break;
             default:
                 run = false;
@@ -330,6 +333,23 @@ public class Facade {
             System.out.println("Trainee successfully deleted");
         } else {
             System.out.println("There is no trainee with such username");
+        }
+    }
+
+
+    private void changeTraineePassword() {
+        System.out.print("Trainee username: ");
+        String username = inputHandler.getLine(false);
+        System.out.print("Old password: ");
+        String oldPassword = inputHandler.getLine(false);
+        System.out.print("New password: ");
+        String newPassword = inputHandler.getLine(false);
+
+        try {
+            traineeService.changeTraineePassword(username, oldPassword, newPassword);
+            System.out.println("Password successfully changed");
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
         }
     }
 }

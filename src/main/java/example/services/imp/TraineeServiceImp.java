@@ -79,4 +79,20 @@ public class TraineeServiceImp implements TraineeService {
     public boolean existsTrainee(Long id) {
         return traineeDAO.existsById(id);
     }
+
+    @Override
+    public void changeTraineePassword(String username, String oldPassword, String newPassword) {
+        Optional<Trainee> optionalTrainee = traineeRepository.findByUsername(username);
+        if(!optionalTrainee.isPresent()) {
+            throw new RuntimeException("There's no trainee with such username");
+        }
+
+        Trainee trainee = optionalTrainee.get();
+        if(!trainee.getPassword().equals(oldPassword)) {
+            throw new RuntimeException("Wrong password");
+        }
+
+        trainee.setPassword(newPassword);
+        traineeRepository.save(trainee);
+    }
 }

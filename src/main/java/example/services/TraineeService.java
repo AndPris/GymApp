@@ -20,4 +20,6 @@ public interface TraineeService {
     Optional<Trainee> getTraineeByUsername(String username);
 
     boolean existsTrainee(Long id);
+
+    void changeTraineePassword(String username, String oldPassword, String newPassword);
 }
