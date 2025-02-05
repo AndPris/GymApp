@@ -62,7 +62,7 @@ public class TraineeServiceImp implements TraineeService {
 
     @Override
     public Iterable<Trainee> getAllTrainees() {
-        return traineeDAO.findAll();
+        return traineeRepository.findAll();
     }
 
     @Override

@@ -1,6 +1,5 @@
 package example.repositories.imp;
 
-import example.daos.TraineeDAO;
 import example.entities.Trainee;
 import example.repositories.TraineeRepository;
 import jakarta.persistence.EntityManager;
@@ -29,7 +28,7 @@ public class TraineeRepositoryImp implements TraineeRepository {
         try {
             transaction.begin();
 
-            if(trainee.getId() == null) {
+            if (trainee.getId() == null) {
                 entityManager.persist(trainee);
                 logger.info("Creating a new trainee: " + trainee);
             } else {
@@ -56,6 +55,13 @@ public class TraineeRepositoryImp implements TraineeRepository {
         List<Trainee> result = query.getResultList();
         logger.info("Find trainee with username " + username + ". Result: " + result);
         return Optional.ofNullable(result.isEmpty() ? null : result.get(0));
+    }
+
+    @Override
+    public List<Trainee> findAll() {
+        logger.info("Find all trainees");
+        return entityManager.createQuery("select t from Trainee t")
+                .getResultList();
     }
 
     @Override
