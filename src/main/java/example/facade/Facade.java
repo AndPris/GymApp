@@ -141,11 +141,11 @@ public class Facade {
 
         switch (choice) {
             case 1:
-                return TrainingType.FITNESS;
+                return new TrainingType("Fitness");
             case 2:
-                return TrainingType.PILATES;
+                return new TrainingType("Pilates");
             default:
-                return TrainingType.ATHLETICS;
+                return new TrainingType("Athletics");
         }
     }
 
@@ -182,7 +182,8 @@ public class Facade {
         System.out.print("Training duration: ");
         float trainingDuration = inputHandler.getFloat();
 
-        return new Training(traineeId, trainerId, trainingName, trainingType, trainingDate, trainingDuration);
+        return new Training();
+//        return new Training(traineeId, trainerId, trainingName, trainingType, trainingDate, trainingDuration);
     }
 
 

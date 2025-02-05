@@ -1,15 +1,30 @@
 package example.entities;
 
+import jakarta.persistence.*;
 import lombok.Data;
 
 @Data
+@Entity
+@Inheritance(strategy = InheritanceType.JOINED)
 public abstract class User {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+
+    @Column(nullable = false)
     private String firstName;
+
+    @Column(nullable = false)
     private String lastName;
+
+    @Column(nullable = false)
     private String username;
+
+    @Column(nullable = false)
     private String password;
-    private boolean active;
+
+    @Column(nullable = false)
+    private Boolean active;
 
     public User(String firstName, String lastName) {
         this.firstName = firstName;
@@ -18,6 +33,10 @@ public abstract class User {
     }
 
     public User() {
+    }
+
+    public Boolean isActive() {
+        return active;
     }
 
     @Override

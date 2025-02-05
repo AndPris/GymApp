@@ -104,7 +104,7 @@ public class TrainerServiceTests {
     @Test
     public void updateTrainerValidParamsTest() {
         testTrainer.setFirstName("first");
-        testTrainer.setSpecialization(TrainingType.FITNESS);
+        testTrainer.setSpecialization(new TrainingType("Fitness"));
         trainerService.createTrainer(testTrainer);
 
         Trainer newTrainer = new Trainer();
@@ -119,7 +119,7 @@ public class TrainerServiceTests {
         assertEquals(1L, updatedTrainer.getId());
         assertEquals("update", updatedTrainer.getFirstName());
         assertEquals("test", updatedTrainer.getLastName());
-        assertEquals(TrainingType.FITNESS, updatedTrainer.getSpecialization());
+        assertEquals("Fitness", updatedTrainer.getSpecialization().getName());
         assertFalse(updatedTrainer.isActive());
     }
 

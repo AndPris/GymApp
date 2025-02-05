@@ -29,18 +29,18 @@ public abstract class Storage<T> {
     }
 
 
-    @PostConstruct
-    public void init() throws IOException {
-        File file = new File(filePath);
-        if (!file.exists()) {
-            data = new HashMap<>();
-            return;
-        }
-
-        ObjectMapper mapper = new ObjectMapper();
-        data = new HashMap<>(mapper.readValue(file, typeReference));
-        logger.info("Read data from {}", filePath);
-    }
+//    @PostConstruct
+//    public void init() throws IOException {
+//        File file = new File(filePath);
+//        if (!file.exists()) {
+//            data = new HashMap<>();
+//            return;
+//        }
+//
+//        ObjectMapper mapper = new ObjectMapper();
+//        data = new HashMap<>(mapper.readValue(file, typeReference));
+//        logger.info("Read data from {}", filePath);
+//    }
 
     @PreDestroy
     public void destroy() throws IOException {
