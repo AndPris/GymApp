@@ -25,7 +25,9 @@ public class Menu {
 
         System.out.println("\t13 -> Select a trainee by username\n");
 
-        System.out.println("\t14 -> Exit\n");
+        System.out.println("\t14 -> Delete a trainee by username\n");
+
+        System.out.println("\t15 -> Exit\n");
 
         System.out.print("->");
     }

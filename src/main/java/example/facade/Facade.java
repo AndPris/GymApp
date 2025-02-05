@@ -54,7 +54,7 @@ public class Facade {
 
         while (run) {
             menu.displayMenu();
-            userInput = inputHandler.getInputInRange(1, 14);
+            userInput = inputHandler.getInputInRange(1, 15);
             logger.info("User selected option '{}'", userInput);
             handleUserInput(userInput);
         }
@@ -100,6 +100,9 @@ public class Facade {
                 break;
             case 13:
                 selectTraineeByUsername();
+                break;
+            case 14:
+                deleteTraineeByUsername();
                 break;
             default:
                 run = false;
@@ -305,6 +308,7 @@ public class Facade {
         return trainingId;
     }
 
+
     private void selectTraineeByUsername() {
         System.out.print("Trainee username: ");
         String username = inputHandler.getLine(false);
@@ -312,6 +316,18 @@ public class Facade {
 
         if(optionalTrainee.isPresent()) {
             System.out.println(optionalTrainee.get());
+        } else {
+            System.out.println("There is no trainee with such username");
+        }
+    }
+
+
+    private void deleteTraineeByUsername() {
+        System.out.print("Trainee username: ");
+        String username = inputHandler.getLine(false);
+
+        if(traineeService.deleteTraineeByUsername(username)) {
+            System.out.println("Trainee successfully deleted");
         } else {
             System.out.println("There is no trainee with such username");
         }

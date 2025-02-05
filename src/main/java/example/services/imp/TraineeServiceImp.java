@@ -56,6 +56,11 @@ public class TraineeServiceImp implements TraineeService {
     }
 
     @Override
+    public boolean deleteTraineeByUsername(String username) {
+        return traineeRepository.deleteByUsername(username);
+    }
+
+    @Override
     public Iterable<Trainee> getAllTrainees() {
         return traineeDAO.findAll();
     }

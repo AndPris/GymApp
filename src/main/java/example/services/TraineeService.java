@@ -11,6 +11,8 @@ public interface TraineeService {
 
     boolean deleteTraineeById(Long id);
 
+    boolean deleteTraineeByUsername(String username);
+
     Iterable<Trainee> getAllTrainees();
 
     Optional<Trainee> getTraineeById(Long id);

@@ -9,5 +9,5 @@ public interface TraineeRepository {
 
     Optional<Trainee> findByUsername(String username);
 
-    void deleteByUsername(String username);
+    boolean deleteByUsername(String username);
 }

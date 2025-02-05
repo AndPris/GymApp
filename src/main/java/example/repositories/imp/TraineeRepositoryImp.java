@@ -1,10 +1,13 @@
 package example.repositories.imp;
 
+import example.daos.TraineeDAO;
 import example.entities.Trainee;
 import example.repositories.TraineeRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.Query;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -12,6 +15,7 @@ import java.util.Optional;
 
 @Repository
 public class TraineeRepositoryImp implements TraineeRepository {
+    private static final Logger logger = LogManager.getLogger(TraineeRepositoryImp.class);
     private final EntityManager entityManager;
 
     public TraineeRepositoryImp(EntityManager entityManager) {
@@ -27,14 +31,18 @@ public class TraineeRepositoryImp implements TraineeRepository {
 
             if(trainee.getId() == null) {
                 entityManager.persist(trainee);
+                logger.info("Creating a new trainee: " + trainee);
             } else {
                 entityManager.merge(trainee);
+                logger.info("Updating a trainee " + trainee);
             }
 
             transaction.commit();
+            logger.info("Operation successfully performed");
             return trainee;
         } catch (Exception e) {
             transaction.rollback();
+            logger.error(e.getMessage());
         }
 
         return null;
@@ -46,11 +54,27 @@ public class TraineeRepositoryImp implements TraineeRepository {
         query.setParameter("username", username);
 
         List<Trainee> result = query.getResultList();
+        logger.info("Find trainee with username " + username + ". Result: " + result);
         return Optional.ofNullable(result.isEmpty() ? null : result.get(0));
     }
 
     @Override
-    public void deleteByUsername(String username) {
+    public boolean deleteByUsername(String username) {
+        EntityTransaction transaction = entityManager.getTransaction();
 
+        try {
+            transaction.begin();
+            logger.info("Deleting a trainee with username " + username);
+            int result = entityManager.createQuery("delete from Trainee t where t.username=:username")
+                    .setParameter("username", username)
+                    .executeUpdate();
+
+            transaction.commit();
+            logger.info("Result: " + result);
+            return result != 0;
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return false;
+        }
     }
 }
