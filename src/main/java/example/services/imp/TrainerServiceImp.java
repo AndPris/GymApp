@@ -71,6 +71,13 @@ public class TrainerServiceImp implements TrainerService {
     }
 
     @Override
+    public void changeTrainerPassword(String username, String oldPassword, String newPassword) {
+        Trainer trainer = authenticateTrainer(username, oldPassword);
+        trainer.setPassword(newPassword);
+        trainerRepository.save(trainer);
+    }
+
+    @Override
     public Trainer authenticateTrainer(String username, String password) {
         Optional<Trainer> optionalTrainer = trainerRepository.findByUsernameAndPassword(username, password);
         if(optionalTrainer.isPresent()) {

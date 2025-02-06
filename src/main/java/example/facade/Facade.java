@@ -59,7 +59,7 @@ public class Facade {
 
         while (run) {
             menu.displayMenu();
-            userInput = inputHandler.getInputInRange(1, 18);
+            userInput = inputHandler.getInputInRange(1, 19);
             logger.info("User selected option '{}'", userInput);
             handleUserInput(userInput);
         }
@@ -116,6 +116,9 @@ public class Facade {
                 changeTraineePassword();
                 break;
             case 17:
+                changeTrainerPassword();
+                break;
+            case 18:
                 toggleTraineeIsActiveStatus();
                 break;
             default:
@@ -379,6 +382,24 @@ public class Facade {
             System.out.println(e.getMessage());
         }
     }
+
+
+    private void changeTrainerPassword() {
+        System.out.print("Trainer username: ");
+        String username = inputHandler.getLine(false);
+        System.out.print("Old password: ");
+        String oldPassword = inputHandler.getLine(false);
+        System.out.print("New password: ");
+        String newPassword = inputHandler.getLine(false);
+
+        try {
+            trainerService.changeTrainerPassword(username, oldPassword, newPassword);
+            System.out.println("Password successfully changed");
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
 
     private void toggleTraineeIsActiveStatus() {
         System.out.print("Trainee id: ");

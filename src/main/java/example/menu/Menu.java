@@ -31,11 +31,12 @@ public class Menu {
 
         System.out.println("\t15 -> Delete a trainee by username\n");
 
-        System.out.println("\t16 -> Change trainee's password\n");
+        System.out.println("\t16 -> Change trainee's password");
+        System.out.println("\t17 -> Change trainer's password\n");
 
-        System.out.println("\t17 -> Change trainee's isActive status\n");
+        System.out.println("\t18 -> Change trainee's isActive status\n");
 
-        System.out.println("\t18 -> Exit\n");
+        System.out.println("\t19 -> Exit\n");
 
         System.out.print("->");
     }
