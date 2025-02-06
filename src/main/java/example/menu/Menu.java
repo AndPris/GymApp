@@ -1,6 +1,9 @@
 package example.menu;
 
+import example.entities.TrainingType;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 @Component
 public class Menu {
@@ -36,11 +39,11 @@ public class Menu {
         System.out.print("->");
     }
 
-    public void displayTrainingTypeMenu() {
+    public void displayTrainingTypeMenu(List<TrainingType> trainingTypes) {
         System.out.println("Training type:");
 
-        System.out.println("\t1 -> Fitness");
-        System.out.println("\t2 -> Pilates");
-        System.out.println("\t3 -> Athletics");
+        for(TrainingType trainingType : trainingTypes) {
+            System.out.println("\t" + trainingType.getId() + " -> " + trainingType.getName());
+        }
     }
 }

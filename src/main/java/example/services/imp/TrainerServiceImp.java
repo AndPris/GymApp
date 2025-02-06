@@ -2,6 +2,7 @@ package example.services.imp;
 
 import example.daos.TrainerDAO;
 import example.entities.Trainer;
+import example.repositories.TrainerRepository;
 import example.services.TrainerService;
 import example.utils.password.PasswordGenerator;
 import example.utils.username.UsernameGenerator;
@@ -13,6 +14,10 @@ import java.util.Optional;
 
 @Service
 public class TrainerServiceImp implements TrainerService {
+    @Autowired
+    @Setter
+    private TrainerRepository trainerRepository;
+
     @Autowired
     @Setter
     private TrainerDAO trainerDAO;
@@ -37,17 +42,17 @@ public class TrainerServiceImp implements TrainerService {
 
         trainer.setPassword(passwordGenerator.generatePassword());
         trainer.setUsername(usernameGenerator.generateUsername(trainer));
-        return trainerDAO.save(trainer);
+        return trainerRepository.save(trainer);
     }
 
     @Override
     public Trainer updateTrainer(Long id, Trainer trainer) {
-        return trainerDAO.update(id, trainer);
+        return trainerRepository.save(trainer);
     }
 
     @Override
     public Iterable<Trainer> getAllTrainers() {
-        return trainerDAO.findAll();
+        return trainerRepository.findAll();
     }
 
     @Override

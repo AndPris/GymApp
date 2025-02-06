@@ -8,6 +8,7 @@ import example.menu.Menu;
 import example.services.TraineeService;
 import example.services.TrainerService;
 import example.services.TrainingService;
+import example.services.TrainingTypeService;
 import example.utils.input.InputHandler;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -15,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
 
@@ -25,16 +27,19 @@ public class Facade {
     private final TraineeService traineeService;
     private final TrainerService trainerService;
     private final TrainingService trainingService;
+    private final TrainingTypeService trainingTypeService;
 
     private Menu menu;
     private InputHandler inputHandler;
 
     private boolean run;
 
-    public Facade(TraineeService traineeService, TrainerService trainerService, TrainingService trainingService) {
+    public Facade(TraineeService traineeService, TrainerService trainerService,
+                  TrainingService trainingService, TrainingTypeService trainingTypeService) {
         this.traineeService = traineeService;
         this.trainerService = trainerService;
         this.trainingService = trainingService;
+        this.trainingTypeService = trainingTypeService;
         this.run = true;
     }
 
@@ -145,20 +150,24 @@ public class Facade {
         System.out.print("Last name: ");
         String lastName = inputHandler.getLine(allowEmpty);
 
-        return new Trainer(firstName, lastName, getTrainingType());
+        try {
+            return new Trainer(firstName, lastName, getTrainingType());
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return null;
+        }
     }
 
     private TrainingType getTrainingType() {
-        menu.displayTrainingTypeMenu();
-        int choice = inputHandler.getInputInRange(1, 3);
+        List<TrainingType> trainingTypes = trainingTypeService.findAll();
+        menu.displayTrainingTypeMenu(trainingTypes);
 
-        switch (choice) {
-            case 1:
-                return new TrainingType("Fitness");
-            case 2:
-                return new TrainingType("Pilates");
-            default:
-                return new TrainingType("Athletics");
+        int choice = inputHandler.getInputInRange(1, trainingTypes.size());
+        Optional<TrainingType> optionalTrainingType = trainingTypeService.findById((long) choice);
+        if (optionalTrainingType.isPresent()) {
+            return optionalTrainingType.get();
+        } else {
+            throw new RuntimeException("There's no training type with id " + choice);
         }
     }
 
@@ -320,7 +329,7 @@ public class Facade {
         String username = inputHandler.getLine(false);
         Optional<Trainee> optionalTrainee = traineeService.getTraineeByUsername(username);
 
-        if(optionalTrainee.isPresent()) {
+        if (optionalTrainee.isPresent()) {
             System.out.println(optionalTrainee.get());
         } else {
             System.out.println("There is no trainee with such username");
@@ -332,7 +341,7 @@ public class Facade {
         System.out.print("Trainee username: ");
         String username = inputHandler.getLine(false);
 
-        if(traineeService.deleteTraineeByUsername(username)) {
+        if (traineeService.deleteTraineeByUsername(username)) {
             System.out.println("Trainee successfully deleted");
         } else {
             System.out.println("There is no trainee with such username");

@@ -4,6 +4,7 @@ import example.entities.Trainee;
 import example.repositories.TraineeRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
+import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.Query;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -15,11 +16,9 @@ import java.util.Optional;
 @Repository
 public class TraineeRepositoryImp implements TraineeRepository {
     private static final Logger logger = LogManager.getLogger(TraineeRepositoryImp.class);
-    private final EntityManager entityManager;
 
-    public TraineeRepositoryImp(EntityManager entityManager) {
-        this.entityManager = entityManager;
-    }
+    @PersistenceContext
+    private EntityManager entityManager;
 
     @Override
     public Trainee save(Trainee trainee) {
@@ -30,10 +29,10 @@ public class TraineeRepositoryImp implements TraineeRepository {
 
             if (trainee.getId() == null) {
                 entityManager.persist(trainee);
-                logger.info("Creating a new trainee: " + trainee);
+                logger.info("Creating a new trainee: {}", trainee);
             } else {
                 entityManager.merge(trainee);
-                logger.info("Updating a trainee " + trainee);
+                logger.info("Updating a trainee {}", trainee);
             }
 
             transaction.commit();
