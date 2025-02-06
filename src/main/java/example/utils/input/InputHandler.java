@@ -52,22 +52,22 @@ public class InputHandler {
         Scanner scanner = new Scanner(System.in);
 
         while (!scanner.hasNextLong()) {
-            System.out.println("Please enter an integer");
+            System.out.println("Please enter a long number");
             scanner.next();
         }
 
         return scanner.nextLong();
     }
 
-    public float getFloat() {
+    public Integer getInteger() {
         Scanner scanner = new Scanner(System.in);
 
-        while (!scanner.hasNextFloat()) {
-            System.out.println("Please enter a float number");
+        while (!scanner.hasNextInt()) {
+            System.out.println("Please enter an integer number");
             scanner.next();
         }
 
-        return scanner.nextFloat();
+        return scanner.nextInt();
     }
 
     public String getLine(boolean allowEmpty) {

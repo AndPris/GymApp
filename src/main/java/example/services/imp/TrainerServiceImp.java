@@ -57,7 +57,7 @@ public class TrainerServiceImp implements TrainerService {
 
     @Override
     public Optional<Trainer> getTrainerById(Long id) {
-        return trainerDAO.findById(id);
+        return trainerRepository.findById(id);
     }
 
     @Override
@@ -67,7 +67,8 @@ public class TrainerServiceImp implements TrainerService {
 
     @Override
     public boolean existsTrainer(Long id) {
-        return trainerDAO.existsById(id);
+        Optional<Trainer> trainer = trainerRepository.findById(id);
+        return trainer.isPresent();
     }
 
     @Override

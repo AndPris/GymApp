@@ -18,7 +18,6 @@ import org.springframework.stereotype.Component;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-import java.util.Scanner;
 
 @Component
 public class Facade {
@@ -190,31 +189,31 @@ public class Facade {
     }
 
     private Training getTrainingData() {
-        Scanner scanner = new Scanner(System.in);
-
         System.out.print("Trainee id: ");
         Long traineeId = inputHandler.getLong();
-        if (!traineeService.existsTrainee(traineeId)) {
+        Optional<Trainee> optionalTrainee = traineeService.getTraineeById(traineeId);
+        if (!optionalTrainee.isPresent()) {
             System.out.println("No such trainee");
             return null;
         }
 
         System.out.print("Trainer id: ");
         Long trainerId = inputHandler.getLong();
-        if (!trainerService.existsTrainer(trainerId)) {
+        Optional<Trainer> optionalTrainer = trainerService.getTrainerById(trainerId);
+        if (!optionalTrainer.isPresent()) {
             System.out.println("No such trainer");
             return null;
         }
 
         System.out.print("Training name: ");
-        String trainingName = scanner.nextLine();
+        String trainingName = inputHandler.getLine(false);
         TrainingType trainingType = getTrainingType();
         Date trainingDate = inputHandler.getDate("Training date (dd-MM-yyyy): ");
         System.out.print("Training duration: ");
-        float trainingDuration = inputHandler.getFloat();
+        Integer trainingDuration = inputHandler.getInteger();
 
-        return new Training();
-//        return new Training(traineeId, trainerId, trainingName, trainingType, trainingDate, trainingDuration);
+        return new Training(optionalTrainee.get(), optionalTrainer.get(), trainingName,
+                trainingType, trainingDate, trainingDuration);
     }
 
 
