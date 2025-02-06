@@ -7,6 +7,7 @@ import example.services.TraineeService;
 import example.utils.password.PasswordGenerator;
 import example.utils.username.UsernameGenerator;
 import lombok.Setter;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -46,8 +47,34 @@ public class TraineeServiceImp implements TraineeService {
     }
 
     @Override
-    public Trainee updateTrainee(Trainee trainee) {
-        return traineeRepository.save(trainee);
+    public Trainee updateTrainee(Trainee updates) {
+        validateTraineeForUpdate(updates);
+
+        Trainee existing = traineeRepository.findById(updates.getId()).get();
+        updateTraineeFields(existing, updates);
+
+        return traineeRepository.save(existing);
+    }
+
+    private void validateTraineeForUpdate(Trainee trainee) {
+        Long traineeId = trainee.getId();
+        if(traineeId == null) {
+            throw new IllegalArgumentException("Cannot update a trainee: id is null");
+        }
+
+        if(!traineeRepository.findById(traineeId).isPresent()) {
+            throw new IllegalArgumentException("Cannot update a trainee: there is no trainee with id " + traineeId);
+        }
+    }
+
+    private void updateTraineeFields(Trainee existing, Trainee updates) {
+        Optional.ofNullable(updates.getFirstName()).filter(StringUtils::isNoneBlank).ifPresent(existing::setFirstName);
+        Optional.ofNullable(updates.getLastName()).filter(StringUtils::isNoneBlank).ifPresent(existing::setLastName);
+        Optional.ofNullable(updates.getUsername()).filter(StringUtils::isNoneBlank).ifPresent(existing::setUsername);
+        Optional.ofNullable(updates.getPassword()).filter(StringUtils::isNoneBlank).ifPresent(existing::setPassword);
+        Optional.ofNullable(updates.getAddress()).filter(StringUtils::isNoneBlank).ifPresent(existing::setAddress);
+        Optional.ofNullable(updates.getDateOfBirth()).ifPresent(existing::setDateOfBirth);
+        Optional.ofNullable(updates.isActive()).ifPresent(existing::setActive);
     }
 
     @Override
