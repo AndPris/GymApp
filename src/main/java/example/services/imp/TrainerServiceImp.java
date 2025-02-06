@@ -61,6 +61,11 @@ public class TrainerServiceImp implements TrainerService {
     }
 
     @Override
+    public Optional<Trainer> getTrainerByUsername(String username) {
+        return trainerRepository.findByUsername(username);
+    }
+
+    @Override
     public boolean existsTrainer(Long id) {
         return trainerDAO.existsById(id);
     }

@@ -13,6 +13,8 @@ public interface TrainerService {
 
     Optional<Trainer> getTrainerById(Long id);
 
+    Optional<Trainer> getTrainerByUsername(String username);
+
     boolean existsTrainer(Long id);
 
     Trainer authenticateTrainer(String username, String password);

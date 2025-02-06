@@ -56,13 +56,23 @@ public class TrainerRepositoryImp implements TrainerRepository {
     }
 
     @Override
+    public Optional<Trainer> findByUsername(String username) {
+        Query query = entityManager.createQuery("select t from Trainer t where t.username=:username");
+        query.setParameter("username", username);
+
+        List<Trainer> result = query.getResultList();
+        logger.info("Find trainer with username {}. Result: {}", username, result);
+        return Optional.ofNullable(result.isEmpty() ? null : result.get(0));
+    }
+
+    @Override
     public Optional<Trainer> findByUsernameAndPassword(String username, String password) {
         Query query = entityManager.createQuery("select t from Trainer t where t.username=:username and t.password=:password");
         query.setParameter("username", username);
         query.setParameter("password", password);
 
         List<Trainer> result = query.getResultList();
-        logger.info("Find trainee with username {} and password {}. Result: {}", username, password, result);
+        logger.info("Find trainer with username {} and password {}. Result: {}", username, password, result);
         return Optional.ofNullable(result.isEmpty() ? null : result.get(0));
     }
 }

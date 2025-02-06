@@ -59,7 +59,7 @@ public class Facade {
 
         while (run) {
             menu.displayMenu();
-            userInput = inputHandler.getInputInRange(1, 17);
+            userInput = inputHandler.getInputInRange(1, 18);
             logger.info("User selected option '{}'", userInput);
             handleUserInput(userInput);
         }
@@ -107,12 +107,15 @@ public class Facade {
                 selectTraineeByUsername();
                 break;
             case 14:
-                deleteTraineeByUsername();
+                selectTrainerByUsername();
                 break;
             case 15:
-                changeTraineePassword();
+                deleteTraineeByUsername();
                 break;
             case 16:
+                changeTraineePassword();
+                break;
+            case 17:
                 toggleTraineeIsActiveStatus();
                 break;
             default:
@@ -333,6 +336,18 @@ public class Facade {
             System.out.println(optionalTrainee.get());
         } else {
             System.out.println("There is no trainee with such username");
+        }
+    }
+
+    private void selectTrainerByUsername() {
+        System.out.print("Trainer username: ");
+        String username = inputHandler.getLine(false);
+        Optional<Trainer> optionalTrainer = trainerService.getTrainerByUsername(username);
+
+        if (optionalTrainer.isPresent()) {
+            System.out.println(optionalTrainer.get());
+        } else {
+            System.out.println("There is no trainer with such username");
         }
     }
 

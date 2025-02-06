@@ -4,7 +4,6 @@ import example.entities.Trainee;
 import example.repositories.TraineeRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
-import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.Query;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -17,8 +16,11 @@ import java.util.Optional;
 public class TraineeRepositoryImp implements TraineeRepository {
     private static final Logger logger = LogManager.getLogger(TraineeRepositoryImp.class);
 
-    @PersistenceContext
-    private EntityManager entityManager;
+    private final EntityManager entityManager;
+
+    public TraineeRepositoryImp(EntityManager entityManager) {
+        this.entityManager = entityManager;
+    }
 
     @Override
     public Trainee save(Trainee trainee) {
@@ -97,7 +99,7 @@ public class TraineeRepositoryImp implements TraineeRepository {
     @Override
     public boolean toggleIsActiveStatus(Long id) {
         Trainee trainee = entityManager.find(Trainee.class, id);
-        if(trainee == null) {
+        if (trainee == null) {
             String message = "No trainee with such id";
             logger.error("toggleIsActiveStatus: {}", message);
             throw new IllegalArgumentException(message);

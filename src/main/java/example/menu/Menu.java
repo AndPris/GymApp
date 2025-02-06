@@ -26,15 +26,16 @@ public class Menu {
         System.out.println("\t11 -> Select a trainer");
         System.out.println("\t12 -> Select a training\n");
 
-        System.out.println("\t13 -> Select a trainee by username\n");
+        System.out.println("\t13 -> Select a trainee by username");
+        System.out.println("\t14 -> Select a trainer by username\n");
 
-        System.out.println("\t14 -> Delete a trainee by username\n");
+        System.out.println("\t15 -> Delete a trainee by username\n");
 
-        System.out.println("\t15 -> Change trainee's password\n");
+        System.out.println("\t16 -> Change trainee's password\n");
 
-        System.out.println("\t16 -> Change trainee's isActive status\n");
+        System.out.println("\t17 -> Change trainee's isActive status\n");
 
-        System.out.println("\t17 -> Exit\n");
+        System.out.println("\t18 -> Exit\n");
 
         System.out.print("->");
     }
