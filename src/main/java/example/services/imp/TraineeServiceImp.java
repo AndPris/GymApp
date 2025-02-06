@@ -99,6 +99,14 @@ public class TraineeServiceImp implements TraineeService {
 
     @Override
     public boolean toggleTraineeIsActiveStatus(Long id) {
-        return traineeRepository.toggleIsActiveStatus(id);
+        Optional<Trainee> optionalTrainee = traineeRepository.findById(id);
+        if (!optionalTrainee.isPresent()) {
+            throw new IllegalArgumentException("No trainee with such id: " + id);
+        }
+
+        Trainee trainee = optionalTrainee.get();
+        trainee.setActive(!trainee.isActive());
+        traineeRepository.save(trainee);
+        return trainee.isActive();
     }
 }

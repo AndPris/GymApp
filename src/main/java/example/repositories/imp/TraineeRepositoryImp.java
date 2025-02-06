@@ -49,6 +49,13 @@ public class TraineeRepositoryImp implements TraineeRepository {
     }
 
     @Override
+    public Optional<Trainee> findById(Long id) {
+        Trainee trainee = entityManager.find(Trainee.class, id);
+        logger.info("Find trainer by id: {}. Result: {}", id, trainee);
+        return Optional.ofNullable(trainee);
+    }
+
+    @Override
     public Optional<Trainee> findByUsername(String username) {
         Query query = entityManager.createQuery("select t from Trainee t where t.username=:username");
         query.setParameter("username", username);
@@ -96,18 +103,18 @@ public class TraineeRepositoryImp implements TraineeRepository {
         }
     }
 
-    @Override
-    public boolean toggleIsActiveStatus(Long id) {
-        Trainee trainee = entityManager.find(Trainee.class, id);
-        if (trainee == null) {
-            String message = "No trainee with such id";
-            logger.error("toggleIsActiveStatus: {}", message);
-            throw new IllegalArgumentException(message);
-        }
-
-        trainee.setActive(!trainee.isActive());
-        boolean isActive = trainee.isActive();
-        logger.info("Toggle isActive status of trainee with id {}. Current status: {}", id, isActive);
-        return isActive;
-    }
+//    @Override
+//    public boolean toggleIsActiveStatus(Long id) {
+//        Trainee trainee = entityManager.find(Trainee.class, id);
+//        if (trainee == null) {
+//            String message = "No trainee with such id";
+//            logger.error("toggleIsActiveStatus: {}", message);
+//            throw new IllegalArgumentException(message);
+//        }
+//
+//        trainee.setActive(!trainee.isActive());
+//        boolean isActive = trainee.isActive();
+//        logger.info("Toggle isActive status of trainee with id {}. Current status: {}", id, isActive);
+//        return isActive;
+//    }
 }

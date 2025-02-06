@@ -34,9 +34,10 @@ public class Menu {
         System.out.println("\t16 -> Change trainee's password");
         System.out.println("\t17 -> Change trainer's password\n");
 
-        System.out.println("\t18 -> Change trainee's isActive status\n");
+        System.out.println("\t18 -> Change trainee's isActive status");
+        System.out.println("\t19 -> Change trainer's isActive status\n");
 
-        System.out.println("\t19 -> Exit\n");
+        System.out.println("\t20 -> Exit\n");
 
         System.out.print("->");
     }

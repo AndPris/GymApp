@@ -20,4 +20,6 @@ public interface TrainerService {
     void changeTrainerPassword(String username, String oldPassword, String newPassword);
 
     Trainer authenticateTrainer(String username, String password);
+
+    boolean toggleTrainerIsActiveStatus(Long id);
 }

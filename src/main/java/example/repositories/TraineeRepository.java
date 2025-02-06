@@ -10,11 +10,13 @@ public interface TraineeRepository {
 
     List<Trainee> findAll();
 
+    Optional<Trainee> findById(Long id);
+
     Optional<Trainee> findByUsername(String username);
 
     Optional<Trainee> findByUsernameAndPassword(String username, String password);
 
     boolean deleteByUsername(String username);
 
-    boolean toggleIsActiveStatus(Long id);
+//    boolean toggleIsActiveStatus(Long id);
 }

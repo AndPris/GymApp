@@ -10,6 +10,8 @@ public interface TrainerRepository {
 
     List<Trainer> findAll();
 
+    Optional<Trainer> findById(Long id);
+
     Optional<Trainer> findByUsername(String username);
 
     Optional<Trainer> findByUsernameAndPassword(String username, String password);

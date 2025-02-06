@@ -59,7 +59,7 @@ public class Facade {
 
         while (run) {
             menu.displayMenu();
-            userInput = inputHandler.getInputInRange(1, 19);
+            userInput = inputHandler.getInputInRange(1, 20);
             logger.info("User selected option '{}'", userInput);
             handleUserInput(userInput);
         }
@@ -120,6 +120,9 @@ public class Facade {
                 break;
             case 18:
                 toggleTraineeIsActiveStatus();
+                break;
+            case 19:
+                toggleTrainerIsActiveStatus();
                 break;
             default:
                 run = false;
@@ -407,6 +410,18 @@ public class Facade {
 
         try {
             boolean result = traineeService.toggleTraineeIsActiveStatus(id);
+            System.out.println("Status was successfully changed. Current value: " + result);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    private void toggleTrainerIsActiveStatus() {
+        System.out.print("Trainer id: ");
+        Long id = inputHandler.getLong();
+
+        try {
+            boolean result = trainerService.toggleTrainerIsActiveStatus(id);
             System.out.println("Status was successfully changed. Current value: " + result);
         } catch (Exception e) {
             System.out.println(e.getMessage());

@@ -86,4 +86,17 @@ public class TrainerServiceImp implements TrainerService {
             throw new RuntimeException("Trainer not found");
         }
     }
+
+    @Override
+    public boolean toggleTrainerIsActiveStatus(Long id) {
+        Optional<Trainer> optionalTrainer = trainerRepository.findById(id);
+        if (!optionalTrainer.isPresent()) {
+            throw new IllegalArgumentException("No trainer with such id: " + id);
+        }
+
+        Trainer trainer = optionalTrainer.get();
+        trainer.setActive(!trainer.isActive());
+        trainerRepository.save(trainer);
+        return trainer.isActive();
+    }
 }

@@ -56,6 +56,13 @@ public class TrainerRepositoryImp implements TrainerRepository {
     }
 
     @Override
+    public Optional<Trainer> findById(Long id) {
+        Trainer trainer = entityManager.find(Trainer.class, id);
+        logger.info("Find trainer by id: {}. Result: {}", id, trainer);
+        return Optional.ofNullable(trainer);
+    }
+
+    @Override
     public Optional<Trainer> findByUsername(String username) {
         Query query = entityManager.createQuery("select t from Trainer t where t.username=:username");
         query.setParameter("username", username);
