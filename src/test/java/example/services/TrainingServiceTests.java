@@ -31,7 +31,7 @@ public class TrainingServiceTests {
         trainingDAO.setIdGenerator(idGenerator);
         trainingDAO.setTrainingStorage(storage);
 
-        trainingService = new TrainingServiceImp();
+//        trainingService = new TrainingServiceImp();
         trainingService.setTrainingDAO(trainingDAO);
         testTraining = new Training();
     }

@@ -11,6 +11,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 public class InputHandlerTests {
     private InputStream originalInputStream;
@@ -44,11 +45,19 @@ public class InputHandlerTests {
     }
 
     @Test
-    public void getFloatTest() {
-        String input = "test\n3,14\n";
+    public void getIntegerEmptyNotAllowedTest() {
+        String input = " \ntest\n5\n";
         System.setIn(new ByteArrayInputStream(input.getBytes()));
-        Float result = inputHandler.getFloat();
-        assertEquals(3.14f, result);
+        Integer result = inputHandler.getInteger(false);
+        assertEquals(5, result);
+    }
+
+    @Test
+    public void getIntegerEmptyAllowedTest() {
+        String input = "test\n \n";
+        System.setIn(new ByteArrayInputStream(input.getBytes()));
+        Integer result = inputHandler.getInteger(true);
+        assertNull(result);
     }
 
     @Test
@@ -60,19 +69,35 @@ public class InputHandlerTests {
     }
 
     @Test
-    public void getInputInRangeTest() {
-        String input = "test\n-1\n10\n5\n";
+    public void getInputInRangeEmptyNotAllowedTest() {
+        String input = " \ntest\n-1\n10\n5\n";
         System.setIn(new ByteArrayInputStream(input.getBytes()));
-        int result = inputHandler.getInputInRange(1, 7);
+        Integer result = inputHandler.getInputInRange(1, 7, false);
         assertEquals(5, result);
     }
 
     @Test
-    public void getDateTest() throws ParseException {
-        SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");
-        String input = "test\n10-10-1010\n";
+    public void getInputInRangeEmptyAllowedTest() {
+        String input = "test\n\n";
         System.setIn(new ByteArrayInputStream(input.getBytes()));
-        Date result = inputHandler.getDate("test");
+        Integer result = inputHandler.getInputInRange(1, 7, true);
+        assertNull(result);
+    }
+
+    @Test
+    public void getDateEmptyNotAllowedTest() throws ParseException {
+        SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");
+        String input = " \ntest\n10-10-1010\n";
+        System.setIn(new ByteArrayInputStream(input.getBytes()));
+        Date result = inputHandler.getDate("test", false);
         assertEquals(format.parse("10-10-1010"), result);
+    }
+
+    @Test
+    public void getDateEmptyAllowedTest() {
+        String input = "test\n\n";
+        System.setIn(new ByteArrayInputStream(input.getBytes()));
+        Date result = inputHandler.getDate("test", true);
+        assertNull(result);
     }
 }

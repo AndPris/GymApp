@@ -38,8 +38,8 @@ public class TraineeServiceTests {
 
         Storage<Trainer> trainerStorage = new TrainerStorage("t");
         trainerStorage.init();
-        usernameGenerator.setTrainerStorage(trainerStorage);
-        usernameGenerator.setTraineeStorage(storage);
+//        usernameGenerator.setTrainerStorage(trainerStorage);
+//        usernameGenerator.setTraineeStorage(storage);
 
         traineeDAO.setIdGenerator(idGenerator);
         traineeDAO.setTraineeStorage(storage);

@@ -58,7 +58,7 @@ public class Facade {
 
         while (run) {
             menu.displayMenu();
-            userInput = inputHandler.getInputInRange(1, 20);
+            userInput = inputHandler.getInputInRange(1, 20, false);
             logger.info("User selected option '{}'", userInput);
             handleUserInput(userInput);
         }
@@ -143,7 +143,7 @@ public class Facade {
         System.out.print("Address: ");
         String address = inputHandler.getLine(allowEmpty);
 
-        return new Trainee(firstName, lastName, address, inputHandler.getDate("Birthday (dd-MM-yyyy): "));
+        return new Trainee(firstName, lastName, address, inputHandler.getDate("Birthday (dd-MM-yyyy): ", allowEmpty));
     }
 
 
@@ -159,18 +159,22 @@ public class Facade {
         String lastName = inputHandler.getLine(allowEmpty);
 
         try {
-            return new Trainer(firstName, lastName, getTrainingType());
+            return new Trainer(firstName, lastName, getTrainingType(allowEmpty));
         } catch (Exception e) {
             System.out.println(e.getMessage());
             return null;
         }
     }
 
-    private TrainingType getTrainingType() {
+    private TrainingType getTrainingType(boolean allowEmpty) {
         List<TrainingType> trainingTypes = trainingTypeService.findAll();
         menu.displayTrainingTypeMenu(trainingTypes);
 
-        int choice = inputHandler.getInputInRange(1, trainingTypes.size());
+        Integer choice = inputHandler.getInputInRange(1, trainingTypes.size(), allowEmpty);
+        if(choice == null) {
+            return null;
+        }
+
         Optional<TrainingType> optionalTrainingType = trainingTypeService.findById((long) choice);
         if (optionalTrainingType.isPresent()) {
             return optionalTrainingType.get();
@@ -205,12 +209,13 @@ public class Facade {
             return null;
         }
 
+        boolean allowEmpty = false;
         System.out.print("Training name: ");
-        String trainingName = inputHandler.getLine(false);
-        TrainingType trainingType = getTrainingType();
-        Date trainingDate = inputHandler.getDate("Training date (dd-MM-yyyy): ");
+        String trainingName = inputHandler.getLine(allowEmpty);
+        TrainingType trainingType = getTrainingType(allowEmpty);
+        Date trainingDate = inputHandler.getDate("Training date (dd-MM-yyyy): ", allowEmpty);
         System.out.print("Training duration: ");
-        Integer trainingDuration = inputHandler.getInteger();
+        Integer trainingDuration = inputHandler.getInteger(allowEmpty);
 
         return new Training(optionalTrainee.get(), optionalTrainer.get(), trainingName,
                 trainingType, trainingDate, trainingDuration);
@@ -245,7 +250,10 @@ public class Facade {
         if (id == null)
             return;
 
-        trainerService.updateTrainer(id, getTrainerData(true));
+        Trainer updates = getTrainerData(true);
+        updates.setId(id);
+        updates.setActive(null);
+        trainerService.updateTrainer(updates);
         System.out.println("Trainer has been successfully updated");
     }
 

@@ -27,8 +27,8 @@ public class SimpleUsernameGeneratorTest {
         traineeStorage.init();
 
         usernameGenerator = new SimpleUsernameGenerator();
-        usernameGenerator.setTraineeStorage(traineeStorage);
-        usernameGenerator.setTrainerStorage(trainerStorage);
+//        usernameGenerator.setTraineeStorage(traineeStorage);
+//        usernameGenerator.setTrainerStorage(trainerStorage);
     }
 
     @Test

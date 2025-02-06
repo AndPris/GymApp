@@ -2,11 +2,13 @@ package example.services.imp;
 
 import example.daos.TrainerDAO;
 import example.entities.Trainer;
+import example.entities.Trainer;
 import example.repositories.TrainerRepository;
 import example.services.TrainerService;
 import example.utils.password.PasswordGenerator;
 import example.utils.username.UsernameGenerator;
 import lombok.Setter;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -46,8 +48,33 @@ public class TrainerServiceImp implements TrainerService {
     }
 
     @Override
-    public Trainer updateTrainer(Long id, Trainer trainer) {
-        return trainerRepository.save(trainer);
+    public Trainer updateTrainer(Trainer updates) {
+        validateTrainerForUpdate(updates);
+
+        Trainer existing = trainerRepository.findById(updates.getId()).get();
+        updateTrainerFields(existing, updates);
+
+        return trainerRepository.save(existing);
+    }
+
+    private void validateTrainerForUpdate(Trainer trainer) {
+        Long trainerId = trainer.getId();
+        if(trainerId == null) {
+            throw new IllegalArgumentException("Cannot update a trainer: id is null");
+        }
+
+        if(!trainerRepository.findById(trainerId).isPresent()) {
+            throw new IllegalArgumentException("Cannot update a trainer: there is no trainer with id " + trainerId);
+        }
+    }
+
+    private void updateTrainerFields(Trainer existing, Trainer updates) {
+        Optional.ofNullable(updates.getFirstName()).filter(StringUtils::isNoneBlank).ifPresent(existing::setFirstName);
+        Optional.ofNullable(updates.getLastName()).filter(StringUtils::isNoneBlank).ifPresent(existing::setLastName);
+        Optional.ofNullable(updates.getUsername()).filter(StringUtils::isNoneBlank).ifPresent(existing::setUsername);
+        Optional.ofNullable(updates.getPassword()).filter(StringUtils::isNoneBlank).ifPresent(existing::setPassword);
+        Optional.ofNullable(updates.getSpecialization()).ifPresent(existing::setSpecialization);
+        Optional.ofNullable(updates.isActive()).ifPresent(existing::setActive);
     }
 
     @Override

@@ -7,7 +7,7 @@ import java.util.Optional;
 public interface TrainerService {
     Trainer createTrainer(Trainer trainer);
 
-    Trainer updateTrainer(Long id, Trainer trainer);
+    Trainer updateTrainer(Trainer updates);
 
     Iterable<Trainer> getAllTrainers();
 
