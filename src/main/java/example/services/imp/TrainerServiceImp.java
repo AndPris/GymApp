@@ -64,4 +64,14 @@ public class TrainerServiceImp implements TrainerService {
     public boolean existsTrainer(Long id) {
         return trainerDAO.existsById(id);
     }
+
+    @Override
+    public Trainer authenticateTrainer(String username, String password) {
+        Optional<Trainer> optionalTrainer = trainerRepository.findByUsernameAndPassword(username, password);
+        if(optionalTrainer.isPresent()) {
+            return optionalTrainer.get();
+        } else {
+            throw new RuntimeException("Trainer not found");
+        }
+    }
 }

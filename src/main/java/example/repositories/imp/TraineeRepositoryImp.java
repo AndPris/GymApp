@@ -52,7 +52,7 @@ public class TraineeRepositoryImp implements TraineeRepository {
         query.setParameter("username", username);
 
         List<Trainee> result = query.getResultList();
-        logger.info("Find trainee with username " + username + ". Result: " + result);
+        logger.info("Find trainee with username {}. Result: {}", username, result);
         return Optional.ofNullable(result.isEmpty() ? null : result.get(0));
     }
 
@@ -63,7 +63,7 @@ public class TraineeRepositoryImp implements TraineeRepository {
         query.setParameter("password", password);
 
         List<Trainee> result = query.getResultList();
-        logger.info("Find trainee with username " + username + " and password " + password + ". Result: " + result);
+        logger.info("Find trainee with username {} and password {}. Result: {}", username, password, result);
         return Optional.ofNullable(result.isEmpty() ? null : result.get(0));
     }
 
@@ -80,13 +80,13 @@ public class TraineeRepositoryImp implements TraineeRepository {
 
         try {
             transaction.begin();
-            logger.info("Deleting a trainee with username " + username);
+            logger.info("Deleting a trainee with username {}", username);
             int result = entityManager.createQuery("delete from Trainee t where t.username=:username")
                     .setParameter("username", username)
                     .executeUpdate();
 
             transaction.commit();
-            logger.info("Result: " + result);
+            logger.info("Result: {}", result);
             return result != 0;
         } catch (Exception e) {
             logger.error(e.getMessage());

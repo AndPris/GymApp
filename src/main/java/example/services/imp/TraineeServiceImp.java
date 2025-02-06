@@ -93,7 +93,7 @@ public class TraineeServiceImp implements TraineeService {
         if(optionalTrainee.isPresent()) {
             return optionalTrainee.get();
         } else {
-            throw new RuntimeException("User not found");
+            throw new RuntimeException("Trainee not found");
         }
     }
 
