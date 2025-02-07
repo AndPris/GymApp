@@ -13,8 +13,6 @@ public interface TraineeService {
 
     Trainee updateTrainee(Trainee updates);
 
-    boolean deleteTraineeById(Long id);
-
     boolean deleteTraineeByUsername(String username);
 
     Iterable<Trainee> getAllTrainees();

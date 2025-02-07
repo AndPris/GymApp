@@ -1,6 +1,5 @@
 package example.services.imp;
 
-import example.daos.TraineeDAO;
 import example.entities.Trainee;
 import example.entities.Trainer;
 import example.entities.Training;
@@ -13,7 +12,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -24,9 +22,6 @@ public class TraineeServiceImp implements TraineeService {
     @Setter
     private TraineeRepository traineeRepository;
 
-    @Autowired
-    @Setter
-    private TraineeDAO traineeDAO;
     private PasswordGenerator passwordGenerator;
     private UsernameGenerator usernameGenerator;
 
@@ -80,11 +75,6 @@ public class TraineeServiceImp implements TraineeService {
         Optional.ofNullable(updates.getAddress()).filter(StringUtils::isNoneBlank).ifPresent(existing::setAddress);
         Optional.ofNullable(updates.getDateOfBirth()).ifPresent(existing::setDateOfBirth);
         Optional.ofNullable(updates.isActive()).ifPresent(existing::setActive);
-    }
-
-    @Override
-    public boolean deleteTraineeById(Long id) {
-        return traineeDAO.deleteById(id);
     }
 
     @Override

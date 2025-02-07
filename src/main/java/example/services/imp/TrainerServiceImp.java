@@ -1,6 +1,5 @@
 package example.services.imp;
 
-import example.daos.TrainerDAO;
 import example.entities.Trainer;
 import example.entities.Training;
 import example.repositories.TrainerRepository;
@@ -22,9 +21,6 @@ public class TrainerServiceImp implements TrainerService {
     @Setter
     private TrainerRepository trainerRepository;
 
-    @Autowired
-    @Setter
-    private TrainerDAO trainerDAO;
     private PasswordGenerator passwordGenerator;
     private UsernameGenerator usernameGenerator;
 

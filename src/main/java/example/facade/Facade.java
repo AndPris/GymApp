@@ -58,7 +58,7 @@ public class Facade {
 
         while (run) {
             menu.displayMenu();
-            userInput = inputHandler.getInputInRange(1, 24, false);
+            userInput = inputHandler.getInputInRange(1, 20, false);
             logger.info("User selected option '{}'", userInput);
             handleUserInput(userInput);
         }
@@ -82,57 +82,45 @@ public class Facade {
                 updateTrainer();
                 break;
             case 6:
-                deleteTrainee();
-                break;
-            case 7:
                 selectAllTrainees();
                 break;
-            case 8:
+            case 7:
                 selectAllTrainers();
                 break;
-            case 9:
+            case 8:
                 selectAllTrainings();
                 break;
-            case 10:
-                selectTrainee();
-                break;
-            case 11:
-                selectTrainer();
-                break;
-            case 12:
-                selectTraining();
-                break;
-            case 13:
+            case 9:
                 selectTraineeByUsername();
                 break;
-            case 14:
+            case 10:
                 selectTrainerByUsername();
                 break;
-            case 15:
+            case 11:
                 deleteTraineeByUsername();
                 break;
-            case 16:
+            case 12:
                 changeTraineePassword();
                 break;
-            case 17:
+            case 13:
                 changeTrainerPassword();
                 break;
-            case 18:
+            case 14:
                 toggleTraineeIsActiveStatus();
                 break;
-            case 19:
+            case 15:
                 toggleTrainerIsActiveStatus();
                 break;
-            case 20:
+            case 16:
                 displayTraineeTrainingList();
                 break;
-            case 21:
+            case 17:
                 displayTrainerTrainingList();
                 break;
-            case 22:
+            case 18:
                 displayTrainersNotAssignedToTrainee();
                 break;
-            case 23:
+            case 19:
                 updateTraineeTrainerList();
                 break;
             default:
@@ -274,16 +262,6 @@ public class Facade {
         return trainerId;
     }
 
-    private void deleteTrainee() {
-        System.out.print("Trainee id: ");
-        Long traineeId = inputHandler.getLong();
-
-        if (traineeService.deleteTraineeById(traineeId))
-            System.out.println("Trainee has been successfully deleted");
-        else
-            System.out.println("There is no trainee with such id");
-    }
-
 
     private void selectAllTrainees() {
         System.out.println("Trainees:");
@@ -303,47 +281,6 @@ public class Facade {
         System.out.println("Trainings:");
         trainingService.getAllTrainings().forEach(System.out::println);
         System.out.println("================================");
-    }
-
-
-    private void selectTrainee() {
-        Long traineeId = getTraineeId();
-        if (traineeId == null)
-            return;
-
-        System.out.println(traineeService.getTraineeById(traineeId).get());
-        System.out.println("================================");
-    }
-
-
-    private void selectTrainer() {
-        Long trainerId = getTrainerId();
-        if (trainerId == null)
-            return;
-
-        System.out.println(trainerService.getTrainerById(trainerId).get());
-        System.out.println("================================");
-    }
-
-
-    private void selectTraining() {
-        Long trainingId = getTrainingId();
-        if (trainingId == null)
-            return;
-
-        System.out.println(trainingService.getTrainingById(trainingId).get());
-        System.out.println("================================");
-    }
-
-    private Long getTrainingId() {
-        System.out.print("Training id: ");
-        Long trainingId = inputHandler.getLong();
-        if (!trainingService.existsTraining(trainingId)) {
-            System.out.println("There's no training with such ID");
-            return null;
-        }
-
-        return trainingId;
     }
 
 
