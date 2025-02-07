@@ -3,6 +3,7 @@ package example.services.imp;
 import example.daos.TrainerDAO;
 import example.entities.Trainer;
 import example.entities.Trainer;
+import example.entities.Training;
 import example.repositories.TrainerRepository;
 import example.services.TrainerService;
 import example.utils.password.PasswordGenerator;
@@ -12,6 +13,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -126,5 +129,11 @@ public class TrainerServiceImp implements TrainerService {
         trainer.setActive(!trainer.isActive());
         trainerRepository.save(trainer);
         return trainer.isActive();
+    }
+
+    @Override
+    public List<Training> findTrainerTrainingList(String username, Date fromDate, Date toDate,
+                                                  String traineeFirstName, String traineeLastName) {
+        return trainerRepository.findTrainingList(username, fromDate, toDate, traineeFirstName, traineeLastName);
     }
 }

@@ -1,7 +1,10 @@
 package example.services;
 
 import example.entities.Trainer;
+import example.entities.Training;
 
+import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 public interface TrainerService {
@@ -22,4 +25,7 @@ public interface TrainerService {
     Trainer authenticateTrainer(String username, String password);
 
     boolean toggleTrainerIsActiveStatus(Long id);
+
+    List<Training> findTrainerTrainingList(String username, Date fromDate, Date toDate,
+                                           String traineeFirstName, String traineeLastName);
 }

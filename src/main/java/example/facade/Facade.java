@@ -58,7 +58,7 @@ public class Facade {
 
         while (run) {
             menu.displayMenu();
-            userInput = inputHandler.getInputInRange(1, 21, false);
+            userInput = inputHandler.getInputInRange(1, 22, false);
             logger.info("User selected option '{}'", userInput);
             handleUserInput(userInput);
         }
@@ -125,6 +125,9 @@ public class Facade {
                 break;
             case 20:
                 displayTraineeTrainingList();
+                break;
+            case 21:
+                displayTrainerTrainingList();
                 break;
             default:
                 run = false;
@@ -435,6 +438,19 @@ public class Facade {
 
         List<Training> trainings = traineeService.findTraineeTrainingList(username, fromDate, toDate,
                 trainerFirstName, trainerLastName, trainingType);
+        System.out.println("Trainings list:");
+        trainings.forEach(System.out::println);
+    }
+
+    private void displayTrainerTrainingList() {
+        String username = inputHandler.getLine("Trainer username: ", false);
+        Date fromDate = inputHandler.getDate("From date (dd-MM-yyyy): ", true);
+        Date toDate = inputHandler.getDate("To date (dd-MM-yyyy): ", true);
+        String trainerFirstName = inputHandler.getLine("Trainee's first name: ", true);
+        String trainerLastName = inputHandler.getLine("Trainee's last name: ", true);
+
+        List<Training> trainings = trainerService.findTrainerTrainingList(username, fromDate, toDate,
+                trainerFirstName, trainerLastName);
         System.out.println("Trainings list:");
         trainings.forEach(System.out::println);
     }
