@@ -58,7 +58,7 @@ public class Facade {
 
         while (run) {
             menu.displayMenu();
-            userInput = inputHandler.getInputInRange(1, 20, false);
+            userInput = inputHandler.getInputInRange(1, 21, false);
             logger.info("User selected option '{}'", userInput);
             handleUserInput(userInput);
         }
@@ -123,6 +123,9 @@ public class Facade {
             case 19:
                 toggleTrainerIsActiveStatus();
                 break;
+            case 20:
+                displayTraineeTrainingList();
+                break;
             default:
                 run = false;
                 break;
@@ -136,12 +139,9 @@ public class Facade {
     }
 
     private Trainee getTraineeData(boolean allowEmpty) {
-        System.out.print("First name: ");
-        String firstName = inputHandler.getLine(allowEmpty);
-        System.out.print("Last name: ");
-        String lastName = inputHandler.getLine(allowEmpty);
-        System.out.print("Address: ");
-        String address = inputHandler.getLine(allowEmpty);
+        String firstName = inputHandler.getLine("First name: ", allowEmpty);
+        String lastName = inputHandler.getLine("Last name: ", allowEmpty);
+        String address = inputHandler.getLine("Address: ", allowEmpty);
 
         return new Trainee(firstName, lastName, address, inputHandler.getDate("Birthday (dd-MM-yyyy): ", allowEmpty));
     }
@@ -153,10 +153,8 @@ public class Facade {
     }
 
     private Trainer getTrainerData(boolean allowEmpty) {
-        System.out.print("First name: ");
-        String firstName = inputHandler.getLine(allowEmpty);
-        System.out.print("Last name: ");
-        String lastName = inputHandler.getLine(allowEmpty);
+        String firstName = inputHandler.getLine("First name: ", allowEmpty);
+        String lastName = inputHandler.getLine("Last name: ", allowEmpty);
 
         try {
             return new Trainer(firstName, lastName, getTrainingType(allowEmpty));
@@ -171,7 +169,7 @@ public class Facade {
         menu.displayTrainingTypeMenu(trainingTypes);
 
         Integer choice = inputHandler.getInputInRange(1, trainingTypes.size(), allowEmpty);
-        if(choice == null) {
+        if (choice == null) {
             return null;
         }
 
@@ -210,8 +208,7 @@ public class Facade {
         }
 
         boolean allowEmpty = false;
-        System.out.print("Training name: ");
-        String trainingName = inputHandler.getLine(allowEmpty);
+        String trainingName = inputHandler.getLine("Training name: ", allowEmpty);
         TrainingType trainingType = getTrainingType(allowEmpty);
         Date trainingDate = inputHandler.getDate("Training date (dd-MM-yyyy): ", allowEmpty);
         System.out.print("Training duration: ");
@@ -342,8 +339,7 @@ public class Facade {
 
 
     private void selectTraineeByUsername() {
-        System.out.print("Trainee username: ");
-        String username = inputHandler.getLine(false);
+        String username = inputHandler.getLine("Trainee username: ", false);
         Optional<Trainee> optionalTrainee = traineeService.getTraineeByUsername(username);
 
         if (optionalTrainee.isPresent()) {
@@ -354,8 +350,7 @@ public class Facade {
     }
 
     private void selectTrainerByUsername() {
-        System.out.print("Trainer username: ");
-        String username = inputHandler.getLine(false);
+        String username = inputHandler.getLine("Trainer username: ", false);
         Optional<Trainer> optionalTrainer = trainerService.getTrainerByUsername(username);
 
         if (optionalTrainer.isPresent()) {
@@ -367,8 +362,7 @@ public class Facade {
 
 
     private void deleteTraineeByUsername() {
-        System.out.print("Trainee username: ");
-        String username = inputHandler.getLine(false);
+        String username = inputHandler.getLine("Trainee username: ", false);
 
         if (traineeService.deleteTraineeByUsername(username)) {
             System.out.println("Trainee successfully deleted");
@@ -379,12 +373,9 @@ public class Facade {
 
 
     private void changeTraineePassword() {
-        System.out.print("Trainee username: ");
-        String username = inputHandler.getLine(false);
-        System.out.print("Old password: ");
-        String oldPassword = inputHandler.getLine(false);
-        System.out.print("New password: ");
-        String newPassword = inputHandler.getLine(false);
+        String username = inputHandler.getLine("Trainee username: ", false);
+        String oldPassword = inputHandler.getLine("Old password: ", false);
+        String newPassword = inputHandler.getLine("New password: ", false);
 
         try {
             traineeService.changeTraineePassword(username, oldPassword, newPassword);
@@ -396,12 +387,9 @@ public class Facade {
 
 
     private void changeTrainerPassword() {
-        System.out.print("Trainer username: ");
-        String username = inputHandler.getLine(false);
-        System.out.print("Old password: ");
-        String oldPassword = inputHandler.getLine(false);
-        System.out.print("New password: ");
-        String newPassword = inputHandler.getLine(false);
+        String username = inputHandler.getLine("Trainer username: ", false);
+        String oldPassword = inputHandler.getLine("Old password: ", false);
+        String newPassword = inputHandler.getLine("New password: ", false);
 
         try {
             trainerService.changeTrainerPassword(username, oldPassword, newPassword);
@@ -434,5 +422,20 @@ public class Facade {
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
+    }
+
+
+    private void displayTraineeTrainingList() {
+        String username = inputHandler.getLine("Trainee username: ", false);
+        Date fromDate = inputHandler.getDate("From date (dd-MM-yyyy): ", true);
+        Date toDate = inputHandler.getDate("To date (dd-MM-yyyy): ", true);
+        String trainerFirstName = inputHandler.getLine("Trainer's first name: ", true);
+        String trainerLastName = inputHandler.getLine("Trainer's last name: ", true);
+        String trainingType = inputHandler.getLine("Training type: ", true);
+
+        List<Training> trainings = traineeService.findTraineeTrainingList(username, fromDate, toDate,
+                trainerFirstName, trainerLastName, trainingType);
+        System.out.println("Trainings list:");
+        trainings.forEach(System.out::println);
     }
 }

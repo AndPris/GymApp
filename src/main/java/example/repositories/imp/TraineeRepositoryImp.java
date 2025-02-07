@@ -1,6 +1,7 @@
 package example.repositories.imp;
 
 import example.entities.Trainee;
+import example.entities.Training;
 import example.repositories.TraineeRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
@@ -9,6 +10,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Repository;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -101,5 +103,31 @@ public class TraineeRepositoryImp implements TraineeRepository {
             logger.error(e.getMessage());
             return false;
         }
+    }
+
+    @Override
+    public List<Training> findTrainingList(String username, Date fromDate, Date toDate, String trainerFirstName,
+                                           String trainerLastName, String trainingType) {
+
+        Query query = entityManager.createQuery("select t from Training t " +
+                "where t.trainee.username=:username " +
+                "and (:fromDate is null or t.trainingDate > :fromDate) " +
+                "and (:toDate is null or t.trainingDate < :toDate) " +
+                "and (:trainerFirstName is null or t.trainer.firstName=:trainerFirstName) " +
+                "and (:trainerLastName is null or t.trainer.lastName=:trainerLastName) " +
+                "and (:trainingType is null or t.trainingType.name=:trainingType)");
+
+        query.setParameter("username", username);
+        query.setParameter("fromDate", fromDate);
+        query.setParameter("toDate", toDate);
+        query.setParameter("trainerFirstName", trainerFirstName);
+        query.setParameter("trainerLastName", trainerLastName);
+        query.setParameter("trainingType", trainingType);
+
+        List<Training> result = query.getResultList();
+        logger.info("Find training list of trainee with username {}, from date {}, to date {}," +
+                        " trainer first name {}, trainer last name {}, training type {}. Result: {}",
+                username, fromDate, toDate, trainerFirstName, trainerLastName, trainingType, result);
+        return result;
     }
 }

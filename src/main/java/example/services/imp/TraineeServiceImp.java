@@ -2,6 +2,7 @@ package example.services.imp;
 
 import example.daos.TraineeDAO;
 import example.entities.Trainee;
+import example.entities.Training;
 import example.repositories.TraineeRepository;
 import example.services.TraineeService;
 import example.utils.password.PasswordGenerator;
@@ -11,7 +12,10 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class TraineeServiceImp implements TraineeService {
@@ -136,5 +140,13 @@ public class TraineeServiceImp implements TraineeService {
         trainee.setActive(!trainee.isActive());
         traineeRepository.save(trainee);
         return trainee.isActive();
+    }
+
+    @Override
+    public List<Training> findTraineeTrainingList(String username, Date fromDate, Date toDate, String trainerFirstName,
+                                                  String trainerLastName, String trainingType) {
+
+        return traineeRepository.findTrainingList(username, fromDate, toDate,
+                trainerFirstName, trainerLastName, trainingType);
     }
 }

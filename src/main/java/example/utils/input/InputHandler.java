@@ -90,12 +90,13 @@ public class InputHandler {
         return result;
     }
 
-    public String getLine(boolean allowEmpty) {
+    public String getLine(String message, boolean allowEmpty) {
+        System.out.print(message);
         Scanner scanner = new Scanner(System.in);
         String line = scanner.nextLine();
 
-        if (allowEmpty) {
-            return line;
+        if (allowEmpty && StringUtils.isBlank(line)) {
+            return null;
         }
 
         while (StringUtils.isBlank(line)) {

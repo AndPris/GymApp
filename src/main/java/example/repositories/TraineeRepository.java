@@ -1,7 +1,9 @@
 package example.repositories;
 
 import example.entities.Trainee;
+import example.entities.Training;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,5 +20,6 @@ public interface TraineeRepository {
 
     boolean deleteByUsername(String username);
 
-//    boolean toggleIsActiveStatus(Long id);
+    List<Training> findTrainingList(String username, Date fromDate, Date toDate, String trainerFirstName,
+                                    String trainerLastName, String trainingType);
 }
