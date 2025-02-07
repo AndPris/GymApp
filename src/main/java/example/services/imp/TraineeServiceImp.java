@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class TraineeServiceImp implements TraineeService {
@@ -62,11 +61,11 @@ public class TraineeServiceImp implements TraineeService {
 
     private void validateTraineeForUpdate(Trainee trainee) {
         Long traineeId = trainee.getId();
-        if(traineeId == null) {
+        if (traineeId == null) {
             throw new IllegalArgumentException("Cannot update a trainee: id is null");
         }
 
-        if(!traineeRepository.findById(traineeId).isPresent()) {
+        if (!traineeRepository.findById(traineeId).isPresent()) {
             throw new IllegalArgumentException("Cannot update a trainee: there is no trainee with id " + traineeId);
         }
     }
@@ -107,8 +106,14 @@ public class TraineeServiceImp implements TraineeService {
     }
 
     @Override
-    public boolean existsTrainee(Long id) {
+    public boolean existsTraineeById(Long id) {
         Optional<Trainee> trainee = traineeRepository.findById(id);
+        return trainee.isPresent();
+    }
+
+    @Override
+    public boolean existsTraineeByUsername(String username) {
+        Optional<Trainee> trainee = traineeRepository.findByUsername(username);
         return trainee.isPresent();
     }
 
@@ -122,7 +127,7 @@ public class TraineeServiceImp implements TraineeService {
     @Override
     public Trainee authenticateTrainee(String username, String password) {
         Optional<Trainee> optionalTrainee = traineeRepository.findByUsernameAndPassword(username, password);
-        if(optionalTrainee.isPresent()) {
+        if (optionalTrainee.isPresent()) {
             return optionalTrainee.get();
         } else {
             throw new RuntimeException("Trainee not found");

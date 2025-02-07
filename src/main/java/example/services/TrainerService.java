@@ -18,7 +18,9 @@ public interface TrainerService {
 
     Optional<Trainer> getTrainerByUsername(String username);
 
-    boolean existsTrainer(Long id);
+    boolean existsTrainerById(Long id);
+
+    boolean existsTrainerByUsername(String username);
 
     void changeTrainerPassword(String username, String oldPassword, String newPassword);
 

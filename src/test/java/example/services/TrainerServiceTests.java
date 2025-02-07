@@ -3,7 +3,6 @@ package example.services;
 import example.daos.TrainerDAO;
 import example.entities.Trainee;
 import example.entities.Trainer;
-import example.entities.TrainingType;
 import example.services.imp.TrainerServiceImp;
 import example.storages.Storage;
 import example.storages.imp.TraineeStorage;
@@ -147,10 +146,10 @@ public class TrainerServiceTests {
     }
 
     @Test
-    public void existsTrainerTest() {
-        assertFalse(trainerService.existsTrainer(10L));
-        assertFalse(trainerService.existsTrainer(null));
+    public void existsTrainerByIdTest() {
+        assertFalse(trainerService.existsTrainerById(10L));
+        assertFalse(trainerService.existsTrainerById(null));
         trainerService.createTrainer(testTrainer);
-        assertTrue(trainerService.existsTrainer(1L));
+        assertTrue(trainerService.existsTrainerById(1L));
     }
 }

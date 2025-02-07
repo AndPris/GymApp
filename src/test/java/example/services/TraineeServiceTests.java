@@ -147,11 +147,11 @@ public class TraineeServiceTests {
     }
 
     @Test
-    public void existsTraineeTest() {
-        assertFalse(traineeService.existsTrainee(10L));
-        assertFalse(traineeService.existsTrainee(null));
+    public void existsTraineeByIdTest() {
+        assertFalse(traineeService.existsTraineeById(10L));
+        assertFalse(traineeService.existsTraineeById(null));
         traineeService.createTrainee(testTrainee);
-        assertTrue(traineeService.existsTrainee(1L));
+        assertTrue(traineeService.existsTraineeById(1L));
     }
 
     @Test
@@ -162,10 +162,10 @@ public class TraineeServiceTests {
         assertFalse(traineeService.deleteTraineeById(1L));
 
         traineeService.createTrainee(testTrainee);
-        assertTrue(traineeService.existsTrainee(1L));
+        assertTrue(traineeService.existsTraineeById(1L));
 
         traineeService.deleteTraineeById(1L);
-        assertFalse(traineeService.existsTrainee(1L));
+        assertFalse(traineeService.existsTraineeById(1L));
 
         Collection<Trainee> trainees = (Collection<Trainee>) traineeService.getAllTrainees();
         assertTrue(trainees.isEmpty());

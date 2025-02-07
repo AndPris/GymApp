@@ -2,7 +2,6 @@ package example.services.imp;
 
 import example.daos.TrainerDAO;
 import example.entities.Trainer;
-import example.entities.Trainer;
 import example.entities.Training;
 import example.repositories.TrainerRepository;
 import example.services.TrainerService;
@@ -62,11 +61,11 @@ public class TrainerServiceImp implements TrainerService {
 
     private void validateTrainerForUpdate(Trainer trainer) {
         Long trainerId = trainer.getId();
-        if(trainerId == null) {
+        if (trainerId == null) {
             throw new IllegalArgumentException("Cannot update a trainer: id is null");
         }
 
-        if(!trainerRepository.findById(trainerId).isPresent()) {
+        if (!trainerRepository.findById(trainerId).isPresent()) {
             throw new IllegalArgumentException("Cannot update a trainer: there is no trainer with id " + trainerId);
         }
     }
@@ -96,8 +95,14 @@ public class TrainerServiceImp implements TrainerService {
     }
 
     @Override
-    public boolean existsTrainer(Long id) {
+    public boolean existsTrainerById(Long id) {
         Optional<Trainer> trainer = trainerRepository.findById(id);
+        return trainer.isPresent();
+    }
+
+    @Override
+    public boolean existsTrainerByUsername(String username) {
+        Optional<Trainer> trainer = trainerRepository.findByUsername(username);
         return trainer.isPresent();
     }
 
@@ -111,7 +116,7 @@ public class TrainerServiceImp implements TrainerService {
     @Override
     public Trainer authenticateTrainer(String username, String password) {
         Optional<Trainer> optionalTrainer = trainerRepository.findByUsernameAndPassword(username, password);
-        if(optionalTrainer.isPresent()) {
+        if (optionalTrainer.isPresent()) {
             return optionalTrainer.get();
         } else {
             throw new RuntimeException("Trainer not found");

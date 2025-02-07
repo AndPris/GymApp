@@ -237,7 +237,7 @@ public class Facade {
     private Long getTraineeId() {
         System.out.print("Trainee id: ");
         Long traineeId = inputHandler.getLong();
-        if (!traineeService.existsTrainee(traineeId)) {
+        if (!traineeService.existsTraineeById(traineeId)) {
             System.out.println("There's no trainee with such ID");
             return null;
         }
@@ -260,7 +260,7 @@ public class Facade {
     private Long getTrainerId() {
         System.out.print("Trainer id: ");
         Long trainerId = inputHandler.getLong();
-        if (!trainerService.existsTrainer(trainerId)) {
+        if (!trainerService.existsTrainerById(trainerId)) {
             System.out.println("There's no trainer with such ID");
             return null;
         }
@@ -430,6 +430,11 @@ public class Facade {
 
     private void displayTraineeTrainingList() {
         String username = inputHandler.getLine("Trainee username: ", false);
+        if (!traineeService.existsTraineeByUsername(username)) {
+            System.out.println("There's no trainee with such username");
+            return;
+        }
+
         Date fromDate = inputHandler.getDate("From date (dd-MM-yyyy): ", true);
         Date toDate = inputHandler.getDate("To date (dd-MM-yyyy): ", true);
         String trainerFirstName = inputHandler.getLine("Trainer's first name: ", true);
@@ -444,6 +449,11 @@ public class Facade {
 
     private void displayTrainerTrainingList() {
         String username = inputHandler.getLine("Trainer username: ", false);
+        if (!trainerService.existsTrainerByUsername(username)) {
+            System.out.println("There's no trainer with such username");
+            return;
+        }
+
         Date fromDate = inputHandler.getDate("From date (dd-MM-yyyy): ", true);
         Date toDate = inputHandler.getDate("To date (dd-MM-yyyy): ", true);
         String trainerFirstName = inputHandler.getLine("Trainee's first name: ", true);

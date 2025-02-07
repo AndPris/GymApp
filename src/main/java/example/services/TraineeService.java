@@ -22,7 +22,9 @@ public interface TraineeService {
 
     Optional<Trainee> getTraineeByUsername(String username);
 
-    boolean existsTrainee(Long id);
+    boolean existsTraineeById(Long id);
+
+    boolean existsTraineeByUsername(String username);
 
     void changeTraineePassword(String username, String oldPassword, String newPassword);
 
