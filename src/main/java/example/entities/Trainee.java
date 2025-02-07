@@ -44,4 +44,16 @@ public class Trainee extends User {
                 "Address: " + address + "\n" +
                 "Date of birth: " + dateOfBirth + "\n";
     }
+
+    public void addTrainer(Trainer trainer) {
+        trainers.add(trainer);
+    }
+
+    public void removeTrainer(Trainer trainer) {
+        trainers.remove(trainer);
+    }
+
+    public void clearTrainers() {
+        trainers.clear();
+    }
 }

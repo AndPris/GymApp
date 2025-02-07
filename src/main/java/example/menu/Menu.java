@@ -40,7 +40,10 @@ public class Menu {
         System.out.println("\t20 -> Display trainee's training list");
         System.out.println("\t21 -> Display trainer's training list\n");
 
-        System.out.println("\t22 -> Exit\n");
+        System.out.println("\t22 -> Get trainers list that not assigned on trainee");
+        System.out.println("\t23 -> Update trainee's trainer list\n");
+
+        System.out.println("\t24 -> Exit\n");
 
         System.out.print("->");
     }
@@ -51,5 +54,12 @@ public class Menu {
         for(TrainingType trainingType : trainingTypes) {
             System.out.println("\t" + trainingType.getId() + " -> " + trainingType.getName());
         }
+    }
+
+    public void displayUpdateTraineeTrainerListMenu() {
+        System.out.println("\t1 -> Display list");
+        System.out.println("\t2 -> Add trainer");
+        System.out.println("\t3 -> Remove trainer");
+        System.out.println("\t4 -> Clear list");
     }
 }

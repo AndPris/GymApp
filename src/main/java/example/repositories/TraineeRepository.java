@@ -1,6 +1,7 @@
 package example.repositories;
 
 import example.entities.Trainee;
+import example.entities.Trainer;
 import example.entities.Training;
 
 import java.util.Date;
@@ -22,4 +23,6 @@ public interface TraineeRepository {
 
     List<Training> findTrainingList(String username, Date fromDate, Date toDate, String trainerFirstName,
                                     String trainerLastName, String trainingType);
+
+    List<Trainer> findTrainersNotAssignedToTrainee(String username);
 }

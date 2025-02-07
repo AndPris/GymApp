@@ -2,6 +2,7 @@ package example.services.imp;
 
 import example.daos.TraineeDAO;
 import example.entities.Trainee;
+import example.entities.Trainer;
 import example.entities.Training;
 import example.repositories.TraineeRepository;
 import example.services.TraineeService;
@@ -12,6 +13,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -153,5 +155,28 @@ public class TraineeServiceImp implements TraineeService {
 
         return traineeRepository.findTrainingList(username, fromDate, toDate,
                 trainerFirstName, trainerLastName, trainingType);
+    }
+
+    @Override
+    public void addTrainerToList(Trainee trainee, Trainer trainer) {
+        trainee.addTrainer(trainer);
+        traineeRepository.save(trainee);
+    }
+
+    @Override
+    public void removeTrainerFromList(Trainee trainee, Trainer trainer) {
+        trainee.removeTrainer(trainer);
+        traineeRepository.save(trainee);
+    }
+
+    @Override
+    public void clearTraineeTrainerList(Trainee trainee) {
+        trainee.clearTrainers();
+        traineeRepository.save(trainee);
+    }
+
+    @Override
+    public List<Trainer> findTrainersNotAssignedToTrainee(String username) {
+        return traineeRepository.findTrainersNotAssignedToTrainee(username);
     }
 }

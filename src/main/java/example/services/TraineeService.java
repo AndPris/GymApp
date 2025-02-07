@@ -1,6 +1,7 @@
 package example.services;
 
 import example.entities.Trainee;
+import example.entities.Trainer;
 import example.entities.Training;
 
 import java.util.Date;
@@ -34,4 +35,12 @@ public interface TraineeService {
 
     List<Training> findTraineeTrainingList(String username, Date fromDate, Date toDate, String trainerFirstName,
                                            String trainerLastName, String trainingType);
+
+    void addTrainerToList(Trainee trainee, Trainer trainer);
+
+    void removeTrainerFromList(Trainee trainee, Trainer trainer);
+
+    void clearTraineeTrainerList(Trainee trainee);
+
+    List<Trainer> findTrainersNotAssignedToTrainee(String username);
 }

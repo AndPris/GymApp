@@ -58,7 +58,7 @@ public class Facade {
 
         while (run) {
             menu.displayMenu();
-            userInput = inputHandler.getInputInRange(1, 22, false);
+            userInput = inputHandler.getInputInRange(1, 24, false);
             logger.info("User selected option '{}'", userInput);
             handleUserInput(userInput);
         }
@@ -128,6 +128,12 @@ public class Facade {
                 break;
             case 21:
                 displayTrainerTrainingList();
+                break;
+            case 22:
+                displayTrainersNotAssignedToTrainee();
+                break;
+            case 23:
+                updateTraineeTrainerList();
                 break;
             default:
                 run = false;
@@ -463,5 +469,89 @@ public class Facade {
                 trainerFirstName, trainerLastName);
         System.out.println("Trainings list:");
         trainings.forEach(System.out::println);
+    }
+
+
+    private void displayTrainersNotAssignedToTrainee() {
+        String username = inputHandler.getLine("Trainee username: ", false);
+        if (!traineeService.existsTraineeByUsername(username)) {
+            System.out.println("There's no trainee with such username");
+            return;
+        }
+
+        System.out.println("Trainers:");
+        traineeService.findTrainersNotAssignedToTrainee(username).forEach(System.out::println);
+        System.out.println("================================");
+    }
+
+    private void updateTraineeTrainerList() {
+        String username = inputHandler.getLine("Trainee username: ", false);
+        if (!traineeService.existsTraineeByUsername(username)) {
+            System.out.println("There's no trainee with such username");
+            return;
+        }
+
+        Trainee trainee = traineeService.getTraineeByUsername(username).get();
+        menu.displayUpdateTraineeTrainerListMenu();
+        int choice = inputHandler.getInputInRange(1, 4, false);
+        handleUpdateTraineeTrainerListChoice(choice, trainee);
+    }
+
+    private void handleUpdateTraineeTrainerListChoice(int choice, Trainee trainee) {
+        switch (choice) {
+            case 1:
+                displayTrainerList(trainee);
+                break;
+            case 2:
+                addTrainerToTraineeTrainerList(trainee);
+                break;
+            case 3:
+                removeTrainerFromTraineeTrainerList(trainee);
+                break;
+            case 4:
+                clearTraineeTrainerList(trainee);
+                break;
+        }
+    }
+
+    private void displayTrainerList(Trainee trainee) {
+        System.out.println("Trainer list:");
+        trainee.getTrainers().forEach(System.out::println);
+        System.out.println("================================");
+    }
+
+    private void addTrainerToTraineeTrainerList(Trainee trainee) {
+        Trainer trainer = getTrainer();
+        if (trainer != null) {
+            traineeService.addTrainerToList(trainee, trainer);
+            System.out.println("Trainer successfully added");
+        } else {
+            System.out.println("Cannot add trainer");
+        }
+    }
+
+    private Trainer getTrainer() {
+        String username = inputHandler.getLine("Trainer username: ", false);
+        if (!trainerService.existsTrainerByUsername(username)) {
+            System.out.println("There's no trainer with such username");
+            return null;
+        }
+
+        return trainerService.getTrainerByUsername(username).get();
+    }
+
+    private void removeTrainerFromTraineeTrainerList(Trainee trainee) {
+        Trainer trainer = getTrainer();
+        if (trainer != null) {
+            traineeService.removeTrainerFromList(trainee, trainer);
+            System.out.println("Trainer successfully removed");
+        } else {
+            System.out.println("Cannot remove trainer");
+        }
+    }
+
+    private void clearTraineeTrainerList(Trainee trainee) {
+        traineeService.clearTraineeTrainerList(trainee);
+        System.out.println("List successfully cleared");
     }
 }

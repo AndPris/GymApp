@@ -1,6 +1,7 @@
 package example.repositories.imp;
 
 import example.entities.Trainee;
+import example.entities.Trainer;
 import example.entities.Training;
 import example.repositories.TraineeRepository;
 import jakarta.persistence.EntityManager;
@@ -128,6 +129,17 @@ public class TraineeRepositoryImp implements TraineeRepository {
         logger.info("Find training list of trainee with username {}, from date {}, to date {}," +
                         " trainer first name {}, trainer last name {}, training type {}. Result: {}",
                 username, fromDate, toDate, trainerFirstName, trainerLastName, trainingType, result);
+        return result;
+    }
+
+    @Override
+    public List<Trainer> findTrainersNotAssignedToTrainee(String username) {
+        Query query = entityManager.createQuery("select tr from Trainer tr " +
+                "where tr not in (select t.trainers from Trainee t where t.username=:username)");
+        query.setParameter("username", username);
+
+        List<Trainer> result = query.getResultList();
+        logger.info("Find trainers not assigned to trainee with username {}. Result: {}", username, result);
         return result;
     }
 }
