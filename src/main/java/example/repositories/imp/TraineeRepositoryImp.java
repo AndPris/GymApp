@@ -82,7 +82,8 @@ public class TraineeRepositoryImp implements TraineeRepository {
     @Override
     public List<Trainee> findAll() {
         logger.info("Find all trainees");
-        return entityManager.createQuery("select t from Trainee t")
+        return entityManager.createQuery("select t from Trainee t " +
+                        "left outer join Training tr on t.id=tr.trainee.id")
                 .getResultList();
     }
 

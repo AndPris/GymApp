@@ -3,6 +3,8 @@ package example.entities;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -18,6 +20,7 @@ public class Trainee extends User {
     private Date dateOfBirth;
 
     @OneToMany(mappedBy = "trainee")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private List<Training> trainings = new ArrayList<>();
 
     @ManyToMany
