@@ -6,7 +6,6 @@ import example.entities.Training;
 import example.entities.TrainingType;
 import example.facade.handlers.utils.TrainingTypeUtil;
 import example.services.TraineeService;
-import example.services.TrainerService;
 import example.services.TrainingService;
 import example.utils.input.InputHandler;
 import org.springframework.stereotype.Component;
@@ -17,45 +16,32 @@ import java.util.Optional;
 @Component
 public class TrainingOptionHandler {
     private final TraineeService traineeService;
-    private final TrainerService trainerService;
     private final TrainingService trainingService;
     private final TrainingTypeUtil trainingTypeUtil;
     private final InputHandler inputHandler;
 
-    public TrainingOptionHandler(TraineeService traineeService, TrainerService trainerService,
-                                 TrainingService trainingService, InputHandler inputHandler,
-                                 TrainingTypeUtil trainingTypeUtil) {
+    public TrainingOptionHandler(TraineeService traineeService, TrainingService trainingService,
+                                 InputHandler inputHandler, TrainingTypeUtil trainingTypeUtil) {
 
         this.traineeService = traineeService;
-        this.trainerService = trainerService;
         this.trainingService = trainingService;
         this.trainingTypeUtil = trainingTypeUtil;
         this.inputHandler = inputHandler;
     }
 
-    public void createTraining() {
-        Training data = getTrainingData();
-        if (data == null)
-            return;
+    public void createTraining(Trainer trainer) {
+        Training data = getTrainingData(trainer);
+
         trainingService.createTraining(data);
         System.out.println("Training has been successfully created");
     }
 
-    private Training getTrainingData() {
+    private Training getTrainingData(Trainer trainer) {
         System.out.print("Trainee id: ");
         Long traineeId = inputHandler.getLong();
         Optional<Trainee> optionalTrainee = traineeService.getTraineeById(traineeId);
         if (!optionalTrainee.isPresent()) {
-            System.out.println("No such trainee");
-            return null;
-        }
-
-        System.out.print("Trainer id: ");
-        Long trainerId = inputHandler.getLong();
-        Optional<Trainer> optionalTrainer = trainerService.getTrainerById(trainerId);
-        if (!optionalTrainer.isPresent()) {
-            System.out.println("No such trainer");
-            return null;
+            throw new RuntimeException("No such trainee");
         }
 
         boolean allowEmpty = false;
@@ -65,7 +51,7 @@ public class TrainingOptionHandler {
         System.out.print("Training duration: ");
         Integer trainingDuration = inputHandler.getInteger(allowEmpty);
 
-        return new Training(optionalTrainee.get(), optionalTrainer.get(), trainingName,
+        return new Training(optionalTrainee.get(), trainer, trainingName,
                 trainingType, trainingDate, trainingDuration);
     }
 

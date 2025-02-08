@@ -87,24 +87,16 @@ public class TraineeOptionHandler {
         String oldPassword = inputHandler.getLine("Old password: ", false);
         String newPassword = inputHandler.getLine("New password: ", false);
 
-        try {
-            traineeService.changeTraineePassword(username, oldPassword, newPassword);
-            System.out.println("Password successfully changed");
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
+        traineeService.changeTraineePassword(username, oldPassword, newPassword);
+        System.out.println("Password successfully changed");
     }
 
 
     public void toggleTraineeIsActiveStatus(Trainee trainee) {
         Long id = trainee.getId();
 
-        try {
-            boolean result = traineeService.toggleTraineeIsActiveStatus(id);
-            System.out.println("Status was successfully changed. Current value: " + result);
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
+        boolean result = traineeService.toggleTraineeIsActiveStatus(id);
+        System.out.println("Status was successfully changed. Current value: " + result);
     }
 
 
@@ -164,19 +156,14 @@ public class TraineeOptionHandler {
 
     private void addTrainerToTraineeTrainerList(Trainee trainee) {
         Trainer trainer = getTrainer();
-        if (trainer != null) {
-            traineeService.addTrainerToList(trainee, trainer);
-            System.out.println("Trainer successfully added");
-        } else {
-            System.out.println("Cannot add trainer");
-        }
+        traineeService.addTrainerToList(trainee, trainer);
+        System.out.println("Trainer successfully added");
     }
 
     private Trainer getTrainer() {
         String username = inputHandler.getLine("Trainer username: ", false);
         if (!trainerService.existsTrainerByUsername(username)) {
-            System.out.println("There's no trainer with such username");
-            return null;
+            throw new RuntimeException("There's no trainer with such username");
         }
 
         return trainerService.getTrainerByUsername(username).get();
@@ -184,12 +171,8 @@ public class TraineeOptionHandler {
 
     private void removeTrainerFromTraineeTrainerList(Trainee trainee) {
         Trainer trainer = getTrainer();
-        if (trainer != null) {
-            traineeService.removeTrainerFromList(trainee, trainer);
-            System.out.println("Trainer successfully removed");
-        } else {
-            System.out.println("Cannot remove trainer");
-        }
+        traineeService.removeTrainerFromList(trainee, trainer);
+        System.out.println("Trainer successfully removed");
     }
 
     private void clearTraineeTrainerList(Trainee trainee) {

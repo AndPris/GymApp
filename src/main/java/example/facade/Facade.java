@@ -52,7 +52,7 @@ public class Facade {
 
             try {
                 handleUserInput(userInput);
-            } catch (RuntimeException e) {
+            } catch (Exception e) {
                 System.out.println(e.getMessage());
             }
         }
@@ -67,13 +67,13 @@ public class Facade {
                 trainerOptionHandler.createTrainer();
                 break;
             case 3:
-                trainingOptionHandler.createTraining();
+                trainingOptionHandler.createTraining(null);
                 break;
             case 4:
                 traineeOptionHandler.updateTrainee(null);
                 break;
             case 5:
-                trainerOptionHandler.updateTrainer();
+                trainerOptionHandler.updateTrainer(null);
                 break;
             case 6:
                 traineeOptionHandler.selectAllTrainees();
@@ -88,7 +88,7 @@ public class Facade {
                 traineeOptionHandler.selectTraineeByUsername(null);
                 break;
             case 10:
-                trainerOptionHandler.selectTrainerByUsername();
+                trainerOptionHandler.selectTrainerByUsername(null);
                 break;
             case 11:
                 traineeOptionHandler.deleteTraineeByUsername(null);
@@ -97,19 +97,19 @@ public class Facade {
                 traineeOptionHandler.changeTraineePassword(null);
                 break;
             case 13:
-                trainerOptionHandler.changeTrainerPassword();
+                trainerOptionHandler.changeTrainerPassword(null);
                 break;
             case 14:
                 traineeOptionHandler.toggleTraineeIsActiveStatus(null);
                 break;
             case 15:
-                trainerOptionHandler.toggleTrainerIsActiveStatus();
+                trainerOptionHandler.toggleTrainerIsActiveStatus(null);
                 break;
             case 16:
                 traineeOptionHandler.displayTraineeTrainingList(null);
                 break;
             case 17:
-                trainerOptionHandler.displayTrainerTrainingList();
+                trainerOptionHandler.displayTrainerTrainingList(null);
                 break;
             case 18:
                 traineeOptionHandler.displayTrainersNotAssignedToTrainee(null);
