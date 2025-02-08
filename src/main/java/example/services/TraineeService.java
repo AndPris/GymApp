@@ -23,8 +23,6 @@ public interface TraineeService {
 
     boolean existsTraineeById(Long id);
 
-    boolean existsTraineeByUsername(String username);
-
     void changeTraineePassword(String username, String oldPassword, String newPassword);
 
     boolean toggleTraineeIsActiveStatus(Long id);

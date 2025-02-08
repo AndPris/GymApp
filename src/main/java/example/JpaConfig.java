@@ -50,8 +50,8 @@ public class JpaConfig {
         return entityManagerFactory.createEntityManager();
     }
 
-//    @Bean
-//    public LocalValidatorFactoryBean validator() {
-//        return new LocalValidatorFactoryBean();
-//    }
+    @Bean
+    public LocalValidatorFactoryBean validator() {
+        return new LocalValidatorFactoryBean();
+    }
 }

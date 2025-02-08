@@ -7,11 +7,15 @@ import example.repositories.TraineeRepository;
 import example.services.TraineeService;
 import example.utils.password.PasswordGenerator;
 import example.utils.username.UsernameGenerator;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.Validation;
+import jakarta.validation.ValidationException;
 import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import jakarta.validation.Validator;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -22,8 +26,14 @@ public class TraineeServiceImp implements TraineeService {
     @Setter
     private TraineeRepository traineeRepository;
 
+    private Validator validator;
+
     private PasswordGenerator passwordGenerator;
     private UsernameGenerator usernameGenerator;
+
+    public TraineeServiceImp() {
+        validator = Validation.buildDefaultValidatorFactory().getValidator();
+    }
 
     @Autowired
     public void setPasswordGenerator(PasswordGenerator passwordGenerator) {
@@ -38,12 +48,21 @@ public class TraineeServiceImp implements TraineeService {
 
     @Override
     public Trainee createTrainee(Trainee trainee) {
-        if (trainee == null)
-            throw new IllegalArgumentException("Cannot perform createTrainee: trainee is null");
+        if (trainee == null) {
+            throw new IllegalArgumentException("Cannot create a trainee: trainee is null");
+        }
+
+        validateTrainee(trainee);
 
         trainee.setPassword(passwordGenerator.generatePassword());
         trainee.setUsername(usernameGenerator.generateUsername(trainee));
         return traineeRepository.save(trainee);
+    }
+
+    private void validateTrainee(Trainee trainee) {
+        for (ConstraintViolation<Trainee> violation : validator.validate(trainee)) {
+            throw new ValidationException("Validation error: " + violation.getMessage());
+        }
     }
 
     @Override
@@ -57,6 +76,10 @@ public class TraineeServiceImp implements TraineeService {
     }
 
     private void validateTraineeForUpdate(Trainee trainee) {
+        if (trainee == null) {
+            throw new IllegalArgumentException("Cannot update a trainee: trainee is null");
+        }
+
         Long traineeId = trainee.getId();
         if (traineeId == null) {
             throw new IllegalArgumentException("Cannot update a trainee: id is null");
@@ -65,6 +88,8 @@ public class TraineeServiceImp implements TraineeService {
         if (!traineeRepository.findById(traineeId).isPresent()) {
             throw new IllegalArgumentException("Cannot update a trainee: there is no trainee with id " + traineeId);
         }
+
+        validateTrainee(trainee);
     }
 
     private void updateTraineeFields(Trainee existing, Trainee updates) {
@@ -104,20 +129,15 @@ public class TraineeServiceImp implements TraineeService {
     }
 
     @Override
-    public boolean existsTraineeByUsername(String username) {
-        Optional<Trainee> trainee = traineeRepository.findByUsername(username);
-        return trainee.isPresent();
-    }
-
-    @Override
     public void changeTraineePassword(String username, String oldPassword, String newPassword) {
-        Optional<Trainee> optionalTrainee = getTraineeByUsername(username);
+        Optional<Trainee> optionalTrainee = traineeRepository.findByUsernameAndPassword(username, oldPassword);
         if(!optionalTrainee.isPresent()) {
-            throw new IllegalArgumentException("There's no trainee with such username");
+            throw new IllegalArgumentException("There's no trainee with such username and password");
         }
 
         Trainee trainee = optionalTrainee.get();
         trainee.setPassword(newPassword);
+        validateTrainee(trainee);
         traineeRepository.save(trainee);
     }
 

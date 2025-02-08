@@ -1,6 +1,9 @@
 package example.entities;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 import java.util.Date;
@@ -21,6 +24,7 @@ public class Training {
     private Trainer trainer;
 
     @Column(nullable = false)
+    @Size(min = 2, max = 20, message = "Training name must be from 2 to 20 characters")
     private String trainingName;
 
     @ManyToOne
@@ -32,6 +36,8 @@ public class Training {
     private Date trainingDate;
 
     @Column(nullable = false)
+    @Min(value = 20, message = "Minimal training duration is 20 minutes")
+    @Max(value = 180, message = "Maximal training duration is 180 minutes")
     private Integer trainingDuration;
 
     public Training(Trainee trainee, Trainer trainer, String trainingName, TrainingType trainingType, Date trainingDate, Integer trainingDuration) {

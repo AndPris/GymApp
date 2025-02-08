@@ -6,6 +6,10 @@ import example.repositories.TrainerRepository;
 import example.services.TrainerService;
 import example.utils.password.PasswordGenerator;
 import example.utils.username.UsernameGenerator;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.Validation;
+import jakarta.validation.ValidationException;
+import jakarta.validation.Validator;
 import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +27,11 @@ public class TrainerServiceImp implements TrainerService {
 
     private PasswordGenerator passwordGenerator;
     private UsernameGenerator usernameGenerator;
+    private Validator validator;
+
+    public TrainerServiceImp() {
+        validator = Validation.buildDefaultValidatorFactory().getValidator();
+    }
 
     @Autowired
     public void setPasswordGenerator(PasswordGenerator passwordGenerator) {
@@ -37,12 +46,21 @@ public class TrainerServiceImp implements TrainerService {
 
     @Override
     public Trainer createTrainer(Trainer trainer) {
-        if (trainer == null)
-            throw new IllegalArgumentException("Cannot perform createTrainer: trainer is null");
+        if (trainer == null) {
+            throw new IllegalArgumentException("Cannot create a trainer: trainer is null");
+        }
+
+        validateTrainer(trainer);
 
         trainer.setPassword(passwordGenerator.generatePassword());
         trainer.setUsername(usernameGenerator.generateUsername(trainer));
         return trainerRepository.save(trainer);
+    }
+
+    private void validateTrainer(Trainer trainer) {
+        for (ConstraintViolation<Trainer> violation : validator.validate(trainer)) {
+            throw new ValidationException("Validation error: " + violation.getMessage());
+        }
     }
 
     @Override
@@ -56,6 +74,10 @@ public class TrainerServiceImp implements TrainerService {
     }
 
     private void validateTrainerForUpdate(Trainer trainer) {
+        if (trainer == null) {
+            throw new IllegalArgumentException("Cannot update a trainer: trainer is null");
+        }
+
         Long trainerId = trainer.getId();
         if (trainerId == null) {
             throw new IllegalArgumentException("Cannot update a trainer: id is null");
@@ -64,6 +86,8 @@ public class TrainerServiceImp implements TrainerService {
         if (!trainerRepository.findById(trainerId).isPresent()) {
             throw new IllegalArgumentException("Cannot update a trainer: there is no trainer with id " + trainerId);
         }
+
+        validateTrainer(trainer);
     }
 
     private void updateTrainerFields(Trainer existing, Trainer updates) {
@@ -104,19 +128,15 @@ public class TrainerServiceImp implements TrainerService {
 
     @Override
     public void changeTrainerPassword(String username, String oldPassword, String newPassword) {
-        Trainer trainer = authenticateTrainer(username, oldPassword);
-        trainer.setPassword(newPassword);
-        trainerRepository.save(trainer);
-    }
-
-    @Override
-    public Trainer authenticateTrainer(String username, String password) {
-        Optional<Trainer> optionalTrainer = trainerRepository.findByUsernameAndPassword(username, password);
-        if (optionalTrainer.isPresent()) {
-            return optionalTrainer.get();
-        } else {
-            throw new RuntimeException("Trainer not found");
+        Optional<Trainer> optionalTrainer = trainerRepository.findByUsernameAndPassword(username, oldPassword);
+        if(!optionalTrainer.isPresent()) {
+            throw new IllegalArgumentException("There's no trainer with such username and password");
         }
+
+        Trainer trainer = optionalTrainer.get();
+        trainer.setPassword(newPassword);
+        validateTrainer(trainer);
+        trainerRepository.save(trainer);
     }
 
     @Override
