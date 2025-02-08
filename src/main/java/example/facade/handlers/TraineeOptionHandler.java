@@ -43,27 +43,12 @@ public class TraineeOptionHandler {
     }
 
 
-    public void updateTrainee() {
-        Long id = getTraineeId();
-        if (id == null)
-            return;
-
+    public void updateTrainee(Trainee trainee) {
         Trainee updates = getTraineeData(true);
-        updates.setId(id);
+        updates.setId(trainee.getId());
         updates.setActive(null);
         traineeService.updateTrainee(updates);
         System.out.println("Trainee has been successfully updated");
-    }
-
-    private Long getTraineeId() {
-        System.out.print("Trainee id: ");
-        Long traineeId = inputHandler.getLong();
-        if (!traineeService.existsTraineeById(traineeId)) {
-            System.out.println("There's no trainee with such ID");
-            return null;
-        }
-
-        return traineeId;
     }
 
 
@@ -86,8 +71,8 @@ public class TraineeOptionHandler {
     }
 
 
-    public void deleteTraineeByUsername() {
-        String username = inputHandler.getLine("Trainee username: ", false);
+    public void deleteTraineeByUsername(Trainee trainee) {
+        String username = trainee.getUsername();
 
         if (traineeService.deleteTraineeByUsername(username)) {
             System.out.println("Trainee successfully deleted");
@@ -97,8 +82,8 @@ public class TraineeOptionHandler {
     }
 
 
-    public void changeTraineePassword() {
-        String username = inputHandler.getLine("Trainee username: ", false);
+    public void changeTraineePassword(Trainee trainee) {
+        String username = trainee.getUsername();
         String oldPassword = inputHandler.getLine("Old password: ", false);
         String newPassword = inputHandler.getLine("New password: ", false);
 
@@ -111,9 +96,8 @@ public class TraineeOptionHandler {
     }
 
 
-    public void toggleTraineeIsActiveStatus() {
-        System.out.print("Trainee id: ");
-        Long id = inputHandler.getLong();
+    public void toggleTraineeIsActiveStatus(Trainee trainee) {
+        Long id = trainee.getId();
 
         try {
             boolean result = traineeService.toggleTraineeIsActiveStatus(id);
@@ -124,12 +108,8 @@ public class TraineeOptionHandler {
     }
 
 
-    public void displayTraineeTrainingList() {
-        String username = inputHandler.getLine("Trainee username: ", false);
-        if (!traineeService.existsTraineeByUsername(username)) {
-            System.out.println("There's no trainee with such username");
-            return;
-        }
+    public void displayTraineeTrainingList(Trainee trainee) {
+        String username = trainee.getUsername();
 
         Date fromDate = inputHandler.getDate("From date (dd-MM-yyyy): ", true);
         Date toDate = inputHandler.getDate("To date (dd-MM-yyyy): ", true);
@@ -144,12 +124,8 @@ public class TraineeOptionHandler {
     }
 
 
-    public void displayTrainersNotAssignedToTrainee() {
-        String username = inputHandler.getLine("Trainee username: ", false);
-        if (!traineeService.existsTraineeByUsername(username)) {
-            System.out.println("There's no trainee with such username");
-            return;
-        }
+    public void displayTrainersNotAssignedToTrainee(Trainee trainee) {
+        String username = trainee.getUsername();
 
         System.out.println("Trainers:");
         traineeService.findTrainersNotAssignedToTrainee(username).forEach(System.out::println);
@@ -157,14 +133,7 @@ public class TraineeOptionHandler {
     }
 
 
-    public void updateTraineeTrainerList() {
-        String username = inputHandler.getLine("Trainee username: ", false);
-        if (!traineeService.existsTraineeByUsername(username)) {
-            System.out.println("There's no trainee with such username");
-            return;
-        }
-
-        Trainee trainee = traineeService.getTraineeByUsername(username).get();
+    public void updateTraineeTrainerList(Trainee trainee) {
         menu.displayUpdateTraineeTrainerListMenu();
         int choice = inputHandler.getInputInRange(1, 4, false);
         handleUpdateTraineeTrainerListChoice(choice, trainee);

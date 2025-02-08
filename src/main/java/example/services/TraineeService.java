@@ -27,8 +27,6 @@ public interface TraineeService {
 
     void changeTraineePassword(String username, String oldPassword, String newPassword);
 
-    Trainee authenticateTrainee(String username, String password);
-
     boolean toggleTraineeIsActiveStatus(Long id);
 
     List<Training> findTraineeTrainingList(String username, Date fromDate, Date toDate, String trainerFirstName,

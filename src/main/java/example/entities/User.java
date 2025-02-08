@@ -1,6 +1,7 @@
 package example.entities;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 @Data
@@ -12,6 +13,7 @@ public abstract class User {
     private Long id;
 
     @Column(nullable = false)
+    @Size(min = 2, max = 20, message = "First name must be from 2 to 20 characters")
     private String firstName;
 
     @Column(nullable = false)

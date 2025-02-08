@@ -70,7 +70,7 @@ public class Facade {
                 trainingOptionHandler.createTraining();
                 break;
             case 4:
-                traineeOptionHandler.updateTrainee();
+                traineeOptionHandler.updateTrainee(null);
                 break;
             case 5:
                 trainerOptionHandler.updateTrainer();
@@ -91,31 +91,31 @@ public class Facade {
                 trainerOptionHandler.selectTrainerByUsername();
                 break;
             case 11:
-                traineeOptionHandler.deleteTraineeByUsername();
+                traineeOptionHandler.deleteTraineeByUsername(null);
                 break;
             case 12:
-                traineeOptionHandler.changeTraineePassword();
+                traineeOptionHandler.changeTraineePassword(null);
                 break;
             case 13:
                 trainerOptionHandler.changeTrainerPassword();
                 break;
             case 14:
-                traineeOptionHandler.toggleTraineeIsActiveStatus();
+                traineeOptionHandler.toggleTraineeIsActiveStatus(null);
                 break;
             case 15:
                 trainerOptionHandler.toggleTrainerIsActiveStatus();
                 break;
             case 16:
-                traineeOptionHandler.displayTraineeTrainingList();
+                traineeOptionHandler.displayTraineeTrainingList(null);
                 break;
             case 17:
                 trainerOptionHandler.displayTrainerTrainingList();
                 break;
             case 18:
-                traineeOptionHandler.displayTrainersNotAssignedToTrainee();
+                traineeOptionHandler.displayTrainersNotAssignedToTrainee(null);
                 break;
             case 19:
-                traineeOptionHandler.updateTraineeTrainerList();
+                traineeOptionHandler.updateTraineeTrainerList(null);
                 break;
             default:
                 run = false;
