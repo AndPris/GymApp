@@ -1,44 +1,33 @@
 package example.facade;
 
-import example.entities.Trainee;
-import example.entities.Trainer;
-import example.entities.Training;
-import example.entities.TrainingType;
+import example.facade.handlers.TraineeOptionHandler;
+import example.facade.handlers.TrainerOptionHandler;
+import example.facade.handlers.TrainingOptionHandler;
 import example.menu.Menu;
-import example.services.TraineeService;
-import example.services.TrainerService;
-import example.services.TrainingService;
-import example.services.TrainingTypeService;
 import example.utils.input.InputHandler;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
-
 @Component
 public class Facade {
     private static final Logger logger = LogManager.getLogger(Facade.class);
 
-    private final TraineeService traineeService;
-    private final TrainerService trainerService;
-    private final TrainingService trainingService;
-    private final TrainingTypeService trainingTypeService;
+    private final TrainerOptionHandler trainerOptionHandler;
+    private final TraineeOptionHandler traineeOptionHandler;
+    private final TrainingOptionHandler trainingOptionHandler;
 
     private Menu menu;
     private InputHandler inputHandler;
 
     private boolean run;
 
-    public Facade(TraineeService traineeService, TrainerService trainerService,
-                  TrainingService trainingService, TrainingTypeService trainingTypeService) {
-        this.traineeService = traineeService;
-        this.trainerService = trainerService;
-        this.trainingService = trainingService;
-        this.trainingTypeService = trainingTypeService;
+    public Facade(TrainerOptionHandler trainerOptionHandler, TraineeOptionHandler traineeOptionHandler,
+                  TrainingOptionHandler trainingOptionHandler) {
+        this.traineeOptionHandler = traineeOptionHandler;
+        this.trainingOptionHandler = trainingOptionHandler;
+        this.trainerOptionHandler = trainerOptionHandler;
         this.run = true;
     }
 
@@ -60,435 +49,77 @@ public class Facade {
             menu.displayMenu();
             userInput = inputHandler.getInputInRange(1, 20, false);
             logger.info("User selected option '{}'", userInput);
-            handleUserInput(userInput);
+
+            try {
+                handleUserInput(userInput);
+            } catch (RuntimeException e) {
+                System.out.println(e.getMessage());
+            }
         }
     }
 
-    private void handleUserInput(int userInput) {
+    public void handleUserInput(int userInput) {
         switch (userInput) {
             case 1:
-                createTrainee();
+                traineeOptionHandler.createTrainee();
                 break;
             case 2:
-                createTrainer();
+                trainerOptionHandler.createTrainer();
                 break;
             case 3:
-                createTraining();
+                trainingOptionHandler.createTraining();
                 break;
             case 4:
-                updateTrainee();
+                traineeOptionHandler.updateTrainee();
                 break;
             case 5:
-                updateTrainer();
+                trainerOptionHandler.updateTrainer();
                 break;
             case 6:
-                selectAllTrainees();
+                traineeOptionHandler.selectAllTrainees();
                 break;
             case 7:
-                selectAllTrainers();
+                trainerOptionHandler.selectAllTrainers();
                 break;
             case 8:
-                selectAllTrainings();
+                trainingOptionHandler.selectAllTrainings();
                 break;
             case 9:
-                selectTraineeByUsername();
+                traineeOptionHandler.selectTraineeByUsername(null);
                 break;
             case 10:
-                selectTrainerByUsername();
+                trainerOptionHandler.selectTrainerByUsername();
                 break;
             case 11:
-                deleteTraineeByUsername();
+                traineeOptionHandler.deleteTraineeByUsername();
                 break;
             case 12:
-                changeTraineePassword();
+                traineeOptionHandler.changeTraineePassword();
                 break;
             case 13:
-                changeTrainerPassword();
+                trainerOptionHandler.changeTrainerPassword();
                 break;
             case 14:
-                toggleTraineeIsActiveStatus();
+                traineeOptionHandler.toggleTraineeIsActiveStatus();
                 break;
             case 15:
-                toggleTrainerIsActiveStatus();
+                trainerOptionHandler.toggleTrainerIsActiveStatus();
                 break;
             case 16:
-                displayTraineeTrainingList();
+                traineeOptionHandler.displayTraineeTrainingList();
                 break;
             case 17:
-                displayTrainerTrainingList();
+                trainerOptionHandler.displayTrainerTrainingList();
                 break;
             case 18:
-                displayTrainersNotAssignedToTrainee();
+                traineeOptionHandler.displayTrainersNotAssignedToTrainee();
                 break;
             case 19:
-                updateTraineeTrainerList();
+                traineeOptionHandler.updateTraineeTrainerList();
                 break;
             default:
                 run = false;
                 break;
         }
-    }
-
-
-    private void createTrainee() {
-        traineeService.createTrainee(getTraineeData(false));
-        System.out.println("Trainee has been successfully created");
-    }
-
-    private Trainee getTraineeData(boolean allowEmpty) {
-        String firstName = inputHandler.getLine("First name: ", allowEmpty);
-        String lastName = inputHandler.getLine("Last name: ", allowEmpty);
-        String address = inputHandler.getLine("Address: ", allowEmpty);
-
-        return new Trainee(firstName, lastName, address, inputHandler.getDate("Birthday (dd-MM-yyyy): ", allowEmpty));
-    }
-
-
-    private void createTrainer() {
-        trainerService.createTrainer(getTrainerData(false));
-        System.out.println("Trainer has been successfully created");
-    }
-
-    private Trainer getTrainerData(boolean allowEmpty) {
-        String firstName = inputHandler.getLine("First name: ", allowEmpty);
-        String lastName = inputHandler.getLine("Last name: ", allowEmpty);
-
-        try {
-            return new Trainer(firstName, lastName, getTrainingType(allowEmpty));
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-            return null;
-        }
-    }
-
-    private TrainingType getTrainingType(boolean allowEmpty) {
-        List<TrainingType> trainingTypes = trainingTypeService.findAll();
-        menu.displayTrainingTypeMenu(trainingTypes);
-
-        Integer choice = inputHandler.getInputInRange(1, trainingTypes.size(), allowEmpty);
-        if (choice == null) {
-            return null;
-        }
-
-        Optional<TrainingType> optionalTrainingType = trainingTypeService.findById((long) choice);
-        if (optionalTrainingType.isPresent()) {
-            return optionalTrainingType.get();
-        } else {
-            throw new RuntimeException("There's no training type with id " + choice);
-        }
-    }
-
-
-    private void createTraining() {
-        Training data = getTrainingData();
-        if (data == null)
-            return;
-        trainingService.createTraining(data);
-        System.out.println("Training has been successfully created");
-    }
-
-    private Training getTrainingData() {
-        System.out.print("Trainee id: ");
-        Long traineeId = inputHandler.getLong();
-        Optional<Trainee> optionalTrainee = traineeService.getTraineeById(traineeId);
-        if (!optionalTrainee.isPresent()) {
-            System.out.println("No such trainee");
-            return null;
-        }
-
-        System.out.print("Trainer id: ");
-        Long trainerId = inputHandler.getLong();
-        Optional<Trainer> optionalTrainer = trainerService.getTrainerById(trainerId);
-        if (!optionalTrainer.isPresent()) {
-            System.out.println("No such trainer");
-            return null;
-        }
-
-        boolean allowEmpty = false;
-        String trainingName = inputHandler.getLine("Training name: ", allowEmpty);
-        TrainingType trainingType = getTrainingType(allowEmpty);
-        Date trainingDate = inputHandler.getDate("Training date (dd-MM-yyyy): ", allowEmpty);
-        System.out.print("Training duration: ");
-        Integer trainingDuration = inputHandler.getInteger(allowEmpty);
-
-        return new Training(optionalTrainee.get(), optionalTrainer.get(), trainingName,
-                trainingType, trainingDate, trainingDuration);
-    }
-
-
-    private void updateTrainee() {
-        Long id = getTraineeId();
-        if (id == null)
-            return;
-
-        Trainee updates = getTraineeData(true);
-        updates.setId(id);
-        updates.setActive(null);
-        traineeService.updateTrainee(updates);
-        System.out.println("Trainee has been successfully updated");
-    }
-
-    private Long getTraineeId() {
-        System.out.print("Trainee id: ");
-        Long traineeId = inputHandler.getLong();
-        if (!traineeService.existsTraineeById(traineeId)) {
-            System.out.println("There's no trainee with such ID");
-            return null;
-        }
-
-        return traineeId;
-    }
-
-    private void updateTrainer() {
-        Long id = getTrainerId();
-        if (id == null)
-            return;
-
-        Trainer updates = getTrainerData(true);
-        updates.setId(id);
-        updates.setActive(null);
-        trainerService.updateTrainer(updates);
-        System.out.println("Trainer has been successfully updated");
-    }
-
-    private Long getTrainerId() {
-        System.out.print("Trainer id: ");
-        Long trainerId = inputHandler.getLong();
-        if (!trainerService.existsTrainerById(trainerId)) {
-            System.out.println("There's no trainer with such ID");
-            return null;
-        }
-
-        return trainerId;
-    }
-
-
-    private void selectAllTrainees() {
-        System.out.println("Trainees:");
-        traineeService.getAllTrainees().forEach(System.out::println);
-        System.out.println("================================");
-    }
-
-
-    private void selectAllTrainers() {
-        System.out.println("Trainers:");
-        trainerService.getAllTrainers().forEach(System.out::println);
-        System.out.println("================================");
-    }
-
-
-    private void selectAllTrainings() {
-        System.out.println("Trainings:");
-        trainingService.getAllTrainings().forEach(System.out::println);
-        System.out.println("================================");
-    }
-
-
-    private void selectTraineeByUsername() {
-        String username = inputHandler.getLine("Trainee username: ", false);
-        Optional<Trainee> optionalTrainee = traineeService.getTraineeByUsername(username);
-
-        if (optionalTrainee.isPresent()) {
-            System.out.println(optionalTrainee.get());
-        } else {
-            System.out.println("There is no trainee with such username");
-        }
-    }
-
-    private void selectTrainerByUsername() {
-        String username = inputHandler.getLine("Trainer username: ", false);
-        Optional<Trainer> optionalTrainer = trainerService.getTrainerByUsername(username);
-
-        if (optionalTrainer.isPresent()) {
-            System.out.println(optionalTrainer.get());
-        } else {
-            System.out.println("There is no trainer with such username");
-        }
-    }
-
-
-    private void deleteTraineeByUsername() {
-        String username = inputHandler.getLine("Trainee username: ", false);
-
-        if (traineeService.deleteTraineeByUsername(username)) {
-            System.out.println("Trainee successfully deleted");
-        } else {
-            System.out.println("There is no trainee with such username");
-        }
-    }
-
-
-    private void changeTraineePassword() {
-        String username = inputHandler.getLine("Trainee username: ", false);
-        String oldPassword = inputHandler.getLine("Old password: ", false);
-        String newPassword = inputHandler.getLine("New password: ", false);
-
-        try {
-            traineeService.changeTraineePassword(username, oldPassword, newPassword);
-            System.out.println("Password successfully changed");
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
-    }
-
-
-    private void changeTrainerPassword() {
-        String username = inputHandler.getLine("Trainer username: ", false);
-        String oldPassword = inputHandler.getLine("Old password: ", false);
-        String newPassword = inputHandler.getLine("New password: ", false);
-
-        try {
-            trainerService.changeTrainerPassword(username, oldPassword, newPassword);
-            System.out.println("Password successfully changed");
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
-    }
-
-
-    private void toggleTraineeIsActiveStatus() {
-        System.out.print("Trainee id: ");
-        Long id = inputHandler.getLong();
-
-        try {
-            boolean result = traineeService.toggleTraineeIsActiveStatus(id);
-            System.out.println("Status was successfully changed. Current value: " + result);
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
-    }
-
-    private void toggleTrainerIsActiveStatus() {
-        System.out.print("Trainer id: ");
-        Long id = inputHandler.getLong();
-
-        try {
-            boolean result = trainerService.toggleTrainerIsActiveStatus(id);
-            System.out.println("Status was successfully changed. Current value: " + result);
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
-    }
-
-
-    private void displayTraineeTrainingList() {
-        String username = inputHandler.getLine("Trainee username: ", false);
-        if (!traineeService.existsTraineeByUsername(username)) {
-            System.out.println("There's no trainee with such username");
-            return;
-        }
-
-        Date fromDate = inputHandler.getDate("From date (dd-MM-yyyy): ", true);
-        Date toDate = inputHandler.getDate("To date (dd-MM-yyyy): ", true);
-        String trainerFirstName = inputHandler.getLine("Trainer's first name: ", true);
-        String trainerLastName = inputHandler.getLine("Trainer's last name: ", true);
-        String trainingType = inputHandler.getLine("Training type: ", true);
-
-        List<Training> trainings = traineeService.findTraineeTrainingList(username, fromDate, toDate,
-                trainerFirstName, trainerLastName, trainingType);
-        System.out.println("Trainings list:");
-        trainings.forEach(System.out::println);
-    }
-
-    private void displayTrainerTrainingList() {
-        String username = inputHandler.getLine("Trainer username: ", false);
-        if (!trainerService.existsTrainerByUsername(username)) {
-            System.out.println("There's no trainer with such username");
-            return;
-        }
-
-        Date fromDate = inputHandler.getDate("From date (dd-MM-yyyy): ", true);
-        Date toDate = inputHandler.getDate("To date (dd-MM-yyyy): ", true);
-        String trainerFirstName = inputHandler.getLine("Trainee's first name: ", true);
-        String trainerLastName = inputHandler.getLine("Trainee's last name: ", true);
-
-        List<Training> trainings = trainerService.findTrainerTrainingList(username, fromDate, toDate,
-                trainerFirstName, trainerLastName);
-        System.out.println("Trainings list:");
-        trainings.forEach(System.out::println);
-    }
-
-
-    private void displayTrainersNotAssignedToTrainee() {
-        String username = inputHandler.getLine("Trainee username: ", false);
-        if (!traineeService.existsTraineeByUsername(username)) {
-            System.out.println("There's no trainee with such username");
-            return;
-        }
-
-        System.out.println("Trainers:");
-        traineeService.findTrainersNotAssignedToTrainee(username).forEach(System.out::println);
-        System.out.println("================================");
-    }
-
-    private void updateTraineeTrainerList() {
-        String username = inputHandler.getLine("Trainee username: ", false);
-        if (!traineeService.existsTraineeByUsername(username)) {
-            System.out.println("There's no trainee with such username");
-            return;
-        }
-
-        Trainee trainee = traineeService.getTraineeByUsername(username).get();
-        menu.displayUpdateTraineeTrainerListMenu();
-        int choice = inputHandler.getInputInRange(1, 4, false);
-        handleUpdateTraineeTrainerListChoice(choice, trainee);
-    }
-
-    private void handleUpdateTraineeTrainerListChoice(int choice, Trainee trainee) {
-        switch (choice) {
-            case 1:
-                displayTrainerList(trainee);
-                break;
-            case 2:
-                addTrainerToTraineeTrainerList(trainee);
-                break;
-            case 3:
-                removeTrainerFromTraineeTrainerList(trainee);
-                break;
-            case 4:
-                clearTraineeTrainerList(trainee);
-                break;
-        }
-    }
-
-    private void displayTrainerList(Trainee trainee) {
-        System.out.println("Trainer list:");
-        trainee.getTrainers().forEach(System.out::println);
-        System.out.println("================================");
-    }
-
-    private void addTrainerToTraineeTrainerList(Trainee trainee) {
-        Trainer trainer = getTrainer();
-        if (trainer != null) {
-            traineeService.addTrainerToList(trainee, trainer);
-            System.out.println("Trainer successfully added");
-        } else {
-            System.out.println("Cannot add trainer");
-        }
-    }
-
-    private Trainer getTrainer() {
-        String username = inputHandler.getLine("Trainer username: ", false);
-        if (!trainerService.existsTrainerByUsername(username)) {
-            System.out.println("There's no trainer with such username");
-            return null;
-        }
-
-        return trainerService.getTrainerByUsername(username).get();
-    }
-
-    private void removeTrainerFromTraineeTrainerList(Trainee trainee) {
-        Trainer trainer = getTrainer();
-        if (trainer != null) {
-            traineeService.removeTrainerFromList(trainee, trainer);
-            System.out.println("Trainer successfully removed");
-        } else {
-            System.out.println("Cannot remove trainer");
-        }
-    }
-
-    private void clearTraineeTrainerList(Trainee trainee) {
-        traineeService.clearTraineeTrainerList(trainee);
-        System.out.println("List successfully cleared");
     }
 }
