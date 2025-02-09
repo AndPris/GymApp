@@ -10,7 +10,6 @@ import example.utils.username.imp.SimpleUsernameGenerator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -24,7 +23,7 @@ public class SimpleUsernameGeneratorTest {
     private TrainerRepository trainerRepository;
 
     @BeforeEach
-    public void init() throws IOException {
+    public void init() {
         traineeRepository = mock(TraineeRepositoryImp.class);
         trainerRepository = mock(TrainerRepositoryImp.class);
 

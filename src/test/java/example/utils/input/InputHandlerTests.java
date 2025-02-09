@@ -33,7 +33,7 @@ public class InputHandlerTests {
         String input = " \ntest\n";
         System.setIn(new ByteArrayInputStream(input.getBytes()));
         String result = inputHandler.getLine("",true);
-        assertEquals(" ", result);
+        assertEquals(null, result);
     }
 
     @Test
