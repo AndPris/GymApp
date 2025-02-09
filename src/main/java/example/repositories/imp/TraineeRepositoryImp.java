@@ -102,6 +102,7 @@ public class TraineeRepositoryImp implements TraineeRepository {
             logger.info("Result: {}", result);
             return result != 0;
         } catch (Exception e) {
+            transaction.rollback();
             logger.error(e.getMessage());
             return false;
         }

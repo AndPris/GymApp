@@ -3,7 +3,6 @@ package example.repositories.imp;
 import example.entities.TrainingType;
 import example.repositories.TrainingTypeRepository;
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Repository;
@@ -15,8 +14,11 @@ import java.util.Optional;
 public class TrainingTypeRepositoryImp implements TrainingTypeRepository {
     private static final Logger logger = LogManager.getLogger(TrainingTypeRepositoryImp.class);
 
-    @PersistenceContext
     private EntityManager entityManager;
+
+    public TrainingTypeRepositoryImp(EntityManager entityManager) {
+        this.entityManager = entityManager;
+    }
 
     @Override
     public List<TrainingType> findAll() {
