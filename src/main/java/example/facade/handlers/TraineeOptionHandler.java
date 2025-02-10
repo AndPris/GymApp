@@ -30,7 +30,7 @@ public class TraineeOptionHandler {
 
 
     public void createTrainee() {
-        if(traineeService.createTrainee(getTraineeData(false)) != null) {
+        if (traineeService.createTrainee(getTraineeData(false)) != null) {
             System.out.println("Trainee has been successfully created");
         } else {
             System.out.println("Error creating trainee");

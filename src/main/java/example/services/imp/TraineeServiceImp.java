@@ -10,12 +10,12 @@ import example.utils.username.UsernameGenerator;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.ValidationException;
+import jakarta.validation.Validator;
 import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import jakarta.validation.Validator;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -131,7 +131,7 @@ public class TraineeServiceImp implements TraineeService {
     @Override
     public void changeTraineePassword(String username, String oldPassword, String newPassword) {
         Optional<Trainee> optionalTrainee = traineeRepository.findByUsernameAndPassword(username, oldPassword);
-        if(!optionalTrainee.isPresent()) {
+        if (!optionalTrainee.isPresent()) {
             throw new IllegalArgumentException("There's no trainee with such username and password");
         }
 

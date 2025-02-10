@@ -58,7 +58,7 @@ public class Facade {
         }
     }
 
-    public void handleUserInput(int userInput) {
+    private void handleUserInput(int userInput) {
         switch (userInput) {
             case 1:
                 traineeOptionHandler.createTrainee();

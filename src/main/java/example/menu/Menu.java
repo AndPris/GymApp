@@ -45,7 +45,7 @@ public class Menu {
     public void displayTrainingTypeMenu(List<TrainingType> trainingTypes) {
         System.out.println("Training type:");
 
-        for(TrainingType trainingType : trainingTypes) {
+        for (TrainingType trainingType : trainingTypes) {
             System.out.println("\t" + trainingType.getId() + " -> " + trainingType.getName());
         }
     }

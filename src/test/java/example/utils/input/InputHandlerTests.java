@@ -32,7 +32,7 @@ public class InputHandlerTests {
     public void getLineEmptyAllowedTest() {
         String input = " \ntest\n";
         System.setIn(new ByteArrayInputStream(input.getBytes()));
-        String result = inputHandler.getLine("",true);
+        String result = inputHandler.getLine("", true);
         assertEquals(null, result);
     }
 
@@ -40,7 +40,7 @@ public class InputHandlerTests {
     public void getLineEmptyNotAllowedTest() {
         String input = " \ntest\n";
         System.setIn(new ByteArrayInputStream(input.getBytes()));
-        String result = inputHandler.getLine("",false);
+        String result = inputHandler.getLine("", false);
         assertEquals("test", result);
     }
 

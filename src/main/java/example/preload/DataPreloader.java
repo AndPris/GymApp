@@ -4,7 +4,6 @@ import example.entities.TrainingType;
 import jakarta.annotation.PostConstruct;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
-import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Component;
 
 @Component

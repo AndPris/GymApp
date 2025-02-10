@@ -41,7 +41,7 @@ public class InputHandler {
 
         while (userInput < minimalValue || userInput > maximalValue) {
             userInput = getInteger(scanner, allowEmpty);
-            if(allowEmpty && userInput == null) {
+            if (allowEmpty && userInput == null) {
                 return null;
             }
 
@@ -75,7 +75,7 @@ public class InputHandler {
 
         while (run) {
             String line = scanner.nextLine();
-            if(allowEmpty && StringUtils.isBlank(line)) {
+            if (allowEmpty && StringUtils.isBlank(line)) {
                 return null;
             }
 

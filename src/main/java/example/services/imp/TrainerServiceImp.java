@@ -129,7 +129,7 @@ public class TrainerServiceImp implements TrainerService {
     @Override
     public void changeTrainerPassword(String username, String oldPassword, String newPassword) {
         Optional<Trainer> optionalTrainer = trainerRepository.findByUsernameAndPassword(username, oldPassword);
-        if(!optionalTrainer.isPresent()) {
+        if (!optionalTrainer.isPresent()) {
             throw new IllegalArgumentException("There's no trainer with such username and password");
         }
 

@@ -3,7 +3,6 @@ package example.repositories;
 import example.entities.TrainingType;
 import example.repositories.imp.TrainingTypeRepositoryImp;
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.Query;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

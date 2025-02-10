@@ -17,7 +17,10 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -276,7 +279,7 @@ public class TraineeServiceTests {
     @Test
     public void findTraineeTrainingListTest_ShouldReturnEmptyList() {
         when(traineeRepository.findTrainingList(any(), any(), any(), any(), any(), any())).thenReturn(new ArrayList<>());
-        List<Training> trainings = traineeService.findTraineeTrainingList(null, null,null,null,null,null);
+        List<Training> trainings = traineeService.findTraineeTrainingList(null, null, null, null, null, null);
         assertTrue(trainings.isEmpty());
     }
 
@@ -285,7 +288,7 @@ public class TraineeServiceTests {
         Training training = new Training();
         when(traineeRepository.findTrainingList(any(), any(), any(), any(), any(), any())).thenReturn(Arrays.asList(training));
 
-        List<Training> trainings = traineeService.findTraineeTrainingList(null, null,null,null,null,null);
+        List<Training> trainings = traineeService.findTraineeTrainingList(null, null, null, null, null, null);
 
         assertEquals(1, trainings.size());
         assertEquals(training, trainings.get(0));
