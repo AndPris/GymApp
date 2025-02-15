@@ -3,12 +3,14 @@ package example.entities;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Data
+@NoArgsConstructor
 public class TrainingType {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -23,10 +25,6 @@ public class TrainingType {
 
     @OneToMany(mappedBy = "trainingType")
     private List<Training> trainings = new ArrayList<>();
-
-    public TrainingType() {
-
-    }
 
     public TrainingType(String name) {
         this.name = name;

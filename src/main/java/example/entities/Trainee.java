@@ -2,6 +2,7 @@ package example.entities;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -13,6 +14,7 @@ import java.util.List;
 @Getter
 @Setter
 @Entity
+@NoArgsConstructor
 public class Trainee extends User {
     private String address;
 
@@ -35,10 +37,6 @@ public class Trainee extends User {
         super(firstName, lastName);
         this.address = address;
         this.dateOfBirth = dateOfBirth;
-    }
-
-    public Trainee() {
-        super();
     }
 
     @Override

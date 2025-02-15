@@ -3,10 +3,12 @@ package example.entities;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
+@NoArgsConstructor
 public abstract class User {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -35,9 +37,6 @@ public abstract class User {
         this.firstName = firstName;
         this.lastName = lastName;
         this.active = true;
-    }
-
-    public User() {
     }
 
     public Boolean isActive() {

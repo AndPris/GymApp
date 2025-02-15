@@ -5,11 +5,13 @@ import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.Date;
 
 @Data
 @Entity
+@NoArgsConstructor
 public class Training {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -47,9 +49,6 @@ public class Training {
         this.trainingType = trainingType;
         this.trainingDate = trainingDate;
         this.trainingDuration = trainingDuration;
-    }
-
-    public Training() {
     }
 
     @Override

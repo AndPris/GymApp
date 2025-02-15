@@ -2,6 +2,7 @@ package example.entities;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.ArrayList;
@@ -10,6 +11,7 @@ import java.util.List;
 @Setter
 @Getter
 @Entity
+@NoArgsConstructor
 public class Trainer extends User {
     @ManyToOne
     @JoinColumn(name = "specialization")
@@ -25,11 +27,6 @@ public class Trainer extends User {
         super(firstName, lastName);
         this.specialization = specialization;
     }
-
-    public Trainer() {
-        super();
-    }
-
 
     @Override
     public String toString() {
