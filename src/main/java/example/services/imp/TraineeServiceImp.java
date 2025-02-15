@@ -121,12 +121,9 @@ public class TraineeServiceImp implements TraineeService {
 
     @Override
     public void changeTraineePassword(String username, String oldPassword, String newPassword) {
-        Optional<Trainee> optionalTrainee = traineeRepository.findByUsernameAndPassword(username, oldPassword);
-        if (!optionalTrainee.isPresent()) {
-            throw new IllegalArgumentException("There's no trainee with such username and password");
-        }
+        Trainee trainee = traineeRepository.findByUsernameAndPassword(username, oldPassword)
+                .orElseThrow(() -> new IllegalArgumentException("There's no trainee with such username and password"));
 
-        Trainee trainee = optionalTrainee.get();
         trainee.setPassword(newPassword);
         validateTrainee(trainee);
         traineeRepository.save(trainee);
@@ -134,12 +131,9 @@ public class TraineeServiceImp implements TraineeService {
 
     @Override
     public boolean toggleTraineeIsActiveStatus(Long id) {
-        Optional<Trainee> optionalTrainee = traineeRepository.findById(id);
-        if (!optionalTrainee.isPresent()) {
-            throw new IllegalArgumentException("No trainee with such id: " + id);
-        }
+        Trainee trainee = traineeRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("No trainee with such id: " + id));
 
-        Trainee trainee = optionalTrainee.get();
         trainee.setActive(!trainee.isActive());
         traineeRepository.save(trainee);
         return trainee.isActive();

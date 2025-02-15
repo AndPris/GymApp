@@ -119,12 +119,9 @@ public class TrainerServiceImp implements TrainerService {
 
     @Override
     public void changeTrainerPassword(String username, String oldPassword, String newPassword) {
-        Optional<Trainer> optionalTrainer = trainerRepository.findByUsernameAndPassword(username, oldPassword);
-        if (!optionalTrainer.isPresent()) {
-            throw new IllegalArgumentException("There's no trainer with such username and password");
-        }
+        Trainer trainer = trainerRepository.findByUsernameAndPassword(username, oldPassword)
+                .orElseThrow(() -> new IllegalArgumentException("There's no trainer with such username and password"));
 
-        Trainer trainer = optionalTrainer.get();
         trainer.setPassword(newPassword);
         validateTrainer(trainer);
         trainerRepository.save(trainer);
@@ -132,12 +129,9 @@ public class TrainerServiceImp implements TrainerService {
 
     @Override
     public boolean toggleTrainerIsActiveStatus(Long id) {
-        Optional<Trainer> optionalTrainer = trainerRepository.findById(id);
-        if (!optionalTrainer.isPresent()) {
-            throw new IllegalArgumentException("No trainer with such id: " + id);
-        }
+        Trainer trainer = trainerRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("No trainer with such id: " + id));
 
-        Trainer trainer = optionalTrainer.get();
         trainer.setActive(!trainer.isActive());
         trainerRepository.save(trainer);
         return trainer.isActive();
