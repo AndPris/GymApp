@@ -3,6 +3,8 @@ package example.facade.handlers;
 import example.entities.Trainee;
 import example.entities.Trainer;
 import example.entities.Training;
+import example.exceptions.TraineeNotFoundException;
+import example.exceptions.TrainerNotFoundException;
 import example.menu.Menu;
 import example.services.TraineeService;
 import example.services.TrainerService;
@@ -11,7 +13,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 
 @Component
 public class TraineeOptionHandler {
@@ -64,13 +65,9 @@ public class TraineeOptionHandler {
 
     public void selectTraineeByUsername(Trainee trainee) {
         String username = trainee.getUsername();
-        Optional<Trainee> optionalTrainee = traineeService.getTraineeByUsername(username);
-
-        if (optionalTrainee.isPresent()) {
-            System.out.println(optionalTrainee.get());
-        } else {
-            System.out.println("There is no trainee with such username");
-        }
+        Trainee resultTrainee = traineeService.getTraineeByUsername(username)
+                .orElseThrow(() -> new TraineeNotFoundException("There is no trainee with such username"));
+        System.out.println(resultTrainee);
     }
 
 
@@ -165,11 +162,9 @@ public class TraineeOptionHandler {
 
     private Trainer getTrainer() {
         String username = inputHandler.getLine("Trainer username: ", false);
-        if (!trainerService.existsTrainerByUsername(username)) {
-            throw new RuntimeException("There's no trainer with such username");
-        }
 
-        return trainerService.getTrainerByUsername(username).get();
+        return trainerService.getTrainerByUsername(username)
+                .orElseThrow(() -> new TrainerNotFoundException("There's no trainer with such username"));
     }
 
     private void removeTrainerFromTraineeTrainerList(Trainee trainee) {

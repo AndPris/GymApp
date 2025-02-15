@@ -1,13 +1,13 @@
 package example.facade.handlers.utils;
 
 import example.entities.TrainingType;
+import example.exceptions.TrainingTypeNotFoundException;
 import example.menu.Menu;
 import example.services.TrainingTypeService;
 import example.utils.input.InputHandler;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.Optional;
 
 @Component
 public class TrainingTypeUtil {
@@ -30,11 +30,7 @@ public class TrainingTypeUtil {
             return null;
         }
 
-        Optional<TrainingType> optionalTrainingType = trainingTypeService.findById((long) choice);
-        if (optionalTrainingType.isPresent()) {
-            return optionalTrainingType.get();
-        } else {
-            throw new RuntimeException("There's no training type with id " + choice);
-        }
+        return trainingTypeService.findById((long) choice)
+                .orElseThrow(() -> new TrainingTypeNotFoundException("There's no training type with id " + choice));
     }
 }

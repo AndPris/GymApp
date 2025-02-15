@@ -2,6 +2,7 @@ package example.facade.handlers;
 
 import example.entities.Trainer;
 import example.entities.Training;
+import example.exceptions.TrainerNotFoundException;
 import example.facade.handlers.utils.TrainingTypeUtil;
 import example.services.TrainerService;
 import example.utils.input.InputHandler;
@@ -9,7 +10,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 
 @Component
 public class TrainerOptionHandler {
@@ -55,13 +55,9 @@ public class TrainerOptionHandler {
 
     public void selectTrainerByUsername(Trainer trainer) {
         String username = trainer.getUsername();
-        Optional<Trainer> optionalTrainer = trainerService.getTrainerByUsername(username);
-
-        if (optionalTrainer.isPresent()) {
-            System.out.println(optionalTrainer.get());
-        } else {
-            System.out.println("There is no trainer with such username");
-        }
+        Trainer resultTrainer = trainerService.getTrainerByUsername(username)
+                .orElseThrow(() -> new TrainerNotFoundException("There is no trainer with such username"));
+        System.out.println(resultTrainer);
     }
 
 

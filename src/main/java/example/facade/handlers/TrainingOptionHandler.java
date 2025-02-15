@@ -4,6 +4,7 @@ import example.entities.Trainee;
 import example.entities.Trainer;
 import example.entities.Training;
 import example.entities.TrainingType;
+import example.exceptions.TraineeNotFoundException;
 import example.facade.handlers.utils.TrainingTypeUtil;
 import example.services.TraineeService;
 import example.services.TrainingService;
@@ -11,7 +12,6 @@ import example.utils.input.InputHandler;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
-import java.util.Optional;
 
 @Component
 public class TrainingOptionHandler {
@@ -39,10 +39,8 @@ public class TrainingOptionHandler {
     private Training getTrainingData(Trainer trainer) {
         System.out.print("Trainee id: ");
         Long traineeId = inputHandler.getLong();
-        Optional<Trainee> optionalTrainee = traineeService.getTraineeById(traineeId);
-        if (!optionalTrainee.isPresent()) {
-            throw new RuntimeException("No such trainee");
-        }
+        Trainee trainee = traineeService.getTraineeById(traineeId)
+                .orElseThrow(() -> new TraineeNotFoundException("No such trainee"));
 
         boolean allowEmpty = false;
         String trainingName = inputHandler.getLine("Training name: ", allowEmpty);
@@ -51,7 +49,7 @@ public class TrainingOptionHandler {
         System.out.print("Training duration: ");
         Integer trainingDuration = inputHandler.getInteger(allowEmpty);
 
-        return new Training(optionalTrainee.get(), trainer, trainingName,
+        return new Training(trainee, trainer, trainingName,
                 trainingType, trainingDate, trainingDuration);
     }
 
