@@ -76,17 +76,8 @@ public class TraineeServiceImp implements TraineeService {
     }
 
     private void validateTraineeForUpdate(Trainee trainee) {
-        if (trainee == null) {
-            throw new IllegalArgumentException("Cannot update a trainee: trainee is null");
-        }
-
-        Long traineeId = trainee.getId();
-        if (traineeId == null) {
-            throw new IllegalArgumentException("Cannot update a trainee: id is null");
-        }
-
-        if (!traineeRepository.findById(traineeId).isPresent()) {
-            throw new IllegalArgumentException("Cannot update a trainee: there is no trainee with id " + traineeId);
+        if (trainee == null || trainee.getId() == null || !traineeRepository.findById(trainee.getId()).isPresent()) {
+            throw new IllegalArgumentException("Cannot update a trainee: invalid data");
         }
 
         validateTrainee(trainee);

@@ -108,16 +108,16 @@ public class TraineeServiceTests {
     @Test
     public void updateTraineeTest_ShouldThrow1() {
         String message = assertThrows(IllegalArgumentException.class, () -> traineeService.updateTrainee(null)).getMessage();
-        assertEquals("Cannot update a trainee: trainee is null", message);
+        assertEquals("Cannot update a trainee: invalid data", message);
 
         message = assertThrows(IllegalArgumentException.class, () -> traineeService.updateTrainee(new Trainee())).getMessage();
-        assertEquals("Cannot update a trainee: id is null", message);
+        assertEquals("Cannot update a trainee: invalid data", message);
 
         Trainee trainee = new Trainee();
         trainee.setId(2L);
         when(traineeRepository.findById(2L)).thenReturn(Optional.empty());
         message = assertThrows(IllegalArgumentException.class, () -> traineeService.updateTrainee(trainee)).getMessage();
-        assertEquals("Cannot update a trainee: there is no trainee with id 2", message);
+        assertEquals("Cannot update a trainee: invalid data", message);
     }
 
     @ParameterizedTest

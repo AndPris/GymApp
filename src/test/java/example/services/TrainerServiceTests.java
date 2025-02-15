@@ -107,16 +107,16 @@ public class TrainerServiceTests {
     @Test
     public void updateTrainerTest_ShouldThrow1() {
         String message = assertThrows(IllegalArgumentException.class, () -> trainerService.updateTrainer(null)).getMessage();
-        assertEquals("Cannot update a trainer: trainer is null", message);
+        assertEquals("Cannot update a trainer: invalid data", message);
 
         message = assertThrows(IllegalArgumentException.class, () -> trainerService.updateTrainer(new Trainer())).getMessage();
-        assertEquals("Cannot update a trainer: id is null", message);
+        assertEquals("Cannot update a trainer: invalid data", message);
 
         Trainer trainer = new Trainer();
         trainer.setId(2L);
         when(trainerRepository.findById(2L)).thenReturn(Optional.empty());
         message = assertThrows(IllegalArgumentException.class, () -> trainerService.updateTrainer(trainer)).getMessage();
-        assertEquals("Cannot update a trainer: there is no trainer with id 2", message);
+        assertEquals("Cannot update a trainer: invalid data", message);
     }
 
     @ParameterizedTest

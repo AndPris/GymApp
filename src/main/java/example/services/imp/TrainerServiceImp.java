@@ -74,17 +74,8 @@ public class TrainerServiceImp implements TrainerService {
     }
 
     private void validateTrainerForUpdate(Trainer trainer) {
-        if (trainer == null) {
-            throw new IllegalArgumentException("Cannot update a trainer: trainer is null");
-        }
-
-        Long trainerId = trainer.getId();
-        if (trainerId == null) {
-            throw new IllegalArgumentException("Cannot update a trainer: id is null");
-        }
-
-        if (!trainerRepository.findById(trainerId).isPresent()) {
-            throw new IllegalArgumentException("Cannot update a trainer: there is no trainer with id " + trainerId);
+        if (trainer == null || trainer.getId() == null || !trainerRepository.findById(trainer.getId()).isPresent()) {
+            throw new IllegalArgumentException("Cannot update a trainer: invalid data");
         }
 
         validateTrainer(trainer);
