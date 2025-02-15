@@ -1,6 +1,7 @@
 package example.security.services;
 
 import example.entities.Trainee;
+import example.exceptions.TraineeNotFoundException;
 import example.repositories.TraineeRepository;
 import example.utils.input.InputHandler;
 import org.springframework.stereotype.Service;
@@ -22,10 +23,6 @@ public class TraineeAuthService {
         String password = inputHandler.getLine("Trainee password: ", false);
 
         Optional<Trainee> optionalTrainee = traineeRepository.findByUsernameAndPassword(username, password);
-        if (optionalTrainee.isPresent()) {
-            return optionalTrainee.get();
-        } else {
-            throw new RuntimeException("Trainee not found");
-        }
+        return optionalTrainee.orElseThrow(() -> new TraineeNotFoundException("Trainee not found"));
     }
 }

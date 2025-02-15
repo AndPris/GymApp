@@ -1,6 +1,7 @@
 package example.security.services;
 
 import example.entities.Trainer;
+import example.exceptions.TrainerNotFoundException;
 import example.repositories.TrainerRepository;
 import example.utils.input.InputHandler;
 import org.springframework.stereotype.Service;
@@ -22,10 +23,6 @@ public class TrainerAuthService {
         String password = inputHandler.getLine("Trainer password: ", false);
 
         Optional<Trainer> optionalTrainer = trainerRepository.findByUsernameAndPassword(username, password);
-        if (optionalTrainer.isPresent()) {
-            return optionalTrainer.get();
-        } else {
-            throw new RuntimeException("Trainer not found");
-        }
+        return optionalTrainer.orElseThrow(() -> new TrainerNotFoundException("Trainer not found"));
     }
 }
