@@ -1,27 +1,28 @@
 package example.utils.username.imp;
 
-import example.entities.Trainee;
-import example.entities.Trainer;
 import example.entities.User;
-import example.storages.Storage;
+import example.repositories.TraineeRepository;
+import example.repositories.TrainerRepository;
 import example.utils.username.UsernameGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.Collection;
+
 
 @Component
 public class SimpleUsernameGenerator implements UsernameGenerator {
-    private Storage<Trainer> trainerStorage;
-    private Storage<Trainee> traineeStorage;
+    private TrainerRepository trainerRepository;
+    private TraineeRepository traineeRepository;
 
     @Autowired
-    public void setTrainerStorage(Storage<Trainer> trainerStorage) {
-        this.trainerStorage = trainerStorage;
+    public void setTrainerRepository(TrainerRepository trainerRepository) {
+        this.trainerRepository = trainerRepository;
     }
 
     @Autowired
-    public void setTraineeStorage(Storage<Trainee> traineeStorage) {
-        this.traineeStorage = traineeStorage;
+    public void setTraineeRepository(TraineeRepository traineeRepository) {
+        this.traineeRepository = traineeRepository;
     }
 
 
@@ -37,14 +38,14 @@ public class SimpleUsernameGenerator implements UsernameGenerator {
     }
 
     private int getUsernameSerialNumber(User user) {
-        return Math.max(getUsernameSerialNumber(traineeStorage, user),
-                getUsernameSerialNumber(trainerStorage, user));
+        return Math.max(getUsernameSerialNumber(traineeRepository.findAll(), user),
+                getUsernameSerialNumber(trainerRepository.findAll(), user));
     }
 
-    private <T extends User> int getUsernameSerialNumber(Storage<T> storage, User user) {
+    private <T extends User> int getUsernameSerialNumber(Collection<T> users, User user) {
         int maxSerial = -1;
 
-        for (User currentUser : storage.values()) {
+        for (User currentUser : users) {
             if (!hasSameFullName(currentUser, user)) {
                 continue;
             }

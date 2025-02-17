@@ -1,15 +1,37 @@
 package example.entities;
 
+import jakarta.persistence.*;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@Entity
+@Inheritance(strategy = InheritanceType.JOINED)
+@NoArgsConstructor
 public abstract class User {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+
+    @Column(nullable = false)
+    @Size(min = 2, max = 20, message = "First name must be from 2 to 20 characters")
     private String firstName;
+
+    @Column(nullable = false)
+    @Size(min = 2, max = 20, message = "Last name must be from 2 to 20 characters")
     private String lastName;
+
+    @Column(unique = true, nullable = false)
+    @Size(min = 2, max = 50, message = "Username must be from 2 to 50 characters")
     private String username;
+
+    @Column(nullable = false)
+    @Size(min = 6, max = 20, message = "Password must be from 6 to 20 characters")
     private String password;
-    private boolean active;
+
+    @Column(nullable = false)
+    private Boolean active;
 
     public User(String firstName, String lastName) {
         this.firstName = firstName;
@@ -17,7 +39,8 @@ public abstract class User {
         this.active = true;
     }
 
-    public User() {
+    public Boolean isActive() {
+        return active;
     }
 
     @Override

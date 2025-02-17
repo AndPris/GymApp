@@ -1,0 +1,112 @@
+package example.repositories.imp;
+
+import example.entities.Trainer;
+import example.entities.Training;
+import example.repositories.TrainerRepository;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityTransaction;
+import jakarta.persistence.Query;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.springframework.stereotype.Repository;
+
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
+
+@Repository
+public class TrainerRepositoryImp implements TrainerRepository {
+    private static final Logger logger = LogManager.getLogger(TrainerRepositoryImp.class);
+
+    private final EntityManager entityManager;
+
+    public TrainerRepositoryImp(EntityManager entityManager) {
+        this.entityManager = entityManager;
+    }
+
+    @Override
+    public Trainer save(Trainer trainer) {
+        EntityTransaction transaction = entityManager.getTransaction();
+
+        try {
+            transaction.begin();
+
+            if (trainer.getId() == null) {
+                entityManager.persist(trainer);
+                logger.info("Creating a new trainer: {}", trainer);
+            } else {
+                entityManager.merge(trainer);
+                logger.info("Updating a trainer {}", trainer);
+            }
+
+            transaction.commit();
+            logger.info("Operation successfully performed");
+            return trainer;
+        } catch (Exception e) {
+            transaction.rollback();
+            logger.error(e.getMessage());
+        }
+
+        return null;
+    }
+
+    @Override
+    public List<Trainer> findAll() {
+        logger.info("Find all trainers");
+        return entityManager.createQuery("select t from Trainer t " +
+                        "left outer join Training tr on t.id=tr.trainee.id")
+                .getResultList();
+    }
+
+    @Override
+    public Optional<Trainer> findById(Long id) {
+        Trainer trainer = entityManager.find(Trainer.class, id);
+        logger.info("Find trainer by id: {}. Result: {}", id, trainer);
+        return Optional.ofNullable(trainer);
+    }
+
+    @Override
+    public Optional<Trainer> findByUsername(String username) {
+        Query query = entityManager.createQuery("select t from Trainer t where t.username=:username");
+        query.setParameter("username", username);
+
+        List<Trainer> result = query.getResultList();
+        logger.info("Find trainer with username {}. Result: {}", username, result);
+        return Optional.ofNullable(result.isEmpty() ? null : result.get(0));
+    }
+
+    @Override
+    public Optional<Trainer> findByUsernameAndPassword(String username, String password) {
+        Query query = entityManager.createQuery("select t from Trainer t where t.username=:username and t.password=:password");
+        query.setParameter("username", username);
+        query.setParameter("password", password);
+
+        List<Trainer> result = query.getResultList();
+        logger.info("Find trainer with username {} and password {}. Result: {}", username, password, result);
+        return Optional.ofNullable(result.isEmpty() ? null : result.get(0));
+    }
+
+    @Override
+    public List<Training> findTrainingList(String username, Date fromDate, Date toDate,
+                                           String traineeFirstName, String traineeLastName) {
+
+        Query query = entityManager.createQuery("select t from Training t " +
+                "where t.trainer.username=:username " +
+                "and (:fromDate is null or t.trainingDate > :fromDate) " +
+                "and (:toDate is null or t.trainingDate < :toDate) " +
+                "and (:traineeFirstName is null or t.trainee.firstName=:traineeFirstName) " +
+                "and (:traineeLastName is null or t.trainee.lastName=:traineeLastName)");
+
+        query.setParameter("username", username);
+        query.setParameter("fromDate", fromDate);
+        query.setParameter("toDate", toDate);
+        query.setParameter("traineeFirstName", traineeFirstName);
+        query.setParameter("traineeLastName", traineeLastName);
+
+        List<Training> result = query.getResultList();
+        logger.info("Find training list of trainee with username {}, from date {}, to date {}," +
+                        " trainee first name {}, trainee last name {}. Result: {}",
+                username, fromDate, toDate, traineeFirstName, traineeLastName, result);
+        return result;
+    }
+}

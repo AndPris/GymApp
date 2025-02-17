@@ -10,39 +10,44 @@ import java.util.Scanner;
 
 @Component
 public class InputHandler {
-    public Date getDate(String message) {
+    public Date getDate(String message, boolean allowEmpty) {
         boolean run = true;
         SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");
         Scanner scanner = new Scanner(System.in);
-        Date birthday = null;
+        Date date = null;
 
         while (run) {
             try {
                 System.out.print(message);
-                birthday = format.parse(scanner.nextLine());
+
+                String dateLine = scanner.nextLine();
+                if (allowEmpty && StringUtils.isBlank(dateLine)) {
+                    return null;
+                }
+
+                date = format.parse(dateLine);
                 run = false;
             } catch (ParseException e) {
                 System.out.println("Invalid date format, try again");
             }
         }
 
-        return birthday;
+        return date;
     }
 
-    public int getInputInRange(int minimalValue, int maximalValue) {
+    public Integer getInputInRange(int minimalValue, int maximalValue, boolean allowEmpty) {
         Scanner scanner = new Scanner(System.in);
-        int userInput = 0;
+        Integer userInput = 0;
 
         while (userInput < minimalValue || userInput > maximalValue) {
-            if (!scanner.hasNextInt()) {
-                System.out.println("Please enter an integer");
-                scanner.next();
-                continue;
+            userInput = getInteger(scanner, allowEmpty);
+            if (allowEmpty && userInput == null) {
+                return null;
             }
 
-            userInput = scanner.nextInt();
-            if (userInput < minimalValue || userInput > maximalValue)
+            if (userInput < minimalValue || userInput > maximalValue) {
                 System.out.println("Number must be from " + minimalValue + " to " + maximalValue);
+            }
         }
 
         return userInput;
@@ -52,32 +57,49 @@ public class InputHandler {
         Scanner scanner = new Scanner(System.in);
 
         while (!scanner.hasNextLong()) {
-            System.out.println("Please enter an integer");
+            System.out.println("Please enter a long number");
             scanner.next();
         }
 
         return scanner.nextLong();
     }
 
-    public float getFloat() {
+    public Integer getInteger(boolean allowEmpty) {
         Scanner scanner = new Scanner(System.in);
-
-        while (!scanner.hasNextFloat()) {
-            System.out.println("Please enter a float number");
-            scanner.next();
-        }
-
-        return scanner.nextFloat();
+        return getInteger(scanner, allowEmpty);
     }
 
-    public String getLine(boolean allowEmpty) {
+    private Integer getInteger(Scanner scanner, boolean allowEmpty) {
+        boolean run = true;
+        Integer result = null;
+
+        while (run) {
+            String line = scanner.nextLine();
+            if (allowEmpty && StringUtils.isBlank(line)) {
+                return null;
+            }
+
+            try {
+                result = Integer.parseInt(line);
+                run = false;
+            } catch (NumberFormatException exception) {
+                System.out.println("Please enter an integer number");
+            }
+        }
+
+        return result;
+    }
+
+    public String getLine(String message, boolean allowEmpty) {
+        System.out.print(message);
         Scanner scanner = new Scanner(System.in);
         String line = scanner.nextLine();
 
-        if (allowEmpty)
-            return line;
+        if (allowEmpty && StringUtils.isBlank(line)) {
+            return null;
+        }
 
-        while (!StringUtils.isNoneBlank(line)) {
+        while (StringUtils.isBlank(line)) {
             System.out.println("Please enter a non empty line");
             line = scanner.nextLine();
         }

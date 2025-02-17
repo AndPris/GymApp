@@ -1,37 +1,45 @@
 package example.services.imp;
 
-import example.daos.TrainingDAO;
 import example.entities.Training;
+import example.repositories.TrainingRepository;
 import example.services.TrainingService;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.Validation;
+import jakarta.validation.ValidationException;
+import jakarta.validation.Validator;
 import lombok.Setter;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 @Setter
 @Service
 public class TrainingServiceImp implements TrainingService {
-    @Autowired
-    private TrainingDAO trainingDAO;
+    private final TrainingRepository trainingRepository;
+    private Validator validator;
+
+    public TrainingServiceImp(TrainingRepository trainingRepository) {
+        this.trainingRepository = trainingRepository;
+        validator = Validation.buildDefaultValidatorFactory().getValidator();
+    }
 
     @Override
     public Training createTraining(Training training) {
-        return trainingDAO.save(training);
+        if (training == null) {
+            throw new IllegalArgumentException("Cannot create a training: training is null");
+        }
+
+        validateTraining(training);
+
+        return trainingRepository.save(training);
+    }
+
+    private void validateTraining(Training training) {
+        for (ConstraintViolation<Training> violation : validator.validate(training)) {
+            throw new ValidationException("Validation error: " + violation.getMessage());
+        }
     }
 
     @Override
     public Iterable<Training> getAllTrainings() {
-        return trainingDAO.findAll();
-    }
-
-    @Override
-    public Optional<Training> getTrainingById(Long id) {
-        return trainingDAO.findById(id);
-    }
-
-    @Override
-    public boolean existsTraining(Long id) {
-        return trainingDAO.existsById(id);
+        return trainingRepository.findAll();
     }
 }
