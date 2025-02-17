@@ -1,4 +1,4 @@
-package example;
+package example.config;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
