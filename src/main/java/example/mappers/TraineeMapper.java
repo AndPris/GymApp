@@ -2,6 +2,7 @@ package example.mappers;
 
 import example.dtos.trainee.TraineeCreateDTO;
 import example.dtos.trainee.TraineeDTO;
+import example.dtos.trainee.TraineeSummaryDTO;
 import example.dtos.trainer.TrainerSummaryDTO;
 import example.entities.Trainee;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,4 +48,16 @@ public class TraineeMapper extends UserMapper {
 
         return trainee;
     }
+
+
+    public TraineeSummaryDTO traineeToTraineeSummaryDTO(Trainee trainee) {
+        TraineeSummaryDTO traineeSummaryDTO = new TraineeSummaryDTO();
+
+        traineeSummaryDTO.setUsername(trainee.getUsername());
+        traineeSummaryDTO.setFirstName(trainee.getFirstName());
+        traineeSummaryDTO.setLastName(trainee.getLastName());
+
+        return traineeSummaryDTO;
+    }
+
 }

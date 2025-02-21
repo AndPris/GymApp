@@ -45,7 +45,7 @@ public class TraineeRestController {
     @GetMapping("/{username}")
     public ResponseEntity<TraineeDTO> getTraineeByUsername(@PathVariable("username") String username) {
         Optional<Trainee> optionalTrainee = traineeService.getTraineeByUsername(username);
-        if(!optionalTrainee.isPresent()) {
+        if (!optionalTrainee.isPresent()) {
             return ResponseEntity.notFound().build();
         }
 
