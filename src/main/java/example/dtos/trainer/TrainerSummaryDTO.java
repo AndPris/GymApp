@@ -7,5 +7,5 @@ public class TrainerSummaryDTO {
     private String username;
     private String firstName;
     private String lastName;
-    private String specialization;
+    private Long specialization;
 }

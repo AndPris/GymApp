@@ -1,6 +1,7 @@
 package example.entities;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,10 +16,12 @@ public abstract class User {
     private Long id;
 
     @Column(nullable = false)
+    @NotNull
     @Size(min = 2, max = 20, message = "First name must be from 2 to 20 characters")
     private String firstName;
 
     @Column(nullable = false)
+    @NotNull
     @Size(min = 2, max = 20, message = "Last name must be from 2 to 20 characters")
     private String lastName;
 
@@ -31,12 +34,11 @@ public abstract class User {
     private String password;
 
     @Column(nullable = false)
-    private Boolean active;
+    private Boolean active = true;
 
     public User(String firstName, String lastName) {
         this.firstName = firstName;
         this.lastName = lastName;
-        this.active = true;
     }
 
     public Boolean isActive() {

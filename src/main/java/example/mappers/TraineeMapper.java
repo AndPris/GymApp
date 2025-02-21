@@ -1,5 +1,6 @@
 package example.mappers;
 
+import example.dtos.trainee.TraineeCreateDTO;
 import example.dtos.trainee.TraineeDTO;
 import example.dtos.trainer.TrainerSummaryDTO;
 import example.entities.Trainee;
@@ -10,7 +11,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
-public class TraineeMapper {
+public class TraineeMapper extends UserMapper {
     private TrainerMapper trainerMapper;
 
     @Autowired
@@ -33,5 +34,17 @@ public class TraineeMapper {
         traineeDTO.setTrainersList(trainers);
 
         return traineeDTO;
+    }
+
+
+    public Trainee traineeCreateDTOToTrainee(TraineeCreateDTO traineeCreateDTO) {
+        Trainee trainee = new Trainee();
+
+        trainee.setFirstName(traineeCreateDTO.getFirstName());
+        trainee.setLastName(traineeCreateDTO.getLastName());
+        trainee.setAddress(traineeCreateDTO.getAddress());
+        trainee.setDateOfBirth(traineeCreateDTO.getDateOfBirth());
+
+        return trainee;
     }
 }
