@@ -92,8 +92,8 @@ public class TraineeRestController {
     @GetMapping("/{username}/trainings")
     public ResponseEntity<List<TrainingDTO>> getTrainingsList(
             @PathVariable("username") String username,
-            @RequestParam(name = "from", required = false) @DateTimeFormat(pattern="yyyy-MM-dd") Date from,
-            @RequestParam(name = "to", required = false) @DateTimeFormat(pattern="yyyy-MM-dd") Date to,
+            @RequestParam(name = "from", required = false) @DateTimeFormat(pattern="dd.MM.yyyy") Date from,
+            @RequestParam(name = "to", required = false) @DateTimeFormat(pattern="dd.MM.yyyy") Date to,
             @RequestParam(name = "trainerFirstName", required = false) String trainerFirstName,
             @RequestParam(name = "trainerLastName", required = false) String trainerLastName,
             @RequestParam(name = "trainingType", required = false) Long trainingType) {

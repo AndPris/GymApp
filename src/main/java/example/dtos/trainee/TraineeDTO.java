@@ -1,5 +1,6 @@
 package example.dtos.trainee;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import example.dtos.trainer.TrainerSummaryDTO;
 import lombok.Data;
 
@@ -10,6 +11,8 @@ import java.util.List;
 public class TraineeDTO {
     private String firstName;
     private String lastName;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd.MM.yyyy")
     private Date dateOfBirth;
     private String address;
     private Boolean active;
