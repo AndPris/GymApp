@@ -1,12 +1,12 @@
 package example.services.imp;
 
 import example.entities.TrainingType;
+import example.exceptions.TrainingTypeNotFoundException;
 import example.repositories.TrainingTypeRepository;
 import example.services.TrainingTypeService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class TrainingTypeServiceImp implements TrainingTypeService {
@@ -22,7 +22,8 @@ public class TrainingTypeServiceImp implements TrainingTypeService {
     }
 
     @Override
-    public Optional<TrainingType> findById(Long id) {
-        return trainingTypeRepository.findById(id);
+    public TrainingType findById(Long id) {
+        return trainingTypeRepository.findById(id)
+                .orElseThrow(() -> new TrainingTypeNotFoundException("There's no training type with such id: " + id));
     }
 }

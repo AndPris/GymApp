@@ -30,7 +30,6 @@ public class TrainingTypeUtil {
             return null;
         }
 
-        return trainingTypeService.findById((long) choice)
-                .orElseThrow(() -> new TrainingTypeNotFoundException("There's no training type with id " + choice));
+        return trainingTypeService.findById((long) choice);
     }
 }

@@ -1,6 +1,7 @@
 package example.controllers;
 
 import example.dtos.CredentialsDTO;
+import example.dtos.trainer.TrainerUpdateDTO;
 import example.dtos.trainer.TrainerCreateDTO;
 import example.dtos.trainer.TrainerDTO;
 import example.entities.Trainer;
@@ -52,6 +53,14 @@ public class TrainerRestController {
         }
 
         TrainerDTO trainerDTO = trainerMapper.trainerToTrainerDTO(optionalTrainer.get());
+        return ResponseEntity.ok(trainerDTO);
+    }
+
+    @PutMapping("/{username}")
+    public ResponseEntity<TrainerDTO> updateTrainer(@PathVariable("username") String username,
+                                                    @RequestBody TrainerUpdateDTO trainerUpdateDTO) {
+        Trainer trainer = trainerService.updateTrainer(username, trainerUpdateDTO);
+        TrainerDTO trainerDTO = trainerMapper.trainerToTrainerDTO(trainer);
         return ResponseEntity.ok(trainerDTO);
     }
 }

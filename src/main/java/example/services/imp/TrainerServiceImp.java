@@ -1,9 +1,16 @@
 package example.services.imp;
 
+import example.dtos.trainer.TrainerUpdateDTO;
+import example.entities.Trainee;
 import example.entities.Trainer;
 import example.entities.Training;
+import example.entities.TrainingType;
+import example.exceptions.TraineeNotFoundException;
+import example.exceptions.TrainerNotFoundException;
+import example.exceptions.TrainingTypeNotFoundException;
 import example.repositories.TrainerRepository;
 import example.services.TrainerService;
+import example.services.TrainingTypeService;
 import example.utils.password.PasswordGenerator;
 import example.utils.username.UsernameGenerator;
 import example.validation.Validator;
@@ -22,8 +29,15 @@ public class TrainerServiceImp implements TrainerService {
     @Setter
     private TrainerRepository trainerRepository;
 
+    private TrainingTypeService trainingTypeService;
+
     private PasswordGenerator passwordGenerator;
     private UsernameGenerator usernameGenerator;
+
+    @Autowired
+    public void setTrainingTypeService(TrainingTypeService trainingTypeService) {
+        this.trainingTypeService = trainingTypeService;
+    }
 
     @Autowired
     public void setPasswordGenerator(PasswordGenerator passwordGenerator) {
@@ -50,16 +64,32 @@ public class TrainerServiceImp implements TrainerService {
     }
 
     @Override
-    public Trainer updateTrainer(Trainer updates) {
-        validateTrainerForUpdate(updates);
+    public Trainer updateTrainer(String username, TrainerUpdateDTO trainerUpdateDTO) {
+        Trainer trainer = trainerRepository.findByUsername(username)
+                .orElseThrow(() -> new TrainerNotFoundException("There's no trainer with such username: " + username));
 
-        Trainer existing = trainerRepository.findById(updates.getId()).get();
-        updateTrainerFields(existing, updates);
+        trainer.setFirstName(trainerUpdateDTO.getFirstName());
+        trainer.setLastName(trainerUpdateDTO.getLastName());
+        trainer.setActive(trainerUpdateDTO.isActive());
+        TrainingType trainingType = trainingTypeService.findById(trainerUpdateDTO.getSpecialization());
+        trainer.setSpecialization(trainingType);
+
+        Validator.validate(trainer);
+
+        return trainerRepository.save(trainer);
+    }
+
+    @Override
+    public Trainer patchTrainer(Trainer patch) {
+        validateTrainerForPatch(patch);
+
+        Trainer existing = trainerRepository.findById(patch.getId()).get();
+        updateTrainerFields(existing, patch);
 
         return trainerRepository.save(existing);
     }
 
-    private void validateTrainerForUpdate(Trainer trainer) {
+    private void validateTrainerForPatch(Trainer trainer) {
         if (trainer == null || trainer.getId() == null || !trainerRepository.findById(trainer.getId()).isPresent()) {
             throw new IllegalArgumentException("Cannot update a trainer: invalid data");
         }
@@ -67,13 +97,13 @@ public class TrainerServiceImp implements TrainerService {
         Validator.validate(trainer);
     }
 
-    private void updateTrainerFields(Trainer existing, Trainer updates) {
-        Optional.ofNullable(updates.getFirstName()).filter(StringUtils::isNoneBlank).ifPresent(existing::setFirstName);
-        Optional.ofNullable(updates.getLastName()).filter(StringUtils::isNoneBlank).ifPresent(existing::setLastName);
-        Optional.ofNullable(updates.getUsername()).filter(StringUtils::isNoneBlank).ifPresent(existing::setUsername);
-        Optional.ofNullable(updates.getPassword()).filter(StringUtils::isNoneBlank).ifPresent(existing::setPassword);
-        Optional.ofNullable(updates.getSpecialization()).ifPresent(existing::setSpecialization);
-        Optional.ofNullable(updates.isActive()).ifPresent(existing::setActive);
+    private void updateTrainerFields(Trainer existing, Trainer patch) {
+        Optional.ofNullable(patch.getFirstName()).filter(StringUtils::isNoneBlank).ifPresent(existing::setFirstName);
+        Optional.ofNullable(patch.getLastName()).filter(StringUtils::isNoneBlank).ifPresent(existing::setLastName);
+        Optional.ofNullable(patch.getUsername()).filter(StringUtils::isNoneBlank).ifPresent(existing::setUsername);
+        Optional.ofNullable(patch.getPassword()).filter(StringUtils::isNoneBlank).ifPresent(existing::setPassword);
+        Optional.ofNullable(patch.getSpecialization()).ifPresent(existing::setSpecialization);
+        Optional.ofNullable(patch.isActive()).ifPresent(existing::setActive);
     }
 
     @Override

@@ -62,8 +62,7 @@ public class TrainerMapper extends UserMapper {
 
         trainer.setFirstName(trainerCreateDTO.getFirstName());
         trainer.setLastName(trainerCreateDTO.getLastName());
-        TrainingType trainingType = trainingTypeService.findById(trainerCreateDTO.getSpecialization())
-                .orElseThrow(() -> new TrainingTypeNotFoundException("There is no such training type"));
+        TrainingType trainingType = trainingTypeService.findById(trainerCreateDTO.getSpecialization());
         trainer.setSpecialization(trainingType);
 
         return trainer;

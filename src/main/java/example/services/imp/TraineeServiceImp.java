@@ -86,14 +86,14 @@ public class TraineeServiceImp implements TraineeService {
         Validator.validate(trainee);
     }
 
-    private void updateTraineeFields(Trainee existing, Trainee updates) {
-        Optional.ofNullable(updates.getFirstName()).filter(StringUtils::isNoneBlank).ifPresent(existing::setFirstName);
-        Optional.ofNullable(updates.getLastName()).filter(StringUtils::isNoneBlank).ifPresent(existing::setLastName);
-        Optional.ofNullable(updates.getUsername()).filter(StringUtils::isNoneBlank).ifPresent(existing::setUsername);
-        Optional.ofNullable(updates.getPassword()).filter(StringUtils::isNoneBlank).ifPresent(existing::setPassword);
-        Optional.ofNullable(updates.getAddress()).filter(StringUtils::isNoneBlank).ifPresent(existing::setAddress);
-        Optional.ofNullable(updates.getDateOfBirth()).ifPresent(existing::setDateOfBirth);
-        Optional.ofNullable(updates.isActive()).ifPresent(existing::setActive);
+    private void updateTraineeFields(Trainee existing, Trainee patch) {
+        Optional.ofNullable(patch.getFirstName()).filter(StringUtils::isNoneBlank).ifPresent(existing::setFirstName);
+        Optional.ofNullable(patch.getLastName()).filter(StringUtils::isNoneBlank).ifPresent(existing::setLastName);
+        Optional.ofNullable(patch.getUsername()).filter(StringUtils::isNoneBlank).ifPresent(existing::setUsername);
+        Optional.ofNullable(patch.getPassword()).filter(StringUtils::isNoneBlank).ifPresent(existing::setPassword);
+        Optional.ofNullable(patch.getAddress()).filter(StringUtils::isNoneBlank).ifPresent(existing::setAddress);
+        Optional.ofNullable(patch.getDateOfBirth()).ifPresent(existing::setDateOfBirth);
+        Optional.ofNullable(patch.isActive()).ifPresent(existing::setActive);
     }
 
     @Override

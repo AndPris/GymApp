@@ -105,32 +105,32 @@ public class TrainerServiceTests {
     }
 
     @Test
-    public void updateTrainerTest_ShouldThrow1() {
-        String message = assertThrows(IllegalArgumentException.class, () -> trainerService.updateTrainer(null)).getMessage();
+    public void patchTrainerTest_ShouldThrow1() {
+        String message = assertThrows(IllegalArgumentException.class, () -> trainerService.patchTrainer(null)).getMessage();
         assertEquals("Cannot update a trainer: invalid data", message);
 
-        message = assertThrows(IllegalArgumentException.class, () -> trainerService.updateTrainer(new Trainer())).getMessage();
+        message = assertThrows(IllegalArgumentException.class, () -> trainerService.patchTrainer(new Trainer())).getMessage();
         assertEquals("Cannot update a trainer: invalid data", message);
 
         Trainer trainer = new Trainer();
         trainer.setId(2L);
         when(trainerRepository.findById(2L)).thenReturn(Optional.empty());
-        message = assertThrows(IllegalArgumentException.class, () -> trainerService.updateTrainer(trainer)).getMessage();
+        message = assertThrows(IllegalArgumentException.class, () -> trainerService.patchTrainer(trainer)).getMessage();
         assertEquals("Cannot update a trainer: invalid data", message);
     }
 
     @ParameterizedTest
     @MethodSource("invalidTrainers")
-    public void updateTrainerTest_ShouldThrow2(Trainer trainer, String errorMessage) {
+    public void patchTrainerTest_ShouldThrow2(Trainer trainer, String errorMessage) {
         trainer.setId(1L);
         when(trainerRepository.findById(any(Long.class))).thenReturn(Optional.of(trainer));
 
-        Exception e = assertThrows(ValidationException.class, () -> trainerService.updateTrainer(trainer));
+        Exception e = assertThrows(ValidationException.class, () -> trainerService.patchTrainer(trainer));
         assertEquals(errorMessage, e.getMessage());
     }
 
     @Test
-    public void updateTrainerTest_ShouldPerformUpdate() {
+    public void updateTrainerTest_ShouldPerformPatch() {
         Trainer existing = new Trainer("first", "last", null);
         existing.setId(1L);
         Trainer update = new Trainer("updated", null, null);
@@ -139,7 +139,7 @@ public class TrainerServiceTests {
         when(trainerRepository.findById(1L)).thenReturn(Optional.of(existing));
         when(trainerRepository.save(existing)).thenReturn(existing);
 
-        Trainer result = trainerService.updateTrainer(update);
+        Trainer result = trainerService.patchTrainer(update);
         assertEquals("updated", result.getFirstName());
         assertEquals("last", result.getLastName());
         assertNull(result.getSpecialization());

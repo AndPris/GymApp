@@ -1,5 +1,6 @@
 package example.services;
 
+import example.dtos.trainer.TrainerUpdateDTO;
 import example.entities.Trainer;
 import example.entities.Training;
 
@@ -10,7 +11,9 @@ import java.util.Optional;
 public interface TrainerService {
     Trainer createTrainer(Trainer trainer);
 
-    Trainer updateTrainer(Trainer updates);
+    Trainer updateTrainer(String username, TrainerUpdateDTO trainerUpdateDTO);
+
+    Trainer patchTrainer(Trainer updates);
 
     Iterable<Trainer> getAllTrainers();
 

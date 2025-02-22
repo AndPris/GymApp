@@ -41,7 +41,7 @@ public class TrainerOptionHandler {
         Trainer updates = getTrainerData(true);
         updates.setId(trainer.getId());
         updates.setActive(null);
-        trainerService.updateTrainer(updates);
+        trainerService.patchTrainer(updates);
         System.out.println("Trainer has been successfully updated");
     }
 
