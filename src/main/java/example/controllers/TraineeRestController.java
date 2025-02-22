@@ -1,5 +1,6 @@
 package example.controllers;
 
+import example.dtos.ActiveStatusDTO;
 import example.dtos.CredentialsDTO;
 import example.dtos.trainee.TraineeCreateDTO;
 import example.dtos.trainee.TraineeDTO;
@@ -71,13 +72,13 @@ public class TraineeRestController {
     public ResponseEntity<List<TrainerSummaryDTO>> getTrainersList(@PathVariable("username") String username,
                                                                    @RequestParam(defaultValue = "true", name = "inverse") boolean inverse) {
         Optional<Trainee> optionalTrainee = traineeService.getTraineeByUsername(username);
-        if(!optionalTrainee.isPresent()) {
+        if (!optionalTrainee.isPresent()) {
             return ResponseEntity.notFound().build();
         }
 
         List<Trainer> trainers;
 
-        if(inverse) {
+        if (inverse) {
             trainers = traineeService.findTrainersNotAssignedToTrainee(username);
         } else {
             trainers = optionalTrainee.get().getTrainers();
@@ -92,13 +93,13 @@ public class TraineeRestController {
     @GetMapping("/{username}/trainings")
     public ResponseEntity<List<TrainingDTO>> getTrainingsList(
             @PathVariable("username") String username,
-            @RequestParam(name = "from", required = false) @DateTimeFormat(pattern="dd.MM.yyyy") Date from,
-            @RequestParam(name = "to", required = false) @DateTimeFormat(pattern="dd.MM.yyyy") Date to,
+            @RequestParam(name = "from", required = false) @DateTimeFormat(pattern = "dd.MM.yyyy") Date from,
+            @RequestParam(name = "to", required = false) @DateTimeFormat(pattern = "dd.MM.yyyy") Date to,
             @RequestParam(name = "trainerFirstName", required = false) String trainerFirstName,
             @RequestParam(name = "trainerLastName", required = false) String trainerLastName,
             @RequestParam(name = "trainingType", required = false) Long trainingType) {
 
-        if(!traineeService.getTraineeByUsername(username).isPresent()) {
+        if (!traineeService.getTraineeByUsername(username).isPresent()) {
             return ResponseEntity.notFound().build();
         }
 
@@ -118,6 +119,12 @@ public class TraineeRestController {
         }
 
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+    @PatchMapping("/{username}/active")
+    public ResponseEntity<?> toggleTraineeActiveStatus(@PathVariable("username") String username) {
+        Boolean active = traineeService.toggleTraineeIsActiveStatus(username);
+        return ResponseEntity.ok(new ActiveStatusDTO(active));
     }
 
     @PutMapping("/{username}")

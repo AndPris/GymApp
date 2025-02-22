@@ -95,8 +95,8 @@ public class TraineeOptionHandler {
     public void toggleTraineeIsActiveStatus(Trainee trainee) {
         Long id = trainee.getId();
 
-        boolean result = traineeService.toggleTraineeIsActiveStatus(id);
-        System.out.println("Status was successfully changed. Current value: " + result);
+//        boolean result = traineeService.toggleTraineeIsActiveStatus(id);
+//        System.out.println("Status was successfully changed. Current value: " + result);
     }
 
 

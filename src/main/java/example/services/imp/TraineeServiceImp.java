@@ -123,9 +123,9 @@ public class TraineeServiceImp implements TraineeService {
     }
 
     @Override
-    public boolean toggleTraineeIsActiveStatus(Long id) {
-        Trainee trainee = traineeRepository.findById(id)
-                .orElseThrow(() -> new TraineeNotFoundException("No trainee with such id: " + id));
+    public boolean toggleTraineeIsActiveStatus(String username) {
+        Trainee trainee = traineeRepository.findByUsername(username)
+                .orElseThrow(() -> new TraineeNotFoundException("No trainee with such username: " + username));
 
         trainee.setActive(!trainee.isActive());
         traineeRepository.save(trainee);

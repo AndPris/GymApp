@@ -258,10 +258,10 @@ public class TrainerServiceTests {
 
     @Test
     public void toggleTrainerIsActiveStatusTest_ShouldThrow() {
-        when(trainerRepository.findById(any(Long.class))).thenReturn(Optional.empty());
+        when(trainerRepository.findByUsername(any(String.class))).thenReturn(Optional.empty());
 
         Exception e = assertThrows(IllegalArgumentException.class,
-                () -> trainerService.toggleTrainerIsActiveStatus(1L));
+                () -> trainerService.toggleTrainerIsActiveStatus("test"));
         assertEquals("No trainer with such id: 1", e.getMessage());
     }
 
@@ -269,9 +269,9 @@ public class TrainerServiceTests {
     public void toggleTrainerIsActiveStatusTest_ShouldToggle() {
         Trainer trainer = new Trainer();
         trainer.setActive(false);
-        when(trainerRepository.findById(any(Long.class))).thenReturn(Optional.of(trainer));
+        when(trainerRepository.findByUsername(any(String.class))).thenReturn(Optional.of(trainer));
 
-        boolean result = trainerService.toggleTrainerIsActiveStatus(1L);
+        boolean result = trainerService.toggleTrainerIsActiveStatus("test");
         assertTrue(result);
     }
 

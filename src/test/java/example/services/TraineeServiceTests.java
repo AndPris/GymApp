@@ -259,10 +259,10 @@ public class TraineeServiceTests {
 
     @Test
     public void toggleTraineeIsActiveStatusTest_ShouldThrow() {
-        when(traineeRepository.findById(any(Long.class))).thenReturn(Optional.empty());
+        when(traineeRepository.findByUsername(any(String.class))).thenReturn(Optional.empty());
 
         Exception e = assertThrows(IllegalArgumentException.class,
-                () -> traineeService.toggleTraineeIsActiveStatus(1L));
+                () -> traineeService.toggleTraineeIsActiveStatus("test"));
         assertEquals("No trainee with such id: 1", e.getMessage());
     }
 
@@ -270,9 +270,9 @@ public class TraineeServiceTests {
     public void toggleTraineeIsActiveStatusTest_ShouldToggle() {
         Trainee trainee = new Trainee();
         trainee.setActive(false);
-        when(traineeRepository.findById(any(Long.class))).thenReturn(Optional.of(trainee));
+        when(traineeRepository.findByUsername(any(String.class))).thenReturn(Optional.of(trainee));
 
-        boolean result = traineeService.toggleTraineeIsActiveStatus(1L);
+        boolean result = traineeService.toggleTraineeIsActiveStatus("test");
         assertTrue(result);
     }
 

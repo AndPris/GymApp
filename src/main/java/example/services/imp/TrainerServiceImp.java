@@ -1,13 +1,10 @@
 package example.services.imp;
 
 import example.dtos.trainer.TrainerUpdateDTO;
-import example.entities.Trainee;
 import example.entities.Trainer;
 import example.entities.Training;
 import example.entities.TrainingType;
-import example.exceptions.TraineeNotFoundException;
 import example.exceptions.TrainerNotFoundException;
-import example.exceptions.TrainingTypeNotFoundException;
 import example.repositories.TrainerRepository;
 import example.services.TrainerService;
 import example.services.TrainingTypeService;
@@ -134,9 +131,9 @@ public class TrainerServiceImp implements TrainerService {
     }
 
     @Override
-    public boolean toggleTrainerIsActiveStatus(Long id) {
-        Trainer trainer = trainerRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("No trainer with such id: " + id));
+    public boolean toggleTrainerIsActiveStatus(String username) {
+        Trainer trainer = trainerRepository.findByUsername(username)
+                .orElseThrow(() -> new IllegalArgumentException("No trainer with such username: " + username));
 
         trainer.setActive(!trainer.isActive());
         trainerRepository.save(trainer);

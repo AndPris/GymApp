@@ -74,8 +74,8 @@ public class TrainerOptionHandler {
     public void toggleTrainerIsActiveStatus(Trainer trainer) {
         Long id = trainer.getId();
 
-        boolean result = trainerService.toggleTrainerIsActiveStatus(id);
-        System.out.println("Status was successfully changed. Current value: " + result);
+//        boolean result = trainerService.toggleTrainerIsActiveStatus(id);
+//        System.out.println("Status was successfully changed. Current value: " + result);
     }
 
 

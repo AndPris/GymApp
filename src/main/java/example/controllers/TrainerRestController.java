@@ -1,9 +1,10 @@
 package example.controllers;
 
+import example.dtos.ActiveStatusDTO;
 import example.dtos.CredentialsDTO;
-import example.dtos.trainer.TrainerUpdateDTO;
 import example.dtos.trainer.TrainerCreateDTO;
 import example.dtos.trainer.TrainerDTO;
+import example.dtos.trainer.TrainerUpdateDTO;
 import example.entities.Trainer;
 import example.mappers.TrainerMapper;
 import example.services.TrainerService;
@@ -54,6 +55,12 @@ public class TrainerRestController {
 
         TrainerDTO trainerDTO = trainerMapper.trainerToTrainerDTO(optionalTrainer.get());
         return ResponseEntity.ok(trainerDTO);
+    }
+
+    @PatchMapping("/{username}/active")
+    public ResponseEntity<?> toggleTrainerActiveStatus(@PathVariable("username") String username) {
+        Boolean active = trainerService.toggleTrainerIsActiveStatus(username);
+        return ResponseEntity.ok(new ActiveStatusDTO(active));
     }
 
     @PutMapping("/{username}")

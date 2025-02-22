@@ -26,7 +26,7 @@ public interface TraineeService {
 
     boolean existsTraineeById(Long id);
 
-    boolean toggleTraineeIsActiveStatus(Long id);
+    boolean toggleTraineeIsActiveStatus(String username);
 
     List<Training> findTraineeTrainingList(String username, Date fromDate, Date toDate, String trainerFirstName,
                                            String trainerLastName, Long trainingType);
