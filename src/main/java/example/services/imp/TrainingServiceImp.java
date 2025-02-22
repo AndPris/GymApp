@@ -4,13 +4,11 @@ import example.entities.Training;
 import example.repositories.TrainingRepository;
 import example.services.TrainingService;
 import jakarta.validation.ConstraintViolation;
-import jakarta.validation.Validation;
 import jakarta.validation.ValidationException;
 import jakarta.validation.Validator;
-import lombok.Setter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-@Setter
 @Service
 public class TrainingServiceImp implements TrainingService {
     private final TrainingRepository trainingRepository;
@@ -18,7 +16,11 @@ public class TrainingServiceImp implements TrainingService {
 
     public TrainingServiceImp(TrainingRepository trainingRepository) {
         this.trainingRepository = trainingRepository;
-        validator = Validation.buildDefaultValidatorFactory().getValidator();
+    }
+
+    @Autowired
+    public void setValidator(Validator validator) {
+        this.validator = validator;
     }
 
     @Override

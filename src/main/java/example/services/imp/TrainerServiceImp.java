@@ -7,7 +7,6 @@ import example.services.TrainerService;
 import example.utils.password.PasswordGenerator;
 import example.utils.username.UsernameGenerator;
 import jakarta.validation.ConstraintViolation;
-import jakarta.validation.Validation;
 import jakarta.validation.ValidationException;
 import jakarta.validation.Validator;
 import lombok.Setter;
@@ -29,8 +28,9 @@ public class TrainerServiceImp implements TrainerService {
     private UsernameGenerator usernameGenerator;
     private Validator validator;
 
-    public TrainerServiceImp() {
-        validator = Validation.buildDefaultValidatorFactory().getValidator();
+    @Autowired
+    public void setValidator(Validator validator) {
+        this.validator = validator;
     }
 
     @Autowired
@@ -115,16 +115,6 @@ public class TrainerServiceImp implements TrainerService {
     public boolean existsTrainerByUsername(String username) {
         Optional<Trainer> trainer = trainerRepository.findByUsername(username);
         return trainer.isPresent();
-    }
-
-    @Override
-    public void changeTrainerPassword(String username, String oldPassword, String newPassword) {
-        Trainer trainer = trainerRepository.findByUsernameAndPassword(username, oldPassword)
-                .orElseThrow(() -> new IllegalArgumentException("There's no trainer with such username and password"));
-
-        trainer.setPassword(newPassword);
-        validateTrainer(trainer);
-        trainerRepository.save(trainer);
     }
 
     @Override

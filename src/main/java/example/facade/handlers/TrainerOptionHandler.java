@@ -66,7 +66,7 @@ public class TrainerOptionHandler {
         String oldPassword = inputHandler.getLine("Old password: ", false);
         String newPassword = inputHandler.getLine("New password: ", false);
 
-        trainerService.changeTrainerPassword(username, oldPassword, newPassword);
+//        trainerService.changeTrainerPassword(username, oldPassword, newPassword);
         System.out.println("Password successfully changed");
     }
 

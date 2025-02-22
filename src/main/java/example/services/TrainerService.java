@@ -22,8 +22,6 @@ public interface TrainerService {
 
     boolean existsTrainerByUsername(String username);
 
-    void changeTrainerPassword(String username, String oldPassword, String newPassword);
-
     boolean toggleTrainerIsActiveStatus(Long id);
 
     List<Training> findTrainerTrainingList(String username, Date fromDate, Date toDate,

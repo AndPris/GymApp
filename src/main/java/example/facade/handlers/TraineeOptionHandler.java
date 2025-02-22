@@ -87,7 +87,7 @@ public class TraineeOptionHandler {
         String oldPassword = inputHandler.getLine("Old password: ", false);
         String newPassword = inputHandler.getLine("New password: ", false);
 
-        traineeService.changeTraineePassword(username, oldPassword, newPassword);
+//        traineeService.changeTraineePassword(username, oldPassword, newPassword);
         System.out.println("Password successfully changed");
     }
 

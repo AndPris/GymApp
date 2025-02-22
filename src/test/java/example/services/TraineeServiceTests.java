@@ -224,38 +224,38 @@ public class TraineeServiceTests {
         assertTrue(result);
     }
 
-    @Test
-    public void changeTraineePassword_ShouldThrow1() {
-        when(traineeRepository.findByUsernameAndPassword(any(String.class), any(String.class))).thenReturn(Optional.empty());
-
-        Exception e = assertThrows(IllegalArgumentException.class,
-                () -> traineeService.changeTraineePassword("1", "1", "1"));
-        assertEquals("There's no trainee with such username and password", e.getMessage());
-    }
-
-    @Test
-    public void changeTraineePassword_ShouldThrow2() {
-        Trainee trainee = new Trainee();
-        trainee.setUsername("username");
-        trainee.setPassword("password");
-        when(traineeRepository.findByUsernameAndPassword(any(String.class), any(String.class))).thenReturn(Optional.of(trainee));
-
-        Exception e = assertThrows(ValidationException.class,
-                () -> traineeService.changeTraineePassword("username", "password", "1"));
-        assertEquals("Validation error: Password must be from 6 to 20 characters", e.getMessage());
-
-    }
-
-    @Test
-    public void changeTraineePassword_ShouldChange() {
-        Trainee trainee = new Trainee();
-        trainee.setUsername("username");
-        trainee.setPassword("password");
-        when(traineeRepository.findByUsernameAndPassword(any(String.class), any(String.class))).thenReturn(Optional.of(trainee));
-
-        traineeService.changeTraineePassword("username", "password", "newPass");
-        assertEquals("newPass", trainee.getPassword());
-    }
+//    @Test
+//    public void changeTraineePassword_ShouldThrow1() {
+//        when(traineeRepository.findByUsernameAndPassword(any(String.class), any(String.class))).thenReturn(Optional.empty());
+//
+//        Exception e = assertThrows(IllegalArgumentException.class,
+//                () -> traineeService.changeTraineePassword("1", "1", "1"));
+//        assertEquals("There's no trainee with such username and password", e.getMessage());
+//    }
+//
+//    @Test
+//    public void changeTraineePassword_ShouldThrow2() {
+//        Trainee trainee = new Trainee();
+//        trainee.setUsername("username");
+//        trainee.setPassword("password");
+//        when(traineeRepository.findByUsernameAndPassword(any(String.class), any(String.class))).thenReturn(Optional.of(trainee));
+//
+//        Exception e = assertThrows(ValidationException.class,
+//                () -> traineeService.changeTraineePassword("username", "password", "1"));
+//        assertEquals("Validation error: Password must be from 6 to 20 characters", e.getMessage());
+//
+//    }
+//
+//    @Test
+//    public void changeTraineePassword_ShouldChange() {
+//        Trainee trainee = new Trainee();
+//        trainee.setUsername("username");
+//        trainee.setPassword("password");
+//        when(traineeRepository.findByUsernameAndPassword(any(String.class), any(String.class))).thenReturn(Optional.of(trainee));
+//
+//        traineeService.changeTraineePassword("username", "password", "newPass");
+//        assertEquals("newPass", trainee.getPassword());
+//    }
 
     @Test
     public void toggleTraineeIsActiveStatusTest_ShouldThrow() {

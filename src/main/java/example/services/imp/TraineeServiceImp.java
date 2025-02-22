@@ -3,12 +3,12 @@ package example.services.imp;
 import example.entities.Trainee;
 import example.entities.Trainer;
 import example.entities.Training;
+import example.exceptions.TraineeNotFoundException;
 import example.repositories.TraineeRepository;
 import example.services.TraineeService;
 import example.utils.password.PasswordGenerator;
 import example.utils.username.UsernameGenerator;
 import jakarta.validation.ConstraintViolation;
-import jakarta.validation.Validation;
 import jakarta.validation.ValidationException;
 import jakarta.validation.Validator;
 import lombok.Setter;
@@ -27,13 +27,9 @@ public class TraineeServiceImp implements TraineeService {
     private TraineeRepository traineeRepository;
 
     private Validator validator;
-
     private PasswordGenerator passwordGenerator;
     private UsernameGenerator usernameGenerator;
 
-    public TraineeServiceImp() {
-        validator = Validation.buildDefaultValidatorFactory().getValidator();
-    }
 
     @Autowired
     public void setPasswordGenerator(PasswordGenerator passwordGenerator) {
@@ -45,6 +41,10 @@ public class TraineeServiceImp implements TraineeService {
         this.usernameGenerator = usernameGenerator;
     }
 
+    @Autowired
+    public void setValidator(Validator validator) {
+        this.validator = validator;
+    }
 
     @Override
     public Trainee createTrainee(Trainee trainee) {
@@ -120,19 +120,9 @@ public class TraineeServiceImp implements TraineeService {
     }
 
     @Override
-    public void changeTraineePassword(String username, String oldPassword, String newPassword) {
-        Trainee trainee = traineeRepository.findByUsernameAndPassword(username, oldPassword)
-                .orElseThrow(() -> new IllegalArgumentException("There's no trainee with such username and password"));
-
-        trainee.setPassword(newPassword);
-        validateTrainee(trainee);
-        traineeRepository.save(trainee);
-    }
-
-    @Override
     public boolean toggleTraineeIsActiveStatus(Long id) {
         Trainee trainee = traineeRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("No trainee with such id: " + id));
+                .orElseThrow(() -> new TraineeNotFoundException("No trainee with such id: " + id));
 
         trainee.setActive(!trainee.isActive());
         traineeRepository.save(trainee);
