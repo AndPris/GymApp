@@ -52,4 +52,10 @@ public class TraineeRestController {
         TraineeDTO traineeDTO = traineeMapper.traineeToTraineeDTO(optionalTrainee.get());
         return ResponseEntity.ok(traineeDTO);
     }
+
+    @DeleteMapping("/{username}")
+    public ResponseEntity<?> deleteTraineeByUsername(@PathVariable("username") String username) {
+        traineeService.deleteTraineeByUsername(username);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }
