@@ -106,32 +106,32 @@ public class TraineeServiceTests {
     }
 
     @Test
-    public void updateTraineeTest_ShouldThrow1() {
-        String message = assertThrows(IllegalArgumentException.class, () -> traineeService.updateTrainee(null)).getMessage();
+    public void patchTraineeTest_ShouldThrow1() {
+        String message = assertThrows(IllegalArgumentException.class, () -> traineeService.patchTrainee(null)).getMessage();
         assertEquals("Cannot update a trainee: invalid data", message);
 
-        message = assertThrows(IllegalArgumentException.class, () -> traineeService.updateTrainee(new Trainee())).getMessage();
+        message = assertThrows(IllegalArgumentException.class, () -> traineeService.patchTrainee(new Trainee())).getMessage();
         assertEquals("Cannot update a trainee: invalid data", message);
 
         Trainee trainee = new Trainee();
         trainee.setId(2L);
         when(traineeRepository.findById(2L)).thenReturn(Optional.empty());
-        message = assertThrows(IllegalArgumentException.class, () -> traineeService.updateTrainee(trainee)).getMessage();
+        message = assertThrows(IllegalArgumentException.class, () -> traineeService.patchTrainee(trainee)).getMessage();
         assertEquals("Cannot update a trainee: invalid data", message);
     }
 
     @ParameterizedTest
     @MethodSource("invalidTrainees")
-    public void updateTraineeTest_ShouldThrow2(Trainee trainee, String errorMessage) {
+    public void patchTraineeTest_ShouldThrow2(Trainee trainee, String errorMessage) {
         trainee.setId(1L);
         when(traineeRepository.findById(any(Long.class))).thenReturn(Optional.of(trainee));
 
-        Exception e = assertThrows(ValidationException.class, () -> traineeService.updateTrainee(trainee));
+        Exception e = assertThrows(ValidationException.class, () -> traineeService.patchTrainee(trainee));
         assertEquals(errorMessage, e.getMessage());
     }
 
     @Test
-    public void updateTraineeTest_ShouldPerformUpdate() {
+    public void updateTraineeTest_ShouldPerformPatch() {
         Trainee existing = new Trainee("first", "last", null, null);
         existing.setId(1L);
         Trainee update = new Trainee("updated", null, null, null);
@@ -140,7 +140,7 @@ public class TraineeServiceTests {
         when(traineeRepository.findById(1L)).thenReturn(Optional.of(existing));
         when(traineeRepository.save(existing)).thenReturn(existing);
 
-        Trainee result = traineeService.updateTrainee(update);
+        Trainee result = traineeService.patchTrainee(update);
         assertEquals("updated", result.getFirstName());
         assertEquals("last", result.getLastName());
         assertNull(result.getAddress());

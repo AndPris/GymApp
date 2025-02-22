@@ -1,5 +1,6 @@
 package example.services.imp;
 
+import example.dtos.trainee.TraineeUpdateDTO;
 import example.entities.Trainee;
 import example.entities.Trainer;
 import example.entities.Training;
@@ -52,16 +53,32 @@ public class TraineeServiceImp implements TraineeService {
     }
 
     @Override
-    public Trainee updateTrainee(Trainee updates) {
-        validateTraineeForUpdate(updates);
+    public Trainee updateTrainee(String username, TraineeUpdateDTO traineeUpdateDTO) {
+        Trainee trainee = traineeRepository.findByUsername(username)
+                .orElseThrow(() -> new TraineeNotFoundException("There's no trainee with such username: " + username));
 
-        Trainee existing = traineeRepository.findById(updates.getId()).get();
-        updateTraineeFields(existing, updates);
+        trainee.setFirstName(traineeUpdateDTO.getFirstName());
+        trainee.setLastName(traineeUpdateDTO.getLastName());
+        trainee.setDateOfBirth(traineeUpdateDTO.getDateOfBirth());
+        trainee.setAddress(traineeUpdateDTO.getAddress());
+        trainee.setActive(traineeUpdateDTO.isActive());
+
+        Validator.validate(trainee);
+
+        return traineeRepository.save(trainee);
+    }
+
+    @Override
+    public Trainee patchTrainee(Trainee patch) {
+        validateTraineeForPatch(patch);
+
+        Trainee existing = traineeRepository.findById(patch.getId()).get();
+        updateTraineeFields(existing, patch);
 
         return traineeRepository.save(existing);
     }
 
-    private void validateTraineeForUpdate(Trainee trainee) {
+    private void validateTraineeForPatch(Trainee trainee) {
         if (trainee == null || trainee.getId() == null || !traineeRepository.findById(trainee.getId()).isPresent()) {
             throw new IllegalArgumentException("Cannot update a trainee: invalid data");
         }

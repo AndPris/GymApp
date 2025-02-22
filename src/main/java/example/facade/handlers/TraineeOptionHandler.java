@@ -51,7 +51,7 @@ public class TraineeOptionHandler {
         Trainee updates = getTraineeData(true);
         updates.setId(trainee.getId());
         updates.setActive(null);
-        traineeService.updateTrainee(updates);
+        traineeService.patchTrainee(updates);
         System.out.println("Trainee has been successfully updated");
     }
 

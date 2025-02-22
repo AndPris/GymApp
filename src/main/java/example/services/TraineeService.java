@@ -1,5 +1,6 @@
 package example.services;
 
+import example.dtos.trainee.TraineeUpdateDTO;
 import example.entities.Trainee;
 import example.entities.Trainer;
 import example.entities.Training;
@@ -11,7 +12,9 @@ import java.util.Optional;
 public interface TraineeService {
     Trainee createTrainee(Trainee trainee);
 
-    Trainee updateTrainee(Trainee updates);
+    Trainee updateTrainee(String username, TraineeUpdateDTO traineeUpdateDTO);
+
+    Trainee patchTrainee(Trainee updates);
 
     boolean deleteTraineeByUsername(String username);
 

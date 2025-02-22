@@ -34,6 +34,7 @@ public abstract class User {
     private String password;
 
     @Column(nullable = false)
+    @NotNull
     private Boolean active = true;
 
     public User(String firstName, String lastName) {

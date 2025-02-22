@@ -3,6 +3,7 @@ package example.controllers;
 import example.dtos.CredentialsDTO;
 import example.dtos.trainee.TraineeCreateDTO;
 import example.dtos.trainee.TraineeDTO;
+import example.dtos.trainee.TraineeUpdateDTO;
 import example.entities.Trainee;
 import example.mappers.TraineeMapper;
 import example.services.TraineeService;
@@ -60,5 +61,13 @@ public class TraineeRestController {
         }
 
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+    @PutMapping("/{username}")
+    public ResponseEntity<TraineeDTO> updateTrainee(@PathVariable("username") String username,
+                                                    @RequestBody TraineeUpdateDTO traineeUpdateDTO) {
+        Trainee trainee = traineeService.updateTrainee(username, traineeUpdateDTO);
+        TraineeDTO traineeDTO = traineeMapper.traineeToTraineeDTO(trainee);
+        return ResponseEntity.ok(traineeDTO);
     }
 }
