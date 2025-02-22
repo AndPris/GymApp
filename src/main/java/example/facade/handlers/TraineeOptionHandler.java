@@ -107,7 +107,7 @@ public class TraineeOptionHandler {
         Date toDate = inputHandler.getDate("To date (dd-MM-yyyy): ", true);
         String trainerFirstName = inputHandler.getLine("Trainer's first name: ", true);
         String trainerLastName = inputHandler.getLine("Trainer's last name: ", true);
-        String trainingType = inputHandler.getLine("Training type: ", true);
+        Long trainingType = inputHandler.getLong();
 
         List<Training> trainings = traineeService.findTraineeTrainingList(username, fromDate, toDate,
                 trainerFirstName, trainerLastName, trainingType);

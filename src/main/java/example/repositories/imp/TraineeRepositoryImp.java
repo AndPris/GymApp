@@ -110,7 +110,7 @@ public class TraineeRepositoryImp implements TraineeRepository {
 
     @Override
     public List<Training> findTrainingList(String username, Date fromDate, Date toDate, String trainerFirstName,
-                                           String trainerLastName, String trainingType) {
+                                           String trainerLastName, Long trainingType) {
 
         Query query = entityManager.createQuery("select t from Training t " +
                 "where t.trainee.username=:username " +
@@ -118,7 +118,7 @@ public class TraineeRepositoryImp implements TraineeRepository {
                 "and (:toDate is null or t.trainingDate < :toDate) " +
                 "and (:trainerFirstName is null or t.trainer.firstName=:trainerFirstName) " +
                 "and (:trainerLastName is null or t.trainer.lastName=:trainerLastName) " +
-                "and (:trainingType is null or t.trainingType.name=:trainingType)");
+                "and (:trainingType is null or t.trainingType.id=:trainingType)");
 
         query.setParameter("username", username);
         query.setParameter("fromDate", fromDate);

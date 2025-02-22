@@ -29,7 +29,7 @@ public interface TraineeService {
     boolean toggleTraineeIsActiveStatus(Long id);
 
     List<Training> findTraineeTrainingList(String username, Date fromDate, Date toDate, String trainerFirstName,
-                                           String trainerLastName, String trainingType);
+                                           String trainerLastName, Long trainingType);
 
     void addTrainerToList(Trainee trainee, Trainer trainer);
 

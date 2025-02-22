@@ -5,15 +5,20 @@ import example.dtos.trainee.TraineeCreateDTO;
 import example.dtos.trainee.TraineeDTO;
 import example.dtos.trainee.TraineeUpdateDTO;
 import example.dtos.trainer.TrainerSummaryDTO;
+import example.dtos.training.TrainingDTO;
 import example.entities.Trainee;
 import example.entities.Trainer;
+import example.entities.Training;
 import example.mappers.TraineeMapper;
 import example.mappers.TrainerMapper;
+import example.mappers.TrainingMapper;
 import example.services.TraineeService;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -24,11 +29,14 @@ public class TraineeRestController {
     private final TraineeService traineeService;
     private final TraineeMapper traineeMapper;
     private final TrainerMapper trainerMapper;
+    private final TrainingMapper trainingMapper;
 
-    public TraineeRestController(TraineeService traineeService, TraineeMapper traineeMapper, TrainerMapper trainerMapper) {
+    public TraineeRestController(TraineeService traineeService, TraineeMapper traineeMapper,
+                                 TrainerMapper trainerMapper, TrainingMapper trainingMapper) {
         this.traineeService = traineeService;
         this.traineeMapper = traineeMapper;
         this.trainerMapper = trainerMapper;
+        this.trainingMapper = trainingMapper;
     }
 
     @PostMapping
@@ -79,6 +87,28 @@ public class TraineeRestController {
                 .map(trainerMapper::trainerToTrainerSummaryDTO)
                 .collect(Collectors.toList());
         return ResponseEntity.ok(trainerSummaryDTOS);
+    }
+
+    @GetMapping("/{username}/trainings")
+    public ResponseEntity<List<TrainingDTO>> getTrainingsList(
+            @PathVariable("username") String username,
+            @RequestParam(name = "from", required = false) @DateTimeFormat(pattern="yyyy-MM-dd") Date from,
+            @RequestParam(name = "to", required = false) @DateTimeFormat(pattern="yyyy-MM-dd") Date to,
+            @RequestParam(name = "trainerFirstName", required = false) String trainerFirstName,
+            @RequestParam(name = "trainerLastName", required = false) String trainerLastName,
+            @RequestParam(name = "trainingType", required = false) Long trainingType) {
+
+        if(!traineeService.getTraineeByUsername(username).isPresent()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        List<Training> trainings = traineeService.findTraineeTrainingList(username, from, to,
+                trainerFirstName, trainerLastName, trainingType);
+
+        List<TrainingDTO> trainingDTOS = trainings.stream()
+                .map(trainingMapper::trainingToTrainingDTO)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(trainingDTOS);
     }
 
     @DeleteMapping("/{username}")

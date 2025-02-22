@@ -6,7 +6,6 @@ import example.dtos.trainer.TrainerDTO;
 import example.dtos.trainer.TrainerSummaryDTO;
 import example.entities.Trainer;
 import example.entities.TrainingType;
-import example.exceptions.TrainingTypeNotFoundException;
 import example.services.TrainingTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

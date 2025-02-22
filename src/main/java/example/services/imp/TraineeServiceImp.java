@@ -134,7 +134,7 @@ public class TraineeServiceImp implements TraineeService {
 
     @Override
     public List<Training> findTraineeTrainingList(String username, Date fromDate, Date toDate, String trainerFirstName,
-                                                  String trainerLastName, String trainingType) {
+                                                  String trainerLastName, Long trainingType) {
 
         return traineeRepository.findTrainingList(username, fromDate, toDate,
                 trainerFirstName, trainerLastName, trainingType);
