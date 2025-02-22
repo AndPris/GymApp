@@ -1,6 +1,7 @@
 package example.entities;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -14,6 +15,7 @@ import java.util.List;
 @NoArgsConstructor
 public class Trainer extends User {
     @ManyToOne
+    @NotNull
     @JoinColumn(name = "specialization")
     private TrainingType specialization;
 

@@ -1,14 +1,14 @@
 package example.controllers;
 
+import example.dtos.CredentialsDTO;
+import example.dtos.trainer.TrainerCreateDTO;
 import example.dtos.trainer.TrainerDTO;
 import example.entities.Trainer;
 import example.mappers.TrainerMapper;
 import example.services.TrainerService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
@@ -23,6 +23,14 @@ public class TrainerRestController {
     public TrainerRestController(TrainerService trainerService, TrainerMapper trainerMapper) {
         this.trainerService = trainerService;
         this.trainerMapper = trainerMapper;
+    }
+
+    @PostMapping
+    public ResponseEntity<CredentialsDTO> createTrainer(@RequestBody TrainerCreateDTO trainerCreateDTO) {
+        Trainer trainer = trainerMapper.trainerCreateDTOToTrainer(trainerCreateDTO);
+        trainer = trainerService.createTrainer(trainer);
+        CredentialsDTO credentialsDTO = trainerMapper.toCredentialsDTO(trainer);
+        return ResponseEntity.status(HttpStatus.CREATED).body(credentialsDTO);
     }
 
     @GetMapping

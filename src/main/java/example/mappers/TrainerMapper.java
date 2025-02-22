@@ -1,9 +1,13 @@
 package example.mappers;
 
 import example.dtos.trainee.TraineeSummaryDTO;
+import example.dtos.trainer.TrainerCreateDTO;
 import example.dtos.trainer.TrainerDTO;
 import example.dtos.trainer.TrainerSummaryDTO;
 import example.entities.Trainer;
+import example.entities.TrainingType;
+import example.exceptions.TrainingTypeNotFoundException;
+import example.services.TrainingTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -13,6 +17,11 @@ import java.util.stream.Collectors;
 @Component
 public class TrainerMapper extends UserMapper {
     private TraineeMapper traineeMapper;
+    private final TrainingTypeService trainingTypeService;
+
+    public TrainerMapper(TrainingTypeService trainingTypeService) {
+        this.trainingTypeService = trainingTypeService;
+    }
 
     @Autowired
     public void setTraineeMapper(TraineeMapper traineeMapper) {
@@ -46,5 +55,17 @@ public class TrainerMapper extends UserMapper {
         trainerSummaryDTO.setSpecialization(trainer.getSpecialization().getId());
 
         return trainerSummaryDTO;
+    }
+
+    public Trainer trainerCreateDTOToTrainer(TrainerCreateDTO trainerCreateDTO) {
+        Trainer trainer = new Trainer();
+
+        trainer.setFirstName(trainerCreateDTO.getFirstName());
+        trainer.setLastName(trainerCreateDTO.getLastName());
+        TrainingType trainingType = trainingTypeService.findById(trainerCreateDTO.getSpecialization())
+                .orElseThrow(() -> new TrainingTypeNotFoundException("There is no such training type"));
+        trainer.setSpecialization(trainingType);
+
+        return trainer;
     }
 }
