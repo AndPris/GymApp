@@ -5,12 +5,10 @@ import example.entities.Trainer;
 import example.entities.Training;
 import example.exceptions.TraineeNotFoundException;
 import example.repositories.TraineeRepository;
+import example.validation.Validator;
 import example.services.TraineeService;
 import example.utils.password.PasswordGenerator;
 import example.utils.username.UsernameGenerator;
-import jakarta.validation.ConstraintViolation;
-import jakarta.validation.ValidationException;
-import jakarta.validation.Validator;
 import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +24,6 @@ public class TraineeServiceImp implements TraineeService {
     @Setter
     private TraineeRepository traineeRepository;
 
-    private Validator validator;
     private PasswordGenerator passwordGenerator;
     private UsernameGenerator usernameGenerator;
 
@@ -41,28 +38,17 @@ public class TraineeServiceImp implements TraineeService {
         this.usernameGenerator = usernameGenerator;
     }
 
-    @Autowired
-    public void setValidator(Validator validator) {
-        this.validator = validator;
-    }
-
     @Override
     public Trainee createTrainee(Trainee trainee) {
         if (trainee == null) {
             throw new IllegalArgumentException("Cannot create a trainee: trainee is null");
         }
 
-        validateTrainee(trainee);
+        Validator.validate(trainee);
 
         trainee.setPassword(passwordGenerator.generatePassword());
         trainee.setUsername(usernameGenerator.generateUsername(trainee));
         return traineeRepository.save(trainee);
-    }
-
-    private void validateTrainee(Trainee trainee) {
-        for (ConstraintViolation<Trainee> violation : validator.validate(trainee)) {
-            throw new ValidationException("Validation error: " + violation.getMessage());
-        }
     }
 
     @Override
@@ -80,7 +66,7 @@ public class TraineeServiceImp implements TraineeService {
             throw new IllegalArgumentException("Cannot update a trainee: invalid data");
         }
 
-        validateTrainee(trainee);
+        Validator.validate(trainee);
     }
 
     private void updateTraineeFields(Trainee existing, Trainee updates) {

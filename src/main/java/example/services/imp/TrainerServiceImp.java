@@ -6,9 +6,7 @@ import example.repositories.TrainerRepository;
 import example.services.TrainerService;
 import example.utils.password.PasswordGenerator;
 import example.utils.username.UsernameGenerator;
-import jakarta.validation.ConstraintViolation;
-import jakarta.validation.ValidationException;
-import jakarta.validation.Validator;
+import example.validation.Validator;
 import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,12 +24,6 @@ public class TrainerServiceImp implements TrainerService {
 
     private PasswordGenerator passwordGenerator;
     private UsernameGenerator usernameGenerator;
-    private Validator validator;
-
-    @Autowired
-    public void setValidator(Validator validator) {
-        this.validator = validator;
-    }
 
     @Autowired
     public void setPasswordGenerator(PasswordGenerator passwordGenerator) {
@@ -50,17 +42,11 @@ public class TrainerServiceImp implements TrainerService {
             throw new IllegalArgumentException("Cannot create a trainer: trainer is null");
         }
 
-        validateTrainer(trainer);
+        Validator.validate(trainer);
 
         trainer.setPassword(passwordGenerator.generatePassword());
         trainer.setUsername(usernameGenerator.generateUsername(trainer));
         return trainerRepository.save(trainer);
-    }
-
-    private void validateTrainer(Trainer trainer) {
-        for (ConstraintViolation<Trainer> violation : validator.validate(trainer)) {
-            throw new ValidationException("Validation error: " + violation.getMessage());
-        }
     }
 
     @Override
@@ -78,7 +64,7 @@ public class TrainerServiceImp implements TrainerService {
             throw new IllegalArgumentException("Cannot update a trainer: invalid data");
         }
 
-        validateTrainer(trainer);
+        Validator.validate(trainer);
     }
 
     private void updateTrainerFields(Trainer existing, Trainer updates) {
