@@ -4,8 +4,11 @@ import example.dtos.CredentialsDTO;
 import example.dtos.trainee.TraineeCreateDTO;
 import example.dtos.trainee.TraineeDTO;
 import example.dtos.trainee.TraineeUpdateDTO;
+import example.dtos.trainer.TrainerSummaryDTO;
 import example.entities.Trainee;
+import example.entities.Trainer;
 import example.mappers.TraineeMapper;
+import example.mappers.TrainerMapper;
 import example.services.TraineeService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,10 +23,12 @@ import java.util.stream.Collectors;
 public class TraineeRestController {
     private final TraineeService traineeService;
     private final TraineeMapper traineeMapper;
+    private final TrainerMapper trainerMapper;
 
-    public TraineeRestController(TraineeService traineeService, TraineeMapper traineeMapper) {
+    public TraineeRestController(TraineeService traineeService, TraineeMapper traineeMapper, TrainerMapper trainerMapper) {
         this.traineeService = traineeService;
         this.traineeMapper = traineeMapper;
+        this.trainerMapper = trainerMapper;
     }
 
     @PostMapping
@@ -52,6 +57,28 @@ public class TraineeRestController {
 
         TraineeDTO traineeDTO = traineeMapper.traineeToTraineeDTO(optionalTrainee.get());
         return ResponseEntity.ok(traineeDTO);
+    }
+
+    @GetMapping("/{username}/trainers")
+    public ResponseEntity<List<TrainerSummaryDTO>> getTrainersList(@PathVariable("username") String username,
+                                                                   @RequestParam(defaultValue = "true", name = "inverse") boolean inverse) {
+        Optional<Trainee> optionalTrainee = traineeService.getTraineeByUsername(username);
+        if(!optionalTrainee.isPresent()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        List<Trainer> trainers;
+
+        if(inverse) {
+            trainers = traineeService.findTrainersNotAssignedToTrainee(username);
+        } else {
+            trainers = optionalTrainee.get().getTrainers();
+        }
+
+        List<TrainerSummaryDTO> trainerSummaryDTOS = trainers.stream()
+                .map(trainerMapper::trainerToTrainerSummaryDTO)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(trainerSummaryDTOS);
     }
 
     @DeleteMapping("/{username}")
