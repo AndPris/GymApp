@@ -4,6 +4,7 @@ import example.dtos.ActiveStatusDTO;
 import example.dtos.CredentialsDTO;
 import example.dtos.trainee.TraineeCreateDTO;
 import example.dtos.trainee.TraineeDTO;
+import example.dtos.trainee.TraineeTrainerListUpdateDTO;
 import example.dtos.trainee.TraineeUpdateDTO;
 import example.dtos.trainer.TrainerSummaryDTO;
 import example.dtos.training.TrainingDTO;
@@ -133,5 +134,21 @@ public class TraineeRestController {
         Trainee trainee = traineeService.updateTrainee(username, traineeUpdateDTO);
         TraineeDTO traineeDTO = traineeMapper.traineeToTraineeDTO(trainee);
         return ResponseEntity.ok(traineeDTO);
+    }
+
+    @PutMapping("/{username}/trainers")
+    public ResponseEntity<List<TrainerSummaryDTO>> updateTraineeTrainerList(@PathVariable("username") String username,
+                                                                            @RequestBody TraineeTrainerListUpdateDTO traineeTrainerListUpdateDTO) {
+        Optional<Trainee> optionalTrainee = traineeService.getTraineeByUsername(username);
+        if (!optionalTrainee.isPresent()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        List<Trainer> trainers = traineeService.updateTraineeTrainerList(username, traineeTrainerListUpdateDTO);
+        List<TrainerSummaryDTO> trainerSummaryDTOS = trainers.stream()
+                .map(trainerMapper::trainerToTrainerSummaryDTO)
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(trainerSummaryDTOS);
     }
 }

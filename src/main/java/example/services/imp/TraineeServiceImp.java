@@ -1,11 +1,14 @@
 package example.services.imp;
 
+import example.dtos.trainee.TraineeTrainerListUpdateDTO;
 import example.dtos.trainee.TraineeUpdateDTO;
 import example.entities.Trainee;
 import example.entities.Trainer;
 import example.entities.Training;
 import example.exceptions.TraineeNotFoundException;
+import example.exceptions.TrainerNotFoundException;
 import example.repositories.TraineeRepository;
+import example.services.TrainerService;
 import example.validation.Validator;
 import example.services.TraineeService;
 import example.utils.password.PasswordGenerator;
@@ -18,6 +21,7 @@ import org.springframework.stereotype.Service;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class TraineeServiceImp implements TraineeService {
@@ -28,6 +32,7 @@ public class TraineeServiceImp implements TraineeService {
     private PasswordGenerator passwordGenerator;
     private UsernameGenerator usernameGenerator;
 
+    private TrainerService trainerService;
 
     @Autowired
     public void setPasswordGenerator(PasswordGenerator passwordGenerator) {
@@ -37,6 +42,11 @@ public class TraineeServiceImp implements TraineeService {
     @Autowired
     public void setUsernameGenerator(UsernameGenerator usernameGenerator) {
         this.usernameGenerator = usernameGenerator;
+    }
+
+    @Autowired
+    public void setTrainerService(TrainerService trainerService) {
+        this.trainerService = trainerService;
     }
 
     @Override
@@ -138,6 +148,24 @@ public class TraineeServiceImp implements TraineeService {
 
         return traineeRepository.findTrainingList(username, fromDate, toDate,
                 trainerFirstName, trainerLastName, trainingType);
+    }
+
+    @Override
+    public List<Trainer> updateTraineeTrainerList(String username, TraineeTrainerListUpdateDTO traineeTrainerListUpdateDTO) {
+        Trainee trainee = traineeRepository.findByUsername(username)
+                .orElseThrow(() -> new TraineeNotFoundException("There's no trainee with such username"));
+
+        List<String> trainersUsernames = traineeTrainerListUpdateDTO.getTrainers();
+
+        List<Trainer> trainers = trainersUsernames.stream()
+                .map(trainerUsername -> trainerService.getTrainerByUsername(trainerUsername)
+                        .orElseThrow(() -> new TrainerNotFoundException("There's no trainer with such username")))
+                .collect(Collectors.toList());
+
+        trainee.setTrainers(trainers);
+        traineeRepository.save(trainee);
+
+        return trainers;
     }
 
     @Override

@@ -1,5 +1,6 @@
 package example.services;
 
+import example.dtos.trainee.TraineeTrainerListUpdateDTO;
 import example.dtos.trainee.TraineeUpdateDTO;
 import example.entities.Trainee;
 import example.entities.Trainer;
@@ -30,6 +31,8 @@ public interface TraineeService {
 
     List<Training> findTraineeTrainingList(String username, Date fromDate, Date toDate, String trainerFirstName,
                                            String trainerLastName, Long trainingType);
+
+    List<Trainer> updateTraineeTrainerList(String username, TraineeTrainerListUpdateDTO traineeTrainerListUpdateDTO);
 
     void addTrainerToList(Trainee trainee, Trainer trainer);
 
