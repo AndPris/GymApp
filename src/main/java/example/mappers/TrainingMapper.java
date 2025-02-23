@@ -1,21 +1,37 @@
 package example.mappers;
 
-import example.dtos.training.TrainingDTO;
+import example.dtos.training.TrainingBaseDTO;
+import example.dtos.training.TrainingTraineeDTO;
+import example.dtos.training.TrainingTrainerDTO;
 import example.entities.Training;
 import org.springframework.stereotype.Component;
 
 @Component
 public class TrainingMapper {
-    public TrainingDTO trainingToTrainingDTO(Training training) {
-        TrainingDTO trainingDTO = new TrainingDTO();
+    public TrainingTraineeDTO trainingToTrainingTraineeDTO(Training training) {
+        TrainingTraineeDTO trainingTraineeDTO = new TrainingTraineeDTO();
 
-        trainingDTO.setTrainingName(training.getTrainingName());
-        trainingDTO.setTrainingDate(training.getTrainingDate());
-        trainingDTO.setTrainingType(training.getTrainingType().getId());
-        trainingDTO.setTrainingDuration(training.getTrainingDuration());
-        trainingDTO.setTrainerFirstName(training.getTrainer().getFirstName());
-        trainingDTO.setTrainerLastName(training.getTrainer().getLastName());
+        populateTrainingBaseDTOFields(training, trainingTraineeDTO);
+        trainingTraineeDTO.setTrainerFirstName(training.getTrainer().getFirstName());
+        trainingTraineeDTO.setTrainerLastName(training.getTrainer().getLastName());
 
-        return trainingDTO;
+        return trainingTraineeDTO;
+    }
+
+    public TrainingTrainerDTO trainingToTrainingTrainerDTO(Training training) {
+        TrainingTrainerDTO trainingTrainerDTO = new TrainingTrainerDTO();
+
+        populateTrainingBaseDTOFields(training, trainingTrainerDTO);
+        trainingTrainerDTO.setTraineeFirstName(training.getTrainee().getFirstName());
+        trainingTrainerDTO.setTraineeLastName(training.getTrainee().getLastName());
+
+        return trainingTrainerDTO;
+    }
+
+    private void populateTrainingBaseDTOFields(Training training, TrainingBaseDTO trainingBaseDTO) {
+        trainingBaseDTO.setTrainingName(training.getTrainingName());
+        trainingBaseDTO.setTrainingDate(training.getTrainingDate());
+        trainingBaseDTO.setTrainingType(training.getTrainingType().getId());
+        trainingBaseDTO.setTrainingDuration(training.getTrainingDuration());
     }
 }

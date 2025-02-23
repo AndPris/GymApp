@@ -7,7 +7,7 @@ import example.dtos.trainee.TraineeDTO;
 import example.dtos.trainee.TraineeTrainerListUpdateDTO;
 import example.dtos.trainee.TraineeUpdateDTO;
 import example.dtos.trainer.TrainerSummaryDTO;
-import example.dtos.training.TrainingDTO;
+import example.dtos.training.TrainingBaseDTO;
 import example.entities.Trainee;
 import example.entities.Trainer;
 import example.entities.Training;
@@ -94,7 +94,7 @@ public class TraineeRestController {
     }
 
     @GetMapping("/{username}/trainings")
-    public ResponseEntity<List<TrainingDTO>> getTrainingsList(
+    public ResponseEntity<List<TrainingBaseDTO>> getTrainingsList(
             @PathVariable("username") String username,
             @RequestParam(name = "from", required = false) @DateTimeFormat(pattern = "dd.MM.yyyy") Date from,
             @RequestParam(name = "to", required = false) @DateTimeFormat(pattern = "dd.MM.yyyy") Date to,
@@ -109,10 +109,10 @@ public class TraineeRestController {
         List<Training> trainings = traineeService.findTraineeTrainingList(username, from, to,
                 trainerFirstName, trainerLastName, trainingType);
 
-        List<TrainingDTO> trainingDTOS = trainings.stream()
-                .map(trainingMapper::trainingToTrainingDTO)
+        List<TrainingBaseDTO> trainingBaseDTOS = trainings.stream()
+                .map(trainingMapper::trainingToTrainingTraineeDTO)
                 .collect(Collectors.toList());
-        return ResponseEntity.ok(trainingDTOS);
+        return ResponseEntity.ok(trainingBaseDTOS);
     }
 
     @DeleteMapping("/{username}")
