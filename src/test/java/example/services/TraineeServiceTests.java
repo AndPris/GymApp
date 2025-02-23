@@ -330,12 +330,12 @@ public class TraineeServiceTests {
     }
 
     @Test
-    public void findTrainersNotAssignedToTraineeTest_ShouldReturnList() {
+    public void findActiveTrainersNotAssignedToTraineeTest_ShouldReturnList() {
         Trainer trainer = new Trainer();
 
-        when(traineeRepository.findTrainersNotAssignedToTrainee(any())).thenReturn(Arrays.asList(trainer));
+        when(traineeRepository.findActiveTrainersNotAssignedToTrainee(any())).thenReturn(Arrays.asList(trainer));
 
-        List<Trainer> trainers = traineeService.findTrainersNotAssignedToTrainee("test");
+        List<Trainer> trainers = traineeService.findActiveTrainersNotAssignedToTrainee("test");
 
         assertEquals(1, trainers.size());
         assertEquals(trainer, trainers.get(0));

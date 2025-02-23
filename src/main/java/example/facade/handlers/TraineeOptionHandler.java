@@ -120,7 +120,7 @@ public class TraineeOptionHandler {
         String username = trainee.getUsername();
 
         System.out.println("Trainers:");
-        traineeService.findTrainersNotAssignedToTrainee(username).forEach(System.out::println);
+        traineeService.findActiveTrainersNotAssignedToTrainee(username).forEach(System.out::println);
         System.out.println("================================");
     }
 

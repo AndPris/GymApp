@@ -187,7 +187,7 @@ public class TraineeServiceImp implements TraineeService {
     }
 
     @Override
-    public List<Trainer> findTrainersNotAssignedToTrainee(String username) {
-        return traineeRepository.findTrainersNotAssignedToTrainee(username);
+    public List<Trainer> findActiveTrainersNotAssignedToTrainee(String username) {
+        return traineeRepository.findActiveTrainersNotAssignedToTrainee(username);
     }
 }

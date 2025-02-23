@@ -135,9 +135,10 @@ public class TraineeRepositoryImp implements TraineeRepository {
     }
 
     @Override
-    public List<Trainer> findTrainersNotAssignedToTrainee(String username) {
+    public List<Trainer> findActiveTrainersNotAssignedToTrainee(String username) {
         Query query = entityManager.createQuery("select tr from Trainer tr " +
-                "where tr not in (select t.trainers from Trainee t where t.username=:username)");
+                "where tr not in (select t.trainers from Trainee t where t.username=:username) " +
+                "and tr.active=true");
         query.setParameter("username", username);
 
         List<Trainer> result = query.getResultList();

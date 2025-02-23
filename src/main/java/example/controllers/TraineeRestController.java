@@ -70,7 +70,7 @@ public class TraineeRestController {
     }
 
     @GetMapping("/{username}/trainers")
-    public ResponseEntity<List<TrainerSummaryDTO>> getTrainersList(@PathVariable("username") String username,
+    public ResponseEntity<List<TrainerSummaryDTO>> getActiveTrainersList(@PathVariable("username") String username,
                                                                    @RequestParam(defaultValue = "true", name = "inverse") boolean inverse) {
         Optional<Trainee> optionalTrainee = traineeService.getTraineeByUsername(username);
         if (!optionalTrainee.isPresent()) {
@@ -80,9 +80,11 @@ public class TraineeRestController {
         List<Trainer> trainers;
 
         if (inverse) {
-            trainers = traineeService.findTrainersNotAssignedToTrainee(username);
+            trainers = traineeService.findActiveTrainersNotAssignedToTrainee(username);
         } else {
-            trainers = optionalTrainee.get().getTrainers();
+            trainers = optionalTrainee.get().getTrainers().stream()
+                    .filter(Trainer::isActive)
+                    .collect(Collectors.toList());
         }
 
         List<TrainerSummaryDTO> trainerSummaryDTOS = trainers.stream()
