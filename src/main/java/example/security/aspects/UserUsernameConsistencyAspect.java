@@ -10,6 +10,11 @@ import org.aspectj.lang.ProceedingJoinPoint;
 @Aspect
 @Component
 public class UserUsernameConsistencyAspect {
+    private final UserAuthAspect userAuthAspect;
+
+    public UserUsernameConsistencyAspect(UserAuthAspect userAuthAspect) {
+        this.userAuthAspect = userAuthAspect;
+    }
 
     @Around("execution(* example.controllers.TraineeRestController.deleteTraineeByUsername(String, ..)) ||" +
             "execution(* example.controllers.TraineeRestController.toggleTraineeActiveStatus(String, ..)) ||" +
@@ -19,7 +24,7 @@ public class UserUsernameConsistencyAspect {
         Object[] args = joinPoint.getArgs();
         String pathUsername = (String) args[0];
 
-        String authorizedUsername = UserAuthAspect.getAuthorizedUsername();
+        String authorizedUsername = userAuthAspect.getAuthorizedUsername();
 
         if (authorizedUsername == null) {
             return new ResponseEntity<>("Authorization header is missing or invalid", HttpStatus.UNAUTHORIZED);

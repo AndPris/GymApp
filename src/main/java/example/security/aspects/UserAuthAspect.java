@@ -17,13 +17,13 @@ import java.util.Base64;
 public class UserAuthAspect {
     private final UserAuthService userAuthService;
 
-    private static final ThreadLocal<String> authorizedUsername = new ThreadLocal<>();
+    private final ThreadLocal<String> authorizedUsername = new ThreadLocal<>();
 
     public UserAuthAspect(UserAuthService userAuthService) {
         this.userAuthService = userAuthService;
     }
 
-    public static String getAuthorizedUsername() {
+    public String getAuthorizedUsername() {
         return authorizedUsername.get();
     }
 

@@ -45,7 +45,7 @@ class UserAuthAspectTests {
         Object result = userAuthAspect.authentication(joinPoint);
 
         assertEquals("success", result);
-        assertEquals("test.test4", UserAuthAspect.getAuthorizedUsername());
+        assertEquals("test.test4", userAuthAspect.getAuthorizedUsername());
         verify(userAuthService, times(1)).userExistsByUsernameAndPassword(any(String.class), any(String.class));
         verify(joinPoint, times(1)).proceed();
     }
