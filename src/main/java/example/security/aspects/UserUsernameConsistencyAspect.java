@@ -16,10 +16,7 @@ public class UserUsernameConsistencyAspect {
         this.userAuthAspect = userAuthAspect;
     }
 
-    @Around("execution(* example.controllers.TraineeRestController.deleteTraineeByUsername(String, ..)) ||" +
-            "execution(* example.controllers.TraineeRestController.toggleTraineeActiveStatus(String, ..)) ||" +
-            "execution(* example.controllers.TraineeRestController.updateTrainee(String, ..)) ||" +
-            "execution(* example.controllers.TraineeRestController.updateTraineeTrainerList(String, ..))")
+    @Around("@annotation(example.security.annotations.Authorized)")
     public Object checkUsernameConsistency(ProceedingJoinPoint joinPoint) throws Throwable {
         Object[] args = joinPoint.getArgs();
         String pathUsername = (String) args[0];

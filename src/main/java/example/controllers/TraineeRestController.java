@@ -14,6 +14,8 @@ import example.entities.Training;
 import example.mappers.TraineeMapper;
 import example.mappers.TrainerMapper;
 import example.mappers.TrainingMapper;
+import example.security.annotations.Authenticated;
+import example.security.annotations.Authorized;
 import example.services.TraineeService;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -56,6 +58,7 @@ public class TraineeRestController {
         return ResponseEntity.ok(traineeDTOList);
     }
 
+    @Authenticated
     @GetMapping("/{username}")
     public ResponseEntity<TraineeDTO> getTraineeByUsername(@PathVariable("username") String username,
                                                            @RequestHeader(value = "Authorization") String authHeader) {
@@ -68,6 +71,7 @@ public class TraineeRestController {
         return ResponseEntity.ok(traineeDTO);
     }
 
+    @Authenticated
     @GetMapping("/{username}/trainers")
     public ResponseEntity<List<TrainerSummaryDTO>> getActiveTrainersList(@PathVariable("username") String username,
                                                                          @RequestParam(defaultValue = "true", name = "inverse") boolean inverse,
@@ -93,6 +97,7 @@ public class TraineeRestController {
         return ResponseEntity.ok(trainerSummaryDTOS);
     }
 
+    @Authenticated
     @GetMapping("/{username}/trainings")
     public ResponseEntity<List<TrainingBaseDTO>> getTrainingsList(
             @PathVariable("username") String username,
@@ -116,6 +121,8 @@ public class TraineeRestController {
         return ResponseEntity.ok(trainingBaseDTOS);
     }
 
+    @Authenticated
+    @Authorized
     @DeleteMapping("/{username}")
     public ResponseEntity<?> deleteTraineeByUsername(@PathVariable("username") String username,
                                                      @RequestHeader(value = "Authorization") String authHeader) {
@@ -126,6 +133,8 @@ public class TraineeRestController {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
+    @Authenticated
+    @Authorized
     @PatchMapping("/{username}/active")
     public ResponseEntity<?> toggleTraineeActiveStatus(@PathVariable("username") String username,
                                                        @RequestHeader(value = "Authorization") String authHeader) {
@@ -133,6 +142,8 @@ public class TraineeRestController {
         return ResponseEntity.ok(new ActiveStatusDTO(active));
     }
 
+    @Authenticated
+    @Authorized
     @PutMapping("/{username}")
     public ResponseEntity<TraineeDTO> updateTrainee(@PathVariable("username") String username,
                                                     @RequestBody TraineeUpdateDTO traineeUpdateDTO,
@@ -142,6 +153,8 @@ public class TraineeRestController {
         return ResponseEntity.ok(traineeDTO);
     }
 
+    @Authenticated
+    @Authorized
     @PutMapping("/{username}/trainers")
     public ResponseEntity<List<TrainerSummaryDTO>> updateTraineeTrainerList(@PathVariable("username") String username,
                                                                             @RequestBody TraineeTrainerListUpdateDTO traineeTrainerListUpdateDTO,

@@ -1,13 +1,12 @@
 package example.controllers;
 
 import example.dtos.ChangePasswordDTO;
+import example.security.annotations.Authenticated;
+import example.security.annotations.Authorized;
 import example.services.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/users")
@@ -18,9 +17,12 @@ public class UserRestController {
         this.userService = userService;
     }
 
-    @PutMapping("/password")
-    public ResponseEntity<?> changeUserPassword(@RequestBody ChangePasswordDTO changePasswordDTO) {
-        String username = changePasswordDTO.getUsername();
+    @Authenticated
+    @Authorized
+    @PutMapping("/{username}/password")
+    public ResponseEntity<?> changeUserPassword(@PathVariable("username") String username,
+                                                @RequestBody ChangePasswordDTO changePasswordDTO,
+                                                @RequestHeader(value = "Authorization") String authHeader) {
         String oldPassword = changePasswordDTO.getOldPassword();
 
         if (!userService.existsUserByUsernameAndPassword(username, oldPassword)) {

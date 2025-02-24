@@ -62,10 +62,6 @@ public class TrainingMapper {
                 .orElseThrow(() -> new TraineeNotFoundException("There's no trainee with such username"));
         training.setTrainee(trainee);
 
-        Trainer trainer = trainerService.getTrainerByUsername(trainingCreateDTO.getTrainerUsername())
-                .orElseThrow(() -> new TrainerNotFoundException("There's no trainer with such username"));
-        training.setTrainer(trainer);
-
         TrainingType trainingType = trainingTypeService.findById(trainingCreateDTO.getTrainingType());
         training.setTrainingType(trainingType);
 

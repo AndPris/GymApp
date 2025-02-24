@@ -27,9 +27,7 @@ public class UserAuthAspect {
         return authorizedUsername.get();
     }
 
-    @Around("execution(* example.controllers.TraineeRestController.*(.., String)) && " +
-            "!execution(* example.controllers.TraineeRestController.createTrainee(..)) && " +
-            "!execution(* example.controllers.TraineeRestController.getAllTrainees(..))")
+    @Around("@annotation(example.security.annotations.Authenticated)")
     public Object authentication(ProceedingJoinPoint joinPoint) throws Throwable {
         Object[] args = joinPoint.getArgs();
         String authHeader = (String) args[args.length-1];
