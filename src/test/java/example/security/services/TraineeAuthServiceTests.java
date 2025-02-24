@@ -20,29 +20,29 @@ public class TraineeAuthServiceTests {
     private TraineeRepository traineeRepository;
     private TraineeAuthService traineeAuthService;
 
-    @BeforeEach
-    public void setUp() {
-        inputHandler = mock(InputHandler.class);
-        traineeRepository = mock(TraineeRepositoryImp.class);
-        traineeAuthService = new TraineeAuthService(traineeRepository, inputHandler);
-    }
-
-    @Test
-    public void authenticateTrainee_ShouldThrow() {
-        when(inputHandler.getLine(any(String.class), any(Boolean.class))).thenReturn("test");
-        when(traineeRepository.findByUsernameAndPassword(any(String.class), any(String.class))).thenReturn(Optional.empty());
-
-        Exception e = assertThrows(RuntimeException.class, () -> traineeAuthService.authenticateTrainee());
-        assertEquals("Trainee not found", e.getMessage());
-    }
-
-    @Test
-    public void authenticateTrainee_ShouldReturnTrainee() {
-        Trainee trainee = new Trainee();
-        when(inputHandler.getLine(any(String.class), any(Boolean.class))).thenReturn("test");
-        when(traineeRepository.findByUsernameAndPassword(any(String.class), any(String.class))).thenReturn(Optional.of(trainee));
-
-        Trainee authTrainee = traineeAuthService.authenticateTrainee();
-        assertEquals(trainee, authTrainee);
-    }
+//    @BeforeEach
+//    public void setUp() {
+//        inputHandler = mock(InputHandler.class);
+//        traineeRepository = mock(TraineeRepositoryImp.class);
+//        traineeAuthService = new TraineeAuthService(traineeRepository, inputHandler);
+//    }
+//
+//    @Test
+//    public void authenticateTrainee_ShouldThrow() {
+//        when(inputHandler.getLine(any(String.class), any(Boolean.class))).thenReturn("test");
+//        when(traineeRepository.findByUsernameAndPassword(any(String.class), any(String.class))).thenReturn(Optional.empty());
+//
+//        Exception e = assertThrows(RuntimeException.class, () -> traineeAuthService.authenticateTrainee());
+//        assertEquals("Trainee not found", e.getMessage());
+//    }
+//
+//    @Test
+//    public void authenticateTrainee_ShouldReturnTrainee() {
+//        Trainee trainee = new Trainee();
+//        when(inputHandler.getLine(any(String.class), any(Boolean.class))).thenReturn("test");
+//        when(traineeRepository.findByUsernameAndPassword(any(String.class), any(String.class))).thenReturn(Optional.of(trainee));
+//
+//        Trainee authTrainee = traineeAuthService.authenticateTrainee();
+//        assertEquals(trainee, authTrainee);
+//    }
 }

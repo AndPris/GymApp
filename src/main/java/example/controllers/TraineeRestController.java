@@ -20,9 +20,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @RestController
@@ -59,7 +57,8 @@ public class TraineeRestController {
     }
 
     @GetMapping("/{username}")
-    public ResponseEntity<TraineeDTO> getTraineeByUsername(@PathVariable("username") String username) {
+    public ResponseEntity<TraineeDTO> getTraineeByUsername(@PathVariable("username") String username,
+                                                           @RequestHeader(value = "Authorization") String authHeader) {
         Optional<Trainee> optionalTrainee = traineeService.getTraineeByUsername(username);
         if (!optionalTrainee.isPresent()) {
             return ResponseEntity.notFound().build();
@@ -71,7 +70,8 @@ public class TraineeRestController {
 
     @GetMapping("/{username}/trainers")
     public ResponseEntity<List<TrainerSummaryDTO>> getActiveTrainersList(@PathVariable("username") String username,
-                                                                   @RequestParam(defaultValue = "true", name = "inverse") boolean inverse) {
+                                                                         @RequestParam(defaultValue = "true", name = "inverse") boolean inverse,
+                                                                         @RequestHeader(value = "Authorization") String authHeader) {
         Optional<Trainee> optionalTrainee = traineeService.getTraineeByUsername(username);
         if (!optionalTrainee.isPresent()) {
             return ResponseEntity.notFound().build();
@@ -100,7 +100,8 @@ public class TraineeRestController {
             @RequestParam(name = "to", required = false) @DateTimeFormat(pattern = "dd.MM.yyyy") Date to,
             @RequestParam(name = "trainerFirstName", required = false) String trainerFirstName,
             @RequestParam(name = "trainerLastName", required = false) String trainerLastName,
-            @RequestParam(name = "trainingType", required = false) Long trainingType) {
+            @RequestParam(name = "trainingType", required = false) Long trainingType,
+            @RequestHeader(value = "Authorization") String authHeader) {
 
         if (!traineeService.getTraineeByUsername(username).isPresent()) {
             return ResponseEntity.notFound().build();
@@ -116,7 +117,8 @@ public class TraineeRestController {
     }
 
     @DeleteMapping("/{username}")
-    public ResponseEntity<?> deleteTraineeByUsername(@PathVariable("username") String username) {
+    public ResponseEntity<?> deleteTraineeByUsername(@PathVariable("username") String username,
+                                                     @RequestHeader(value = "Authorization") String authHeader) {
         if (traineeService.deleteTraineeByUsername(username)) {
             return new ResponseEntity<>(HttpStatus.OK);
         }
@@ -125,14 +127,16 @@ public class TraineeRestController {
     }
 
     @PatchMapping("/{username}/active")
-    public ResponseEntity<?> toggleTraineeActiveStatus(@PathVariable("username") String username) {
+    public ResponseEntity<?> toggleTraineeActiveStatus(@PathVariable("username") String username,
+                                                       @RequestHeader(value = "Authorization") String authHeader) {
         Boolean active = traineeService.toggleTraineeIsActiveStatus(username);
         return ResponseEntity.ok(new ActiveStatusDTO(active));
     }
 
     @PutMapping("/{username}")
     public ResponseEntity<TraineeDTO> updateTrainee(@PathVariable("username") String username,
-                                                    @RequestBody TraineeUpdateDTO traineeUpdateDTO) {
+                                                    @RequestBody TraineeUpdateDTO traineeUpdateDTO,
+                                                    @RequestHeader(value = "Authorization") String authHeader) {
         Trainee trainee = traineeService.updateTrainee(username, traineeUpdateDTO);
         TraineeDTO traineeDTO = traineeMapper.traineeToTraineeDTO(trainee);
         return ResponseEntity.ok(traineeDTO);
@@ -140,7 +144,8 @@ public class TraineeRestController {
 
     @PutMapping("/{username}/trainers")
     public ResponseEntity<List<TrainerSummaryDTO>> updateTraineeTrainerList(@PathVariable("username") String username,
-                                                                            @RequestBody TraineeTrainerListUpdateDTO traineeTrainerListUpdateDTO) {
+                                                                            @RequestBody TraineeTrainerListUpdateDTO traineeTrainerListUpdateDTO,
+                                                                            @RequestHeader(value = "Authorization") String authHeader) {
         Optional<Trainee> optionalTrainee = traineeService.getTraineeByUsername(username);
         if (!optionalTrainee.isPresent()) {
             return ResponseEntity.notFound().build();
