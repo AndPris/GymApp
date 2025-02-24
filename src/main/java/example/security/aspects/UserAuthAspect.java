@@ -1,7 +1,7 @@
-package example.security.aspects.trainee;
+package example.security.aspects;
 
 import example.dtos.CredentialsDTO;
-import example.security.services.TraineeAuthService;
+import example.security.services.UserAuthService;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -14,13 +14,13 @@ import java.util.Base64;
 
 @Aspect
 @Component
-public class TraineeAuthAspect {
-    private final TraineeAuthService traineeAuthService;
+public class UserAuthAspect {
+    private final UserAuthService userAuthService;
 
     private static final ThreadLocal<String> authorizedUsername = new ThreadLocal<>();
 
-    public TraineeAuthAspect(TraineeAuthService traineeAuthService) {
-        this.traineeAuthService = traineeAuthService;
+    public UserAuthAspect(UserAuthService userAuthService) {
+        this.userAuthService = userAuthService;
     }
 
     public static String getAuthorizedUsername() {
@@ -39,9 +39,9 @@ public class TraineeAuthAspect {
         }
 
         CredentialsDTO credentialsDTO = parseAuthHeader(authHeader);
-        if(!traineeAuthService.traineeExistsByUsernameAndPassword(credentialsDTO.getUsername(),
+        if(!userAuthService.userExistsByUsernameAndPassword(credentialsDTO.getUsername(),
                 credentialsDTO.getPassword())) {
-            return new ResponseEntity<>("Authorization fails: no such trainee", HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>("Authorization fails: no such user", HttpStatus.UNAUTHORIZED);
         }
 
         authorizedUsername.set(credentialsDTO.getUsername());

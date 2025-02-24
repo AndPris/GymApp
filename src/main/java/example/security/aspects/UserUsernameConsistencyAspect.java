@@ -1,4 +1,4 @@
-package example.security.aspects.trainee;
+package example.security.aspects;
 
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -9,7 +9,7 @@ import org.aspectj.lang.ProceedingJoinPoint;
 
 @Aspect
 @Component
-public class TraineeUsernameConsistencyAspect {
+public class UserUsernameConsistencyAspect {
 
     @Around("execution(* example.controllers.TraineeRestController.deleteTraineeByUsername(String, ..)) ||" +
             "execution(* example.controllers.TraineeRestController.toggleTraineeActiveStatus(String, ..)) ||" +
@@ -19,7 +19,7 @@ public class TraineeUsernameConsistencyAspect {
         Object[] args = joinPoint.getArgs();
         String pathUsername = (String) args[0];
 
-        String authorizedUsername = TraineeAuthAspect.getAuthorizedUsername();
+        String authorizedUsername = UserAuthAspect.getAuthorizedUsername();
 
         if (authorizedUsername == null) {
             return new ResponseEntity<>("Authorization header is missing or invalid", HttpStatus.UNAUTHORIZED);
