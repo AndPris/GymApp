@@ -7,6 +7,7 @@ import example.dtos.trainer.TrainerDTO;
 import example.dtos.trainer.TrainerUpdateDTO;
 import example.dtos.training.TrainingBaseDTO;
 import example.dtos.training.TrainingCreateDTO;
+import example.dtos.training.TrainingTrainerDTO;
 import example.entities.Trainer;
 import example.entities.Training;
 import example.exceptions.TrainerNotFoundException;
@@ -34,7 +35,8 @@ public class TrainerRestController {
     private final TrainerMapper trainerMapper;
     private final TrainingMapper trainingMapper;
 
-    public TrainerRestController(TrainerService trainerService, TrainingService trainingService, TrainerMapper trainerMapper, TrainingMapper trainingMapper) {
+    public TrainerRestController(TrainerService trainerService, TrainingService trainingService,
+                                 TrainerMapper trainerMapper, TrainingMapper trainingMapper) {
         this.trainerService = trainerService;
         this.trainingService = trainingService;
         this.trainerMapper = trainerMapper;
@@ -81,7 +83,7 @@ public class TrainerRestController {
                                             @RequestHeader(value = "Authorization") String authHeader) {
         Training training = trainingMapper.trainingCreateDTOToTraining(trainingCreateDTO);
         Trainer trainer = trainerService.getTrainerByUsername(username)
-                .orElseThrow(() -> new TrainerNotFoundException("There's no trainer with such username"));
+                .orElseThrow(() -> new TrainerNotFoundException("There's no trainer with such username: " + username));
         training.setTrainer(trainer);
 
         trainingService.createTraining(training);
@@ -90,7 +92,7 @@ public class TrainerRestController {
 
     @Authenticated
     @GetMapping("/{username}/trainings")
-    public ResponseEntity<List<TrainingBaseDTO>> getTrainingsList(
+    public ResponseEntity<List<TrainingTrainerDTO>> getTrainingsList(
             @PathVariable("username") String username,
             @RequestParam(name = "from", required = false) @DateTimeFormat(pattern = "dd.MM.yyyy") Date from,
             @RequestParam(name = "to", required = false) @DateTimeFormat(pattern = "dd.MM.yyyy") Date to,
@@ -105,7 +107,7 @@ public class TrainerRestController {
         List<Training> trainings = trainerService.findTrainerTrainingList(username, from, to,
                 traineeFirstName, traineeLastName);
 
-        List<TrainingBaseDTO> trainingBaseDTOS = trainings.stream()
+        List<TrainingTrainerDTO> trainingBaseDTOS = trainings.stream()
                 .map(trainingMapper::trainingToTrainingTrainerDTO)
                 .collect(Collectors.toList());
         return ResponseEntity.ok(trainingBaseDTOS);
