@@ -4,6 +4,7 @@ import example.entities.Training;
 import example.repositories.TrainingRepository;
 import example.repositories.imp.TrainingRepositoryImp;
 import example.services.imp.TrainingServiceImp;
+import example.validation.CustomValidator;
 import jakarta.validation.ValidationException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,12 +23,14 @@ import static org.mockito.Mockito.when;
 
 public class TrainingServiceTests {
     private TrainingRepository trainingRepository;
+    private CustomValidator customValidator;
     private TrainingService trainingService;
 
     @BeforeEach
     public void init() {
         trainingRepository = mock(TrainingRepositoryImp.class);
-        trainingService = new TrainingServiceImp(trainingRepository);
+        customValidator = mock(CustomValidator.class);
+        trainingService = new TrainingServiceImp(trainingRepository, customValidator);
     }
 
     @Test

@@ -4,7 +4,7 @@ import example.entities.User;
 import example.exceptions.UserNotFoundException;
 import example.repositories.UserRepository;
 import example.services.UserService;
-import example.validation.Validator;
+import example.validation.CustomValidator;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -12,9 +12,11 @@ import java.util.Optional;
 @Service
 public class UserServiceImp implements UserService {
     private final UserRepository userRepository;
+    private final CustomValidator customValidator;
 
-    public UserServiceImp(UserRepository userRepository) {
+    public UserServiceImp(UserRepository userRepository, CustomValidator customValidator) {
         this.userRepository = userRepository;
+        this.customValidator = customValidator;
     }
 
     @Override
@@ -29,7 +31,7 @@ public class UserServiceImp implements UserService {
                 .orElseThrow(() -> new UserNotFoundException("There's no user with such username and password"));
 
         user.setPassword(newPassword);
-        Validator.validate(user);
+        customValidator.validate(user);
         userRepository.save(user);
     }
 }

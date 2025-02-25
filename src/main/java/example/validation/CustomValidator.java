@@ -3,11 +3,17 @@ package example.validation;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.ValidationException;
+import org.springframework.stereotype.Component;
 
-public class Validator {
-    private static final jakarta.validation.Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
+@Component
+public class CustomValidator {
+    private final jakarta.validation.Validator validator;
 
-    public static <T> void validate(T obj) {
+    public CustomValidator() {
+        validator = Validation.buildDefaultValidatorFactory().getValidator();
+    }
+
+    public <T> void validate(T obj) {
         for (ConstraintViolation<T> violation : validator.validate(obj)) {
             throw new ValidationException("Validation error: " + violation.getMessage());
         }

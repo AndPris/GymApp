@@ -3,15 +3,17 @@ package example.services.imp;
 import example.entities.Training;
 import example.repositories.TrainingRepository;
 import example.services.TrainingService;
-import example.validation.Validator;
+import example.validation.CustomValidator;
 import org.springframework.stereotype.Service;
 
 @Service
 public class TrainingServiceImp implements TrainingService {
     private final TrainingRepository trainingRepository;
+    private final CustomValidator customValidator;
 
-    public TrainingServiceImp(TrainingRepository trainingRepository) {
+    public TrainingServiceImp(TrainingRepository trainingRepository, CustomValidator customValidator) {
         this.trainingRepository = trainingRepository;
+        this.customValidator = customValidator;
     }
 
     @Override
@@ -20,7 +22,7 @@ public class TrainingServiceImp implements TrainingService {
             throw new IllegalArgumentException("Cannot create a training: training is null");
         }
 
-        Validator.validate(training);
+        customValidator.validate(training);
 
         return trainingRepository.save(training);
     }

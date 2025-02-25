@@ -9,7 +9,7 @@ import example.exceptions.TraineeNotFoundException;
 import example.exceptions.TrainerNotFoundException;
 import example.repositories.TraineeRepository;
 import example.services.TrainerService;
-import example.validation.Validator;
+import example.validation.CustomValidator;
 import example.services.TraineeService;
 import example.utils.password.PasswordGenerator;
 import example.utils.username.UsernameGenerator;
@@ -33,6 +33,7 @@ public class TraineeServiceImp implements TraineeService {
     private UsernameGenerator usernameGenerator;
 
     private TrainerService trainerService;
+    private CustomValidator customValidator;
 
     @Autowired
     public void setPasswordGenerator(PasswordGenerator passwordGenerator) {
@@ -49,13 +50,18 @@ public class TraineeServiceImp implements TraineeService {
         this.trainerService = trainerService;
     }
 
+    @Autowired
+    public void setCustomValidator(CustomValidator customValidator) {
+        this.customValidator = customValidator;
+    }
+
     @Override
     public Trainee createTrainee(Trainee trainee) {
         if (trainee == null) {
             throw new IllegalArgumentException("Cannot create a trainee: trainee is null");
         }
 
-        Validator.validate(trainee);
+        customValidator.validate(trainee);
 
         trainee.setPassword(passwordGenerator.generatePassword());
         trainee.setUsername(usernameGenerator.generateUsername(trainee));
@@ -73,7 +79,7 @@ public class TraineeServiceImp implements TraineeService {
         trainee.setAddress(traineeUpdateDTO.getAddress());
         trainee.setActive(traineeUpdateDTO.isActive());
 
-        Validator.validate(trainee);
+        customValidator.validate(trainee);
 
         return traineeRepository.save(trainee);
     }
@@ -93,7 +99,7 @@ public class TraineeServiceImp implements TraineeService {
             throw new IllegalArgumentException("Cannot update a trainee: invalid data");
         }
 
-        Validator.validate(trainee);
+        customValidator.validate(trainee);
     }
 
     private void updateTraineeFields(Trainee existing, Trainee patch) {

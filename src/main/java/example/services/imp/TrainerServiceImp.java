@@ -10,7 +10,7 @@ import example.services.TrainerService;
 import example.services.TrainingTypeService;
 import example.utils.password.PasswordGenerator;
 import example.utils.username.UsernameGenerator;
-import example.validation.Validator;
+import example.validation.CustomValidator;
 import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +31,8 @@ public class TrainerServiceImp implements TrainerService {
     private PasswordGenerator passwordGenerator;
     private UsernameGenerator usernameGenerator;
 
+    private CustomValidator customValidator;
+
     @Autowired
     public void setTrainingTypeService(TrainingTypeService trainingTypeService) {
         this.trainingTypeService = trainingTypeService;
@@ -46,6 +48,10 @@ public class TrainerServiceImp implements TrainerService {
         this.usernameGenerator = usernameGenerator;
     }
 
+    @Autowired
+    public void setValidator(CustomValidator customValidator) {
+        this.customValidator = customValidator;
+    }
 
     @Override
     public Trainer createTrainer(Trainer trainer) {
@@ -53,7 +59,7 @@ public class TrainerServiceImp implements TrainerService {
             throw new IllegalArgumentException("Cannot create a trainer: trainer is null");
         }
 
-        Validator.validate(trainer);
+        customValidator.validate(trainer);
 
         trainer.setPassword(passwordGenerator.generatePassword());
         trainer.setUsername(usernameGenerator.generateUsername(trainer));
@@ -71,7 +77,7 @@ public class TrainerServiceImp implements TrainerService {
         TrainingType trainingType = trainingTypeService.findById(trainerUpdateDTO.getSpecialization());
         trainer.setSpecialization(trainingType);
 
-        Validator.validate(trainer);
+        customValidator.validate(trainer);
 
         return trainerRepository.save(trainer);
     }
@@ -91,7 +97,7 @@ public class TrainerServiceImp implements TrainerService {
             throw new IllegalArgumentException("Cannot update a trainer: invalid data");
         }
 
-        Validator.validate(trainer);
+        customValidator.validate(trainer);
     }
 
     private void updateTrainerFields(Trainer existing, Trainer patch) {

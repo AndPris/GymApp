@@ -5,7 +5,6 @@ import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 
 @Configuration
 @PropertySource("classpath:application.properties")
-//@ComponentScan(basePackages = "example")
 @EnableAspectJAutoProxy
 public class AppConfig {
     @Bean

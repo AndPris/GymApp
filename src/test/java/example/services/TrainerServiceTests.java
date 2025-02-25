@@ -9,6 +9,7 @@ import example.utils.password.PasswordGenerator;
 import example.utils.password.imp.SimplePasswordGenerator;
 import example.utils.username.UsernameGenerator;
 import example.utils.username.imp.SimpleUsernameGenerator;
+import example.validation.CustomValidator;
 import jakarta.validation.ValidationException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -32,6 +33,7 @@ public class TrainerServiceTests {
     private UsernameGenerator usernameGenerator;
     private TrainerRepository trainerRepository;
     private TrainerServiceImp trainerService;
+    private CustomValidator customValidator;
 
     @BeforeEach
     public void init() {
@@ -42,6 +44,7 @@ public class TrainerServiceTests {
         when(usernameGenerator.generateUsername(any())).thenReturn("username");
 
         trainerRepository = mock(TrainerRepositoryImp.class);
+        customValidator = mock(CustomValidator.class);
 
         trainerService = new TrainerServiceImp();
         trainerService.setTrainerRepository(trainerRepository);
