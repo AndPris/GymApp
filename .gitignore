@@ -9,7 +9,7 @@ target/
 *.iml
 *.ipr
 *.json
-logs
+logs/app.log
 
 ### Eclipse ###
 .apt_generated

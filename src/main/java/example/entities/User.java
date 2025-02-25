@@ -16,12 +16,12 @@ public abstract class User {
     private Long id;
 
     @Column(nullable = false)
-    @NotNull
+    @NotNull(message = "First name must be provided")
     @Size(min = 2, max = 20, message = "First name must be from 2 to 20 characters")
     private String firstName;
 
     @Column(nullable = false)
-    @NotNull
+    @NotNull(message = "Last name must be provided")
     @Size(min = 2, max = 20, message = "Last name must be from 2 to 20 characters")
     private String lastName;
 
