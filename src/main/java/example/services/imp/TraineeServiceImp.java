@@ -130,13 +130,13 @@ public class TraineeServiceImp implements TraineeService {
     @Override
     public List<Trainer> updateTraineeTrainerList(String username, TraineeTrainerListUpdateDTO traineeTrainerListUpdateDTO) {
         Trainee trainee = traineeRepository.findByUsername(username)
-                .orElseThrow(() -> new TraineeNotFoundException("There's no trainee with such username"));
+                .orElseThrow(() -> new TraineeNotFoundException("There's no trainee with such username: " + username));
 
         List<String> trainersUsernames = traineeTrainerListUpdateDTO.getTrainers();
 
         List<Trainer> trainers = trainersUsernames.stream()
                 .map(trainerUsername -> trainerService.getTrainerByUsername(trainerUsername)
-                        .orElseThrow(() -> new TrainerNotFoundException("There's no trainer with such username")))
+                        .orElseThrow(() -> new TrainerNotFoundException("There's no trainer with such username: " + trainerUsername)))
                 .collect(Collectors.toList());
 
         trainee.setTrainers(trainers);

@@ -1,8 +1,11 @@
 package example.services;
 
+import example.dtos.trainer.TrainerUpdateDTO;
 import example.entities.Trainer;
 import example.entities.Training;
+import example.entities.TrainingType;
 import example.exceptions.TrainerNotFoundException;
+import example.exceptions.TrainingTypeNotFoundException;
 import example.repositories.TrainerRepository;
 import example.repositories.imp.TrainerRepositoryImp;
 import example.services.imp.TrainerServiceImp;
@@ -26,8 +29,7 @@ import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 public class TrainerServiceTests {
     private PasswordGenerator passwordGenerator;
@@ -35,23 +37,26 @@ public class TrainerServiceTests {
     private TrainerRepository trainerRepository;
     private TrainerServiceImp trainerService;
     private CustomValidator customValidator;
+    private TrainingTypeService trainingTypeService;
 
     @BeforeEach
     public void init() {
-        PasswordGenerator passwordGenerator = mock(SimplePasswordGenerator.class);
+        passwordGenerator = mock(SimplePasswordGenerator.class);
         when(passwordGenerator.generatePassword()).thenReturn("password");
 
-        SimpleUsernameGenerator usernameGenerator = mock(SimpleUsernameGenerator.class);
+        usernameGenerator = mock(SimpleUsernameGenerator.class);
         when(usernameGenerator.generateUsername(any())).thenReturn("username");
 
         trainerRepository = mock(TrainerRepositoryImp.class);
         customValidator = mock(CustomValidator.class);
+        trainingTypeService = mock(TrainingTypeService.class);
 
         trainerService = new TrainerServiceImp();
         trainerService.setCustomValidator(customValidator);
         trainerService.setTrainerRepository(trainerRepository);
         trainerService.setPasswordGenerator(passwordGenerator);
         trainerService.setUsernameGenerator(usernameGenerator);
+        trainerService.setTrainingTypeService(trainingTypeService);
     }
 
     @Test
@@ -69,6 +74,46 @@ public class TrainerServiceTests {
         assertNotNull(result);
         assertEquals("username", result.getUsername());
         assertEquals("password", result.getPassword());
+    }
+
+    @Test
+    public void updateTrainerTest_ShouldThrowTrainerNotFoundException() {
+        when(trainerRepository.findByUsername(any(String.class))).thenReturn(Optional.empty());
+
+        String message = assertThrows(TrainerNotFoundException.class, () -> trainerService.updateTrainer("test", null)).getMessage();
+        assertEquals("There's no trainer with such username: test", message);
+    }
+
+    @Test
+    public void updateTrainerTest_ShouldThrowTrainingTypeNotFoundException() {
+        Trainer trainer = new Trainer();
+        TrainerUpdateDTO trainerUpdateDTO = new TrainerUpdateDTO();
+        trainerUpdateDTO.setSpecialization(1L);
+
+        when(trainerRepository.findByUsername(any(String.class))).thenReturn(Optional.of(trainer));
+        when(trainingTypeService.findById(any(Long.class))).thenThrow(new TrainingTypeNotFoundException("test"));
+
+        String message = assertThrows(TrainingTypeNotFoundException.class, () -> trainerService.updateTrainer("test", trainerUpdateDTO)).getMessage();
+        assertEquals("test", message);
+    }
+
+    @Test
+    public void updateTrainerTest_ShouldUpdate() {
+        Trainer trainer = new Trainer();
+        TrainingType trainingType = new TrainingType();
+
+        TrainerUpdateDTO trainerUpdateDTO = new TrainerUpdateDTO();
+        trainerUpdateDTO.setFirstName("test");
+        trainerUpdateDTO.setSpecialization(1L);
+
+        when(trainerRepository.findByUsername(any(String.class))).thenReturn(Optional.of(trainer));
+        when(trainingTypeService.findById(any(Long.class))).thenReturn(trainingType);
+        when(trainerRepository.save(trainer)).thenReturn(trainer);
+
+        Trainer result = trainerService.updateTrainer("test", trainerUpdateDTO);
+        assertEquals("test", result.getFirstName());
+        assertNull(result.getLastName());
+        assertEquals(trainingType, trainer.getSpecialization());
     }
 
     @Test
