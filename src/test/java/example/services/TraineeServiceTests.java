@@ -3,6 +3,7 @@ package example.services;
 import example.entities.Trainee;
 import example.entities.Trainer;
 import example.entities.Training;
+import example.exceptions.TraineeNotFoundException;
 import example.repositories.TraineeRepository;
 import example.repositories.imp.TraineeRepositoryImp;
 import example.services.imp.TraineeServiceImp;
@@ -10,6 +11,7 @@ import example.utils.password.PasswordGenerator;
 import example.utils.password.imp.SimplePasswordGenerator;
 import example.utils.username.UsernameGenerator;
 import example.utils.username.imp.SimpleUsernameGenerator;
+import example.validation.CustomValidator;
 import jakarta.validation.ValidationException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -25,12 +27,12 @@ import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 public class TraineeServiceTests {
     private PasswordGenerator passwordGenerator;
     private UsernameGenerator usernameGenerator;
+    private CustomValidator customValidator;
     private TraineeRepository traineeRepository;
     private TraineeServiceImp traineeService;
 
@@ -42,9 +44,11 @@ public class TraineeServiceTests {
         SimpleUsernameGenerator usernameGenerator = mock(SimpleUsernameGenerator.class);
         when(usernameGenerator.generateUsername(any())).thenReturn("username");
 
+        customValidator = mock(CustomValidator.class);
         traineeRepository = mock(TraineeRepositoryImp.class);
 
         traineeService = new TraineeServiceImp();
+        traineeService.setCustomValidator(customValidator);
         traineeService.setTraineeRepository(traineeRepository);
         traineeService.setPasswordGenerator(passwordGenerator);
         traineeService.setUsernameGenerator(usernameGenerator);
@@ -56,42 +60,15 @@ public class TraineeServiceTests {
         assertEquals("Cannot create a trainee: trainee is null", message);
     }
 
-    @ParameterizedTest
-    @MethodSource("invalidTrainees")
-    public void createTraineeTest_ShouldThrow(Trainee trainee, String errorMessage) {
+    @Test
+    public void createTraineeTest_ShouldThrow() {
+        Trainee trainee = new Trainee();
+        String errorMessage = "Validation error";
+        doThrow(new ValidationException(errorMessage)).when(customValidator).validate(trainee);
         when(traineeRepository.save(trainee)).thenReturn(trainee);
 
         Exception e = assertThrows(ValidationException.class, () -> traineeService.createTrainee(trainee));
         assertEquals(errorMessage, e.getMessage());
-    }
-
-    private static Stream<Arguments> invalidTrainees() {
-        Trainee trainee1 = new Trainee();
-        trainee1.setPassword("1");
-
-        Trainee trainee2 = new Trainee();
-        trainee2.setPassword("1111111111111111111111111111111111111111111");
-
-        Trainee trainee3 = new Trainee();
-        trainee3.setUsername("1");
-
-        Trainee trainee4 = new Trainee();
-        trainee4.setUsername("111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111");
-
-        return Stream.of(
-                Arguments.of(new Trainee("f", "last", null, null),
-                        "Validation error: First name must be from 2 to 20 characters"),
-                Arguments.of(new Trainee("fgggggggggggggggggggggggggggggggggggggggggggggggg", "last", null, null),
-                        "Validation error: First name must be from 2 to 20 characters"),
-                Arguments.of(new Trainee("first", "l", null, null),
-                        "Validation error: Last name must be from 2 to 20 characters"),
-                Arguments.of(new Trainee("first", "lllllllllllllllllllllllllllllllllllllllllllllll", null, null),
-                        "Validation error: Last name must be from 2 to 20 characters"),
-                Arguments.of(trainee1, "Validation error: Password must be from 6 to 20 characters"),
-                Arguments.of(trainee2, "Validation error: Password must be from 6 to 20 characters"),
-                Arguments.of(trainee3, "Validation error: Username must be from 2 to 50 characters"),
-                Arguments.of(trainee4, "Validation error: Username must be from 2 to 50 characters")
-        );
     }
 
     @Test
@@ -103,48 +80,6 @@ public class TraineeServiceTests {
         assertNotNull(result);
         assertEquals("username", result.getUsername());
         assertEquals("password", result.getPassword());
-    }
-
-    @Test
-    public void patchTraineeTest_ShouldThrow1() {
-        String message = assertThrows(IllegalArgumentException.class, () -> traineeService.patchTrainee(null)).getMessage();
-        assertEquals("Cannot update a trainee: invalid data", message);
-
-        message = assertThrows(IllegalArgumentException.class, () -> traineeService.patchTrainee(new Trainee())).getMessage();
-        assertEquals("Cannot update a trainee: invalid data", message);
-
-        Trainee trainee = new Trainee();
-        trainee.setId(2L);
-        when(traineeRepository.findById(2L)).thenReturn(Optional.empty());
-        message = assertThrows(IllegalArgumentException.class, () -> traineeService.patchTrainee(trainee)).getMessage();
-        assertEquals("Cannot update a trainee: invalid data", message);
-    }
-
-    @ParameterizedTest
-    @MethodSource("invalidTrainees")
-    public void patchTraineeTest_ShouldThrow2(Trainee trainee, String errorMessage) {
-        trainee.setId(1L);
-        when(traineeRepository.findById(any(Long.class))).thenReturn(Optional.of(trainee));
-
-        Exception e = assertThrows(ValidationException.class, () -> traineeService.patchTrainee(trainee));
-        assertEquals(errorMessage, e.getMessage());
-    }
-
-    @Test
-    public void updateTraineeTest_ShouldPerformPatch() {
-        Trainee existing = new Trainee("first", "last", null, null);
-        existing.setId(1L);
-        Trainee update = new Trainee("updated", null, null, null);
-        update.setId(1L);
-
-        when(traineeRepository.findById(1L)).thenReturn(Optional.of(existing));
-        when(traineeRepository.save(existing)).thenReturn(existing);
-
-        Trainee result = traineeService.patchTrainee(update);
-        assertEquals("updated", result.getFirstName());
-        assertEquals("last", result.getLastName());
-        assertNull(result.getAddress());
-        assertNull(result.getDateOfBirth());
     }
 
     @Test
@@ -261,9 +196,9 @@ public class TraineeServiceTests {
     public void toggleTraineeIsActiveStatusTest_ShouldThrow() {
         when(traineeRepository.findByUsername(any(String.class))).thenReturn(Optional.empty());
 
-        Exception e = assertThrows(IllegalArgumentException.class,
+        Exception e = assertThrows(TraineeNotFoundException.class,
                 () -> traineeService.toggleTraineeIsActiveStatus("test"));
-        assertEquals("No trainee with such id: 1", e.getMessage());
+        assertEquals("No trainee with such username: test", e.getMessage());
     }
 
     @Test

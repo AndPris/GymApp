@@ -15,7 +15,7 @@ import java.util.List;
 @NoArgsConstructor
 public class Trainer extends User {
     @ManyToOne
-    @NotNull
+    @NotNull(message = "Specialization must be provided")
     @JoinColumn(name = "specialization")
     private TrainingType specialization;
 

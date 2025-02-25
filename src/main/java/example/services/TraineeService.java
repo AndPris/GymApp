@@ -15,8 +15,6 @@ public interface TraineeService {
 
     Trainee updateTrainee(String username, TraineeUpdateDTO traineeUpdateDTO);
 
-    Trainee patchTrainee(Trainee updates);
-
     boolean deleteTraineeByUsername(String username);
 
     Iterable<Trainee> getAllTrainees();

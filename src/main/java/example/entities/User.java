@@ -34,7 +34,7 @@ public abstract class User {
     private String password;
 
     @Column(nullable = false)
-    @NotNull
+    @NotNull(message = "Active must be provided")
     private Boolean active = true;
 
     public User(String firstName, String lastName) {

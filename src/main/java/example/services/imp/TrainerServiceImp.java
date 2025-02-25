@@ -49,7 +49,7 @@ public class TrainerServiceImp implements TrainerService {
     }
 
     @Autowired
-    public void setValidator(CustomValidator customValidator) {
+    public void setCustomValidator(CustomValidator customValidator) {
         this.customValidator = customValidator;
     }
 
@@ -83,33 +83,6 @@ public class TrainerServiceImp implements TrainerService {
     }
 
     @Override
-    public Trainer patchTrainer(Trainer patch) {
-        validateTrainerForPatch(patch);
-
-        Trainer existing = trainerRepository.findById(patch.getId()).get();
-        updateTrainerFields(existing, patch);
-
-        return trainerRepository.save(existing);
-    }
-
-    private void validateTrainerForPatch(Trainer trainer) {
-        if (trainer == null || trainer.getId() == null || !trainerRepository.findById(trainer.getId()).isPresent()) {
-            throw new IllegalArgumentException("Cannot update a trainer: invalid data");
-        }
-
-        customValidator.validate(trainer);
-    }
-
-    private void updateTrainerFields(Trainer existing, Trainer patch) {
-        Optional.ofNullable(patch.getFirstName()).filter(StringUtils::isNoneBlank).ifPresent(existing::setFirstName);
-        Optional.ofNullable(patch.getLastName()).filter(StringUtils::isNoneBlank).ifPresent(existing::setLastName);
-        Optional.ofNullable(patch.getUsername()).filter(StringUtils::isNoneBlank).ifPresent(existing::setUsername);
-        Optional.ofNullable(patch.getPassword()).filter(StringUtils::isNoneBlank).ifPresent(existing::setPassword);
-        Optional.ofNullable(patch.getSpecialization()).ifPresent(existing::setSpecialization);
-        Optional.ofNullable(patch.isActive()).ifPresent(existing::setActive);
-    }
-
-    @Override
     public Iterable<Trainer> getAllTrainers() {
         return trainerRepository.findAll();
     }
@@ -139,7 +112,7 @@ public class TrainerServiceImp implements TrainerService {
     @Override
     public boolean toggleTrainerIsActiveStatus(String username) {
         Trainer trainer = trainerRepository.findByUsername(username)
-                .orElseThrow(() -> new IllegalArgumentException("No trainer with such username: " + username));
+                .orElseThrow(() -> new TrainerNotFoundException("No trainer with such username: " + username));
 
         trainer.setActive(!trainer.isActive());
         trainerRepository.save(trainer);

@@ -14,7 +14,6 @@ import example.services.TraineeService;
 import example.utils.password.PasswordGenerator;
 import example.utils.username.UsernameGenerator;
 import lombok.Setter;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -82,34 +81,6 @@ public class TraineeServiceImp implements TraineeService {
         customValidator.validate(trainee);
 
         return traineeRepository.save(trainee);
-    }
-
-    @Override
-    public Trainee patchTrainee(Trainee patch) {
-        validateTraineeForPatch(patch);
-
-        Trainee existing = traineeRepository.findById(patch.getId()).get();
-        updateTraineeFields(existing, patch);
-
-        return traineeRepository.save(existing);
-    }
-
-    private void validateTraineeForPatch(Trainee trainee) {
-        if (trainee == null || trainee.getId() == null || !traineeRepository.findById(trainee.getId()).isPresent()) {
-            throw new IllegalArgumentException("Cannot update a trainee: invalid data");
-        }
-
-        customValidator.validate(trainee);
-    }
-
-    private void updateTraineeFields(Trainee existing, Trainee patch) {
-        Optional.ofNullable(patch.getFirstName()).filter(StringUtils::isNoneBlank).ifPresent(existing::setFirstName);
-        Optional.ofNullable(patch.getLastName()).filter(StringUtils::isNoneBlank).ifPresent(existing::setLastName);
-        Optional.ofNullable(patch.getUsername()).filter(StringUtils::isNoneBlank).ifPresent(existing::setUsername);
-        Optional.ofNullable(patch.getPassword()).filter(StringUtils::isNoneBlank).ifPresent(existing::setPassword);
-        Optional.ofNullable(patch.getAddress()).filter(StringUtils::isNoneBlank).ifPresent(existing::setAddress);
-        Optional.ofNullable(patch.getDateOfBirth()).ifPresent(existing::setDateOfBirth);
-        Optional.ofNullable(patch.isActive()).ifPresent(existing::setActive);
     }
 
     @Override

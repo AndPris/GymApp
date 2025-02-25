@@ -228,7 +228,7 @@ public class TraineeRepositoryTests {
                 "and (:toDate is null or t.trainingDate < :toDate) " +
                 "and (:trainerFirstName is null or t.trainer.firstName=:trainerFirstName) " +
                 "and (:trainerLastName is null or t.trainer.lastName=:trainerLastName) " +
-                "and (:trainingType is null or t.trainingType.name=:trainingType)";
+                "and (:trainingType is null or t.trainingType.id=:trainingType)";
         when(entityManager.createQuery(eq(jpql))).thenReturn(query);
         when(query.getResultList()).thenReturn(new ArrayList<Trainee>());
 
@@ -247,7 +247,7 @@ public class TraineeRepositoryTests {
                 "and (:toDate is null or t.trainingDate < :toDate) " +
                 "and (:trainerFirstName is null or t.trainer.firstName=:trainerFirstName) " +
                 "and (:trainerLastName is null or t.trainer.lastName=:trainerLastName) " +
-                "and (:trainingType is null or t.trainingType.name=:trainingType)";
+                "and (:trainingType is null or t.trainingType.id=:trainingType)";
 
         when(entityManager.createQuery(eq(jpql))).thenReturn(query);
         when(query.getResultList()).thenReturn(Arrays.asList(training));

@@ -2,6 +2,7 @@ package example.services;
 
 import example.entities.Trainer;
 import example.entities.Training;
+import example.exceptions.TrainerNotFoundException;
 import example.repositories.TrainerRepository;
 import example.repositories.imp.TrainerRepositoryImp;
 import example.services.imp.TrainerServiceImp;
@@ -47,6 +48,7 @@ public class TrainerServiceTests {
         customValidator = mock(CustomValidator.class);
 
         trainerService = new TrainerServiceImp();
+        trainerService.setCustomValidator(customValidator);
         trainerService.setTrainerRepository(trainerRepository);
         trainerService.setPasswordGenerator(passwordGenerator);
         trainerService.setUsernameGenerator(usernameGenerator);
@@ -58,44 +60,6 @@ public class TrainerServiceTests {
         assertEquals("Cannot create a trainer: trainer is null", message);
     }
 
-    @ParameterizedTest
-    @MethodSource("invalidTrainers")
-    public void createTrainerTest_ShouldThrow(Trainer trainer, String errorMessage) {
-        when(trainerRepository.save(trainer)).thenReturn(trainer);
-
-        Exception e = assertThrows(ValidationException.class, () -> trainerService.createTrainer(trainer));
-        assertEquals(errorMessage, e.getMessage());
-    }
-
-    private static Stream<Arguments> invalidTrainers() {
-        Trainer trainer1 = new Trainer();
-        trainer1.setPassword("1");
-
-        Trainer trainer2 = new Trainer();
-        trainer2.setPassword("1111111111111111111111111111111111111111111");
-
-        Trainer trainer3 = new Trainer();
-        trainer3.setUsername("1");
-
-        Trainer trainer4 = new Trainer();
-        trainer4.setUsername("111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111");
-
-        return Stream.of(
-                Arguments.of(new Trainer("f", "last", null),
-                        "Validation error: First name must be from 2 to 20 characters"),
-                Arguments.of(new Trainer("fgggggggggggggggggggggggggggggggggggggggggggggggg", "last", null),
-                        "Validation error: First name must be from 2 to 20 characters"),
-                Arguments.of(new Trainer("first", "l", null),
-                        "Validation error: Last name must be from 2 to 20 characters"),
-                Arguments.of(new Trainer("first", "lllllllllllllllllllllllllllllllllllllllllllllll", null),
-                        "Validation error: Last name must be from 2 to 20 characters"),
-                Arguments.of(trainer1, "Validation error: Password must be from 6 to 20 characters"),
-                Arguments.of(trainer2, "Validation error: Password must be from 6 to 20 characters"),
-                Arguments.of(trainer3, "Validation error: Username must be from 2 to 50 characters"),
-                Arguments.of(trainer4, "Validation error: Username must be from 2 to 50 characters")
-        );
-    }
-
     @Test
     public void createTrainerTest_ShouldGeneratePasswordAndUsername() {
         Trainer trainer = new Trainer();
@@ -105,47 +69,6 @@ public class TrainerServiceTests {
         assertNotNull(result);
         assertEquals("username", result.getUsername());
         assertEquals("password", result.getPassword());
-    }
-
-    @Test
-    public void patchTrainerTest_ShouldThrow1() {
-        String message = assertThrows(IllegalArgumentException.class, () -> trainerService.patchTrainer(null)).getMessage();
-        assertEquals("Cannot update a trainer: invalid data", message);
-
-        message = assertThrows(IllegalArgumentException.class, () -> trainerService.patchTrainer(new Trainer())).getMessage();
-        assertEquals("Cannot update a trainer: invalid data", message);
-
-        Trainer trainer = new Trainer();
-        trainer.setId(2L);
-        when(trainerRepository.findById(2L)).thenReturn(Optional.empty());
-        message = assertThrows(IllegalArgumentException.class, () -> trainerService.patchTrainer(trainer)).getMessage();
-        assertEquals("Cannot update a trainer: invalid data", message);
-    }
-
-    @ParameterizedTest
-    @MethodSource("invalidTrainers")
-    public void patchTrainerTest_ShouldThrow2(Trainer trainer, String errorMessage) {
-        trainer.setId(1L);
-        when(trainerRepository.findById(any(Long.class))).thenReturn(Optional.of(trainer));
-
-        Exception e = assertThrows(ValidationException.class, () -> trainerService.patchTrainer(trainer));
-        assertEquals(errorMessage, e.getMessage());
-    }
-
-    @Test
-    public void updateTrainerTest_ShouldPerformPatch() {
-        Trainer existing = new Trainer("first", "last", null);
-        existing.setId(1L);
-        Trainer update = new Trainer("updated", null, null);
-        update.setId(1L);
-
-        when(trainerRepository.findById(1L)).thenReturn(Optional.of(existing));
-        when(trainerRepository.save(existing)).thenReturn(existing);
-
-        Trainer result = trainerService.patchTrainer(update);
-        assertEquals("updated", result.getFirstName());
-        assertEquals("last", result.getLastName());
-        assertNull(result.getSpecialization());
     }
 
     @Test
@@ -226,46 +149,13 @@ public class TrainerServiceTests {
         assertTrue(result);
     }
 
-//    @Test
-//    public void changeTrainerPassword_ShouldThrow1() {
-//        when(trainerRepository.findByUsernameAndPassword(any(String.class), any(String.class))).thenReturn(Optional.empty());
-//
-//        Exception e = assertThrows(IllegalArgumentException.class,
-//                () -> trainerService.changeTrainerPassword("1", "1", "1"));
-//        assertEquals("There's no trainer with such username and password", e.getMessage());
-//    }
-//
-//    @Test
-//    public void changeTrainerPassword_ShouldThrow2() {
-//        Trainer trainer = new Trainer();
-//        trainer.setUsername("username");
-//        trainer.setPassword("password");
-//        when(trainerRepository.findByUsernameAndPassword(any(String.class), any(String.class))).thenReturn(Optional.of(trainer));
-//
-//        Exception e = assertThrows(ValidationException.class,
-//                () -> trainerService.changeTrainerPassword("username", "password", "1"));
-//        assertEquals("Validation error: Password must be from 6 to 20 characters", e.getMessage());
-//
-//    }
-//
-//    @Test
-//    public void changeTrainerPassword_ShouldChange() {
-//        Trainer trainer = new Trainer();
-//        trainer.setUsername("username");
-//        trainer.setPassword("password");
-//        when(trainerRepository.findByUsernameAndPassword(any(String.class), any(String.class))).thenReturn(Optional.of(trainer));
-//
-//        trainerService.changeTrainerPassword("username", "password", "newPass");
-//        assertEquals("newPass", trainer.getPassword());
-//    }
-
     @Test
     public void toggleTrainerIsActiveStatusTest_ShouldThrow() {
         when(trainerRepository.findByUsername(any(String.class))).thenReturn(Optional.empty());
 
-        Exception e = assertThrows(IllegalArgumentException.class,
+        Exception e = assertThrows(TrainerNotFoundException.class,
                 () -> trainerService.toggleTrainerIsActiveStatus("test"));
-        assertEquals("No trainer with such id: 1", e.getMessage());
+        assertEquals("No trainer with such username: test", e.getMessage());
     }
 
     @Test

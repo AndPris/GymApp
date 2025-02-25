@@ -13,8 +13,6 @@ public interface TrainerService {
 
     Trainer updateTrainer(String username, TrainerUpdateDTO trainerUpdateDTO);
 
-    Trainer patchTrainer(Trainer updates);
-
     Iterable<Trainer> getAllTrainers();
 
     Optional<Trainer> getTrainerById(Long id);
