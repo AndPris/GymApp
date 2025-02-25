@@ -1,6 +1,6 @@
 package example.config;
 
-import example.interceptors.LoggingInterceptor;
+import example.logs.interceptors.LoggingInterceptor;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;

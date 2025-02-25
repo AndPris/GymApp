@@ -1,6 +1,7 @@
 package example.repositories.imp;
 
 import example.entities.Training;
+import static example.logs.TransactionLogger.getTransactionId;
 import example.repositories.TrainingRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
@@ -29,18 +30,18 @@ public class TrainingRepositoryImp implements TrainingRepository {
 
             if (training.getId() == null) {
                 entityManager.persist(training);
-                logger.info("Creating a new training: {}", training);
+                logger.info("[Transaction ID: {}] Creating a new training: {}", getTransactionId(), training);
             } else {
                 entityManager.merge(training);
-                logger.info("Updating a training {}", training);
+                logger.info("[Transaction ID: {}] Updating a training {}", getTransactionId(), training);
             }
 
             transaction.commit();
-            logger.info("Operation successfully performed");
+            logger.info("[Transaction ID: {}] Operation successfully performed", getTransactionId());
             return training;
         } catch (Exception e) {
             transaction.rollback();
-            logger.error(e.getMessage());
+            logger.error("[Transaction ID: {}] {}", getTransactionId(), e.getMessage());
         }
 
         return null;
@@ -48,7 +49,7 @@ public class TrainingRepositoryImp implements TrainingRepository {
 
     @Override
     public List<Training> findAll() {
-        logger.info("Find all trainings");
+        logger.info("[Transaction ID: {}] Find all trainings", getTransactionId());
         return entityManager.createQuery("select t from Training t")
                 .getResultList();
     }

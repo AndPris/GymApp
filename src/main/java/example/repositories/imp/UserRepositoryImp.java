@@ -2,6 +2,7 @@ package example.repositories.imp;
 
 import example.entities.User;
 import example.repositories.UserRepository;
+import static example.logs.TransactionLogger.getTransactionId;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.Query;
@@ -14,7 +15,7 @@ import java.util.Optional;
 
 @Repository
 public class UserRepositoryImp implements UserRepository {
-    private static final Logger logger = LogManager.getLogger(TraineeRepositoryImp.class);
+    private static final Logger logger = LogManager.getLogger(UserRepositoryImp.class);
 
     private final EntityManager entityManager;
 
@@ -32,18 +33,18 @@ public class UserRepositoryImp implements UserRepository {
 
             if (user.getId() == null) {
                 entityManager.persist(user);
-                logger.info("Creating a new user: {}", user);
+                logger.info("[Transaction ID: {}] Creating a new user: {}", getTransactionId(), user);
             } else {
                 entityManager.merge(user);
-                logger.info("Updating a user {}", user);
+                logger.info("[Transaction ID: {}] Updating a user {}", getTransactionId(), user);
             }
 
             transaction.commit();
-            logger.info("Operation successfully performed");
+            logger.info("[Transaction ID: {}] Operation successfully performed", getTransactionId());
             return user;
         } catch (Exception e) {
             transaction.rollback();
-            logger.error(e.getMessage());
+            logger.error("[Transaction ID: {}] {}", getTransactionId(), e.getMessage());
         }
 
         return null;
@@ -56,7 +57,8 @@ public class UserRepositoryImp implements UserRepository {
         query.setParameter("password", password);
 
         List<User> result = query.getResultList();
-        logger.info("Find user with username {} and password {}. Result: {}", username, password, result);
+        logger.info("[Transaction ID: {}] Find user with username {} and password {}. Result: {}",
+                getTransactionId(), username, password, result);
         return Optional.ofNullable(result.isEmpty() ? null : result.get(0));
     }
 }
