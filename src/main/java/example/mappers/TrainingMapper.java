@@ -5,24 +5,19 @@ import example.dtos.training.TrainingCreateDTO;
 import example.dtos.training.TrainingTraineeDTO;
 import example.dtos.training.TrainingTrainerDTO;
 import example.entities.Trainee;
-import example.entities.Trainer;
 import example.entities.Training;
 import example.entities.TrainingType;
 import example.exceptions.TraineeNotFoundException;
-import example.exceptions.TrainerNotFoundException;
 import example.services.TraineeService;
-import example.services.TrainerService;
 import example.services.TrainingTypeService;
 import org.springframework.stereotype.Component;
 
 @Component
 public class TrainingMapper {
-    private final TrainerService trainerService;
     private final TraineeService traineeService;
     private final TrainingTypeService trainingTypeService;
 
-    public TrainingMapper(TrainerService trainerService, TraineeService traineeService, TrainingTypeService trainingTypeService) {
-        this.trainerService = trainerService;
+    public TrainingMapper(TraineeService traineeService, TrainingTypeService trainingTypeService) {
         this.traineeService = traineeService;
         this.trainingTypeService = trainingTypeService;
     }
