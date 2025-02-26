@@ -5,7 +5,6 @@ import example.dtos.CredentialsDTO;
 import example.dtos.trainer.TrainerCreateDTO;
 import example.dtos.trainer.TrainerDTO;
 import example.dtos.trainer.TrainerUpdateDTO;
-import example.dtos.training.TrainingBaseDTO;
 import example.dtos.training.TrainingCreateDTO;
 import example.dtos.training.TrainingTrainerDTO;
 import example.entities.Trainer;
@@ -17,6 +16,12 @@ import example.security.annotations.Authenticated;
 import example.security.annotations.Authorized;
 import example.services.TrainerService;
 import example.services.TrainingService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -43,6 +48,15 @@ public class TrainerRestController {
         this.trainingMapper = trainingMapper;
     }
 
+
+    @Operation(summary = "Create new trainer")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Trainer successfully created",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = CredentialsDTO.class))}),
+            @ApiResponse(responseCode = "422", description = "Invalid request body",
+                    content = @Content)
+    })
     @PostMapping
     public ResponseEntity<CredentialsDTO> createTrainer(@RequestBody TrainerCreateDTO trainerCreateDTO) {
         Trainer trainer = trainerMapper.trainerCreateDTOToTrainer(trainerCreateDTO);
@@ -51,6 +65,13 @@ public class TrainerRestController {
         return ResponseEntity.status(HttpStatus.CREATED).body(credentialsDTO);
     }
 
+
+    @Operation(summary = "Get all trainers")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "All trainers are returned",
+                    content = {@Content(mediaType = "application/json",
+                            array = @ArraySchema(schema = @Schema(implementation = TrainerDTO.class)))})
+    })
     @GetMapping
     public ResponseEntity<List<TrainerDTO>> getAllTrainers() {
         List<Trainer> trainers = (List<Trainer>) trainerService.getAllTrainers();
@@ -62,6 +83,17 @@ public class TrainerRestController {
         return ResponseEntity.ok(trainerDTOS);
     }
 
+
+    @Operation(summary = "Get trainer by username")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Trainer found",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = TrainerDTO.class))}),
+            @ApiResponse(responseCode = "401", description = "Authentication failed",
+                    content = @Content),
+            @ApiResponse(responseCode = "404", description = "Trainer not found",
+                    content = @Content)
+    })
     @Authenticated
     @GetMapping("/{username}")
     public ResponseEntity<TrainerDTO> getTrainerByUsername(@PathVariable("username") String username,
@@ -75,6 +107,18 @@ public class TrainerRestController {
         return ResponseEntity.ok(trainerDTO);
     }
 
+
+    @Operation(summary = "Create new training")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Training successfully created",
+                    content = @Content),
+            @ApiResponse(responseCode = "401", description = "Authentication failed",
+                    content = @Content),
+            @ApiResponse(responseCode = "403", description = "Authorization failed",
+                    content = @Content),
+            @ApiResponse(responseCode = "422", description = "Invalid request body",
+                    content = @Content)
+    })
     @Authenticated
     @Authorized
     @PostMapping("/{username}/trainings")
@@ -90,6 +134,17 @@ public class TrainerRestController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
+
+    @Operation(summary = "Get trainer's trainings list")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Trainings list is returned",
+                    content = {@Content(mediaType = "application/json",
+                            array = @ArraySchema(schema = @Schema(implementation = TrainingTrainerDTO.class)))}),
+            @ApiResponse(responseCode = "401", description = "Authentication failed",
+                    content = @Content),
+            @ApiResponse(responseCode = "404", description = "No trainer with such username",
+                    content = @Content)
+    })
     @Authenticated
     @GetMapping("/{username}/trainings")
     public ResponseEntity<List<TrainingTrainerDTO>> getTrainingsList(
@@ -113,15 +168,43 @@ public class TrainerRestController {
         return ResponseEntity.ok(trainingBaseDTOS);
     }
 
+
+    @Operation(summary = "Toggle trainer's active status")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Status successfully changed",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ActiveStatusDTO.class))}),
+            @ApiResponse(responseCode = "401", description = "Authentication failed",
+                    content = @Content),
+            @ApiResponse(responseCode = "403", description = "Authorization failed",
+                    content = @Content),
+            @ApiResponse(responseCode = "404", description = "No trainer with such username",
+                    content = @Content)
+    })
     @Authenticated
     @Authorized
     @PatchMapping("/{username}/active")
-    public ResponseEntity<?> toggleTrainerActiveStatus(@PathVariable("username") String username,
-                                                       @RequestHeader(value = "Authorization") String authHeader) {
+    public ResponseEntity<ActiveStatusDTO> toggleTrainerActiveStatus(@PathVariable("username") String username,
+                                                                     @RequestHeader(value = "Authorization") String authHeader) {
         Boolean active = trainerService.toggleTrainerIsActiveStatus(username);
         return ResponseEntity.ok(new ActiveStatusDTO(active));
     }
 
+
+    @Operation(summary = "Update trainer")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Trainer successfully updated",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = TrainerDTO.class))}),
+            @ApiResponse(responseCode = "401", description = "Authentication failed",
+                    content = @Content),
+            @ApiResponse(responseCode = "403", description = "Authorization failed",
+                    content = @Content),
+            @ApiResponse(responseCode = "404", description = "No trainer with such username",
+                    content = @Content),
+            @ApiResponse(responseCode = "422", description = "Invalid request body",
+                    content = @Content)
+    })
     @Authenticated
     @Authorized
     @PutMapping("/{username}")

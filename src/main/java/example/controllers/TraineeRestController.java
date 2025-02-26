@@ -28,7 +28,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.*;
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
@@ -51,8 +53,8 @@ public class TraineeRestController {
     @Operation(summary = "Create new trainee")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Trainee successfully created",
-                    content = { @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = CredentialsDTO.class)) }),
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = CredentialsDTO.class))}),
             @ApiResponse(responseCode = "422", description = "Invalid request body",
                     content = @Content)
     })
@@ -68,8 +70,8 @@ public class TraineeRestController {
     @Operation(summary = "Get all trainees")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "All trainees are returned",
-                    content = { @Content(mediaType = "application/json",
-                            array = @ArraySchema(schema = @Schema(implementation = TraineeDTO.class))) })
+                    content = {@Content(mediaType = "application/json",
+                            array = @ArraySchema(schema = @Schema(implementation = TraineeDTO.class)))})
     })
     @GetMapping
     public ResponseEntity<List<TraineeDTO>> getAllTrainees() {
@@ -84,8 +86,8 @@ public class TraineeRestController {
     @Operation(summary = "Get trainee by username")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Trainee found",
-                    content = { @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = TraineeDTO.class)) }),
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = TraineeDTO.class))}),
             @ApiResponse(responseCode = "401", description = "Authentication failed",
                     content = @Content),
             @ApiResponse(responseCode = "404", description = "Trainee not found",
@@ -108,8 +110,8 @@ public class TraineeRestController {
     @Operation(summary = "Get favourite active trainers list")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Trainers list is returned",
-                    content = { @Content(mediaType = "application/json",
-                            array = @ArraySchema(schema = @Schema(implementation = TrainerSummaryDTO.class))) }),
+                    content = {@Content(mediaType = "application/json",
+                            array = @ArraySchema(schema = @Schema(implementation = TrainerSummaryDTO.class)))}),
             @ApiResponse(responseCode = "401", description = "Authentication failed",
                     content = @Content),
             @ApiResponse(responseCode = "404", description = "No trainee with such username",
@@ -145,8 +147,8 @@ public class TraineeRestController {
     @Operation(summary = "Get trainee's trainings list")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Trainings list is returned",
-                    content = { @Content(mediaType = "application/json",
-                            array = @ArraySchema(schema = @Schema(implementation = TrainingTraineeDTO.class))) }),
+                    content = {@Content(mediaType = "application/json",
+                            array = @ArraySchema(schema = @Schema(implementation = TrainingTraineeDTO.class)))}),
             @ApiResponse(responseCode = "401", description = "Authentication failed",
                     content = @Content),
             @ApiResponse(responseCode = "404", description = "No trainee with such username",
@@ -204,8 +206,8 @@ public class TraineeRestController {
     @Operation(summary = "Toggle trainee's active status")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Status successfully changed",
-                    content = { @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = ActiveStatusDTO.class)) }),
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ActiveStatusDTO.class))}),
             @ApiResponse(responseCode = "401", description = "Authentication failed",
                     content = @Content),
             @ApiResponse(responseCode = "403", description = "Authorization failed",
@@ -217,7 +219,7 @@ public class TraineeRestController {
     @Authorized
     @PatchMapping("/{username}/active")
     public ResponseEntity<ActiveStatusDTO> toggleTraineeActiveStatus(@PathVariable("username") String username,
-                                                       @RequestHeader(value = "Authorization") String authHeader) {
+                                                                     @RequestHeader(value = "Authorization") String authHeader) {
         Boolean active = traineeService.toggleTraineeIsActiveStatus(username);
         return ResponseEntity.ok(new ActiveStatusDTO(active));
     }
@@ -226,8 +228,8 @@ public class TraineeRestController {
     @Operation(summary = "Update trainee")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Trainee successfully updated",
-                    content = { @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = TraineeDTO.class)) }),
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = TraineeDTO.class))}),
             @ApiResponse(responseCode = "401", description = "Authentication failed",
                     content = @Content),
             @ApiResponse(responseCode = "403", description = "Authorization failed",
@@ -252,8 +254,8 @@ public class TraineeRestController {
     @Operation(summary = "Update trainee's favourite trainers list")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Trainers list successfully updated",
-                    content = { @Content(mediaType = "application/json",
-                            array = @ArraySchema(schema = @Schema(implementation = TrainerSummaryDTO.class))) }),
+                    content = {@Content(mediaType = "application/json",
+                            array = @ArraySchema(schema = @Schema(implementation = TrainerSummaryDTO.class)))}),
             @ApiResponse(responseCode = "401", description = "Authentication failed",
                     content = @Content),
             @ApiResponse(responseCode = "403", description = "Authorization failed",
