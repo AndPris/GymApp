@@ -44,8 +44,8 @@ public class WebConfig implements WebMvcConfigurer {
     @Bean
     public OpenAPI ApiInfo() {
         return new OpenAPI()
-                .info(new Info().title("API")
-                        .description("Test api")
+                .info(new Info().title("GymApp")
+                        .description("REST Api documentation for Gym application")
                         .version("v1")
                         .license(new License().name("Apache 2.0").url("http://springdoc.org")));
     }

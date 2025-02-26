@@ -184,7 +184,7 @@ class TraineeRestControllerTests {
         when(traineeService.findTraineeTrainingList(eq(username), any(), any(), any(), any(), any())).thenReturn(Arrays.asList(training));
         when(trainingMapper.trainingToTrainingTraineeDTO(training)).thenReturn(new TrainingTraineeDTO());
 
-        ResponseEntity<List<TrainingBaseDTO>> response = traineeRestController.getTrainingsList(username, null, null, null, null, null, authHeader);
+        ResponseEntity<List<TrainingTraineeDTO>> response = traineeRestController.getTrainingsList(username, null, null, null, null, null, authHeader);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(1, response.getBody().size());
