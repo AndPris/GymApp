@@ -14,22 +14,18 @@ import example.utils.password.imp.SimplePasswordGenerator;
 import example.utils.username.UsernameGenerator;
 import example.utils.username.imp.SimpleUsernameGenerator;
 import example.validation.CustomValidator;
-import jakarta.validation.ValidationException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class TrainerServiceTests {
     private PasswordGenerator passwordGenerator;

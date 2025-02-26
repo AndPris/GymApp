@@ -1,20 +1,34 @@
 package example.controllers;
 
-import example.dtos.*;
-import example.dtos.trainee.*;
+import example.dtos.ActiveStatusDTO;
+import example.dtos.CredentialsDTO;
+import example.dtos.trainee.TraineeCreateDTO;
+import example.dtos.trainee.TraineeDTO;
+import example.dtos.trainee.TraineeTrainerListUpdateDTO;
+import example.dtos.trainee.TraineeUpdateDTO;
 import example.dtos.trainer.TrainerSummaryDTO;
-import example.dtos.training.TrainingBaseDTO;
 import example.dtos.training.TrainingTraineeDTO;
-import example.entities.*;
-import example.mappers.*;
-import example.services.*;
-import org.junit.jupiter.api.*;
-import org.mockito.*;
-import org.springframework.http.*;
+import example.entities.Trainee;
+import example.entities.Trainer;
+import example.entities.Training;
+import example.mappers.TraineeMapper;
+import example.mappers.TrainerMapper;
+import example.mappers.TrainingMapper;
+import example.services.TraineeService;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 
 class TraineeRestControllerTests {

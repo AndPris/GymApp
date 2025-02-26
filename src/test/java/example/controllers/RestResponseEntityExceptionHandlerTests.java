@@ -15,7 +15,7 @@ import org.springframework.web.context.request.WebRequest;
 
 import java.util.stream.Stream;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
 
 public class RestResponseEntityExceptionHandlerTests {

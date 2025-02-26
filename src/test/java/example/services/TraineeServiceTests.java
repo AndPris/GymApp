@@ -2,14 +2,11 @@ package example.services;
 
 import example.dtos.trainee.TraineeTrainerListUpdateDTO;
 import example.dtos.trainee.TraineeUpdateDTO;
-import example.dtos.trainer.TrainerUpdateDTO;
 import example.entities.Trainee;
 import example.entities.Trainer;
 import example.entities.Training;
-import example.entities.TrainingType;
 import example.exceptions.TraineeNotFoundException;
 import example.exceptions.TrainerNotFoundException;
-import example.exceptions.TrainingTypeNotFoundException;
 import example.repositories.TraineeRepository;
 import example.repositories.imp.TraineeRepositoryImp;
 import example.services.imp.TraineeServiceImp;
@@ -22,15 +19,11 @@ import example.validation.CustomValidator;
 import jakarta.validation.ValidationException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;

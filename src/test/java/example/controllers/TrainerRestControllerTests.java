@@ -1,12 +1,19 @@
 package example.controllers;
 
-import example.dtos.*;
-import example.dtos.trainer.*;
-import example.dtos.training.*;
-import example.entities.*;
+import example.dtos.ActiveStatusDTO;
+import example.dtos.CredentialsDTO;
+import example.dtos.trainer.TrainerCreateDTO;
+import example.dtos.trainer.TrainerDTO;
+import example.dtos.trainer.TrainerUpdateDTO;
+import example.dtos.training.TrainingCreateDTO;
+import example.dtos.training.TrainingTrainerDTO;
+import example.entities.Trainer;
+import example.entities.Training;
 import example.exceptions.TrainerNotFoundException;
-import example.mappers.*;
-import example.services.*;
+import example.mappers.TrainerMapper;
+import example.mappers.TrainingMapper;
+import example.services.TrainerService;
+import example.services.TrainingService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -15,7 +22,9 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;

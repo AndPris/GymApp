@@ -7,21 +7,21 @@ import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatche
 public class GymAppInitializer extends AbstractAnnotationConfigDispatcherServletInitializer {
     @Override
     protected Class<?>[] getRootConfigClasses() {
-        return new Class<?>[] {AppConfig.class, JpaConfig.class};
+        return new Class<?>[]{AppConfig.class, JpaConfig.class};
     }
 
     @Override
     protected Class<?>[] getServletConfigClasses() {
-        return new Class<?>[] {WebConfig.class};
+        return new Class<?>[]{WebConfig.class};
     }
 
     @Override
     protected String[] getServletMappings() {
-        return new String[] {"/"};
+        return new String[]{"/"};
     }
 
     @Override
     protected Filter[] getServletFilters() {
-        return new Filter[] {new CharacterEncodingFilter("UTF-8", true)};
+        return new Filter[]{new CharacterEncodingFilter("UTF-8", true)};
     }
 }

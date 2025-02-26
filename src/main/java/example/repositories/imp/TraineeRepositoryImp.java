@@ -3,7 +3,6 @@ package example.repositories.imp;
 import example.entities.Trainee;
 import example.entities.Trainer;
 import example.entities.Training;
-import static example.logs.TransactionLogger.getTransactionId;
 import example.repositories.TraineeRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
@@ -15,6 +14,8 @@ import org.springframework.stereotype.Repository;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+
+import static example.logs.TransactionLogger.getTransactionId;
 
 @Repository
 public class TraineeRepositoryImp implements TraineeRepository {

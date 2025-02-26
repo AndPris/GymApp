@@ -1,6 +1,5 @@
 package example.controllers;
 
-import example.dtos.trainee.TraineeDTO;
 import example.dtos.trainingtype.TrainingTypeDTO;
 import example.entities.TrainingType;
 import example.mappers.TrainingTypeMapper;

@@ -1,7 +1,12 @@
 package example.mappers;
 
-import example.dtos.training.*;
-import example.entities.*;
+import example.dtos.training.TrainingCreateDTO;
+import example.dtos.training.TrainingTraineeDTO;
+import example.dtos.training.TrainingTrainerDTO;
+import example.entities.Trainee;
+import example.entities.Trainer;
+import example.entities.Training;
+import example.entities.TrainingType;
 import example.exceptions.TraineeNotFoundException;
 import example.services.TraineeService;
 import example.services.TrainingTypeService;
@@ -11,8 +16,10 @@ import org.junit.jupiter.api.Test;
 import java.util.Date;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class TrainingMapperTests {
 

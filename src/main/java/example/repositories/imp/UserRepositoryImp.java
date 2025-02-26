@@ -2,7 +2,6 @@ package example.repositories.imp;
 
 import example.entities.User;
 import example.repositories.UserRepository;
-import static example.logs.TransactionLogger.getTransactionId;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.Query;
@@ -12,6 +11,8 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
+
+import static example.logs.TransactionLogger.getTransactionId;
 
 @Repository
 public class UserRepositoryImp implements UserRepository {

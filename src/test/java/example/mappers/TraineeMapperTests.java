@@ -3,8 +3,8 @@ package example.mappers;
 import example.dtos.trainee.TraineeCreateDTO;
 import example.dtos.trainee.TraineeDTO;
 import example.dtos.trainee.TraineeSummaryDTO;
-import example.entities.Trainee;
 import example.dtos.trainer.TrainerSummaryDTO;
+import example.entities.Trainee;
 import example.entities.Trainer;
 import example.entities.TrainingType;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,8 +15,9 @@ import org.mockito.MockitoAnnotations;
 
 import java.util.Date;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.when;
 
 class TraineeMapperTests {
 

@@ -30,14 +30,14 @@ public class UserAuthAspect {
     @Around("@annotation(example.security.annotations.Authenticated)")
     public Object authentication(ProceedingJoinPoint joinPoint) throws Throwable {
         Object[] args = joinPoint.getArgs();
-        String authHeader = (String) args[args.length-1];
+        String authHeader = (String) args[args.length - 1];
 
         if (authHeader == null || !authHeader.startsWith("Basic ")) {
             return new ResponseEntity<>("Authorization header is missing or invalid", HttpStatus.UNAUTHORIZED);
         }
 
         CredentialsDTO credentialsDTO = parseAuthHeader(authHeader);
-        if(!userAuthService.userExistsByUsernameAndPassword(credentialsDTO.getUsername(),
+        if (!userAuthService.userExistsByUsernameAndPassword(credentialsDTO.getUsername(),
                 credentialsDTO.getPassword())) {
             return new ResponseEntity<>("Authorization fails: no such user", HttpStatus.UNAUTHORIZED);
         }
