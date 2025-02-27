@@ -126,52 +126,29 @@ class TraineeRestControllerTests {
     }
 
     @Test
-    void getActiveTrainersListInverse_returnsTrainers() {
+    void getTrainersList_returnsTrainers() {
         String username = "test";
         String authHeader = "test";
         Trainer trainer = new Trainer();
         trainer.setActive(true);
 
         when(traineeService.getTraineeByUsername(username)).thenReturn(Optional.of(new Trainee()));
-        when(traineeService.findActiveTrainersNotAssignedToTrainee(username)).thenReturn(Arrays.asList(trainer));
-        when(trainerMapper.trainerToTrainerSummaryDTO(trainer)).thenReturn(new TrainerSummaryDTO());
+        when(traineeService.findTraineeTrainers(any(String.class), any(Boolean.class), any(Boolean.class))).thenReturn(Arrays.asList(trainer));
 
-        ResponseEntity<List<TrainerSummaryDTO>> response = traineeRestController.getActiveTrainersList(username, true, authHeader);
-
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(1, response.getBody().size());
-    }
-
-    @Test
-    void getActiveTrainersListNotInverse_returnsTrainers() {
-        String username = "test";
-        String authHeader = "test";
-
-        Trainer trainer1 = new Trainer();
-        trainer1.setActive(true);
-        Trainer trainer2 = new Trainer();
-        trainer2.setActive(false);
-
-        Trainee trainee = new Trainee();
-        trainee.setTrainers(Arrays.asList(trainer1, trainer2));
-
-        when(traineeService.getTraineeByUsername(username)).thenReturn(Optional.of(trainee));
-        when(trainerMapper.trainerToTrainerSummaryDTO(any(Trainer.class))).thenReturn(new TrainerSummaryDTO());
-
-        ResponseEntity<List<TrainerSummaryDTO>> response = traineeRestController.getActiveTrainersList(username, false, authHeader);
+        ResponseEntity<List<TrainerSummaryDTO>> response = traineeRestController.getTrainersList(username, true, true, authHeader);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(1, response.getBody().size());
     }
 
     @Test
-    void getActiveTrainersList_returnsNotFound() {
+    void getTrainersList_returnsNotFound() {
         String username = "test";
         String authHeader = "test";
 
         when(traineeService.getTraineeByUsername(username)).thenReturn(Optional.empty());
 
-        ResponseEntity<?> response = traineeRestController.getActiveTrainersList(username, true, authHeader);
+        ResponseEntity<?> response = traineeRestController.getTrainersList(any(String.class), true, true, authHeader);
 
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }
@@ -181,7 +158,7 @@ class TraineeRestControllerTests {
         String username = "test";
         String authHeader = "test";
 
-        when(traineeService.getTraineeByUsername(username)).thenReturn(Optional.empty());
+        when(traineeService.getTraineeByUsername(any(String.class))).thenReturn(Optional.empty());
 
         ResponseEntity<?> response = traineeRestController.getTrainingsList(username, null, null, null, null, null, authHeader);
 

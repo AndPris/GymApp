@@ -298,15 +298,42 @@ public class TraineeServiceTests {
     }
 
     @Test
-    public void findActiveTrainersNotAssignedToTraineeTest_ShouldReturnList() {
+    public void findTraineeNotAssignedTrainersTest_ShouldReturnList() {
         Trainer trainer = new Trainer();
 
-        when(traineeRepository.findActiveTrainersNotAssignedToTrainee(any())).thenReturn(Arrays.asList(trainer));
+        when(traineeRepository.findTrainersNotAssignedToTrainee(any(String.class), any(Boolean.class))).thenReturn(Arrays.asList(trainer));
 
-        List<Trainer> trainers = traineeService.findActiveTrainersNotAssignedToTrainee("test");
+        List<Trainer> trainers = traineeService.findTraineeTrainers("test", false, true);
 
         assertEquals(1, trainers.size());
         assertEquals(trainer, trainers.get(0));
     }
 
+    @Test
+    public void findTraineeAssignedTrainersTest_ShouldReturnList() {
+        Trainee trainee = new Trainee();
+
+        Trainer trainer1 = new Trainer();
+        trainer1.setActive(true);
+
+        Trainer trainer2 = new Trainer();
+        trainer2.setActive(false);
+
+        trainee.setTrainers(Arrays.asList(trainer1, trainer2));
+
+        when(traineeRepository.findByUsername(any(String.class))).thenReturn(Optional.of(trainee));
+
+        List<Trainer> trainers = traineeService.findTraineeTrainers("test", true, true);
+
+        assertEquals(1, trainers.size());
+        assertEquals(trainer1, trainers.get(0));
+    }
+
+    @Test
+    public void findTraineeAssignedTrainersTest_ShouldThrow() {
+        when(traineeRepository.findByUsername(any(String.class))).thenReturn(Optional.empty());
+
+        String message = assertThrows(TraineeNotFoundException.class, () -> traineeService.findTraineeTrainers("test", true, true)).getMessage();
+        assertEquals("There's no trainee with such username: test", message);
+    }
 }

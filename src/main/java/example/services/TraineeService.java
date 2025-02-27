@@ -38,5 +38,5 @@ public interface TraineeService {
 
     void clearTraineeTrainerList(Trainee trainee);
 
-    List<Trainer> findActiveTrainersNotAssignedToTrainee(String username);
+    List<Trainer> findTraineeTrainers(String username, Boolean assigned, Boolean active);
 }

@@ -107,7 +107,7 @@ public class TraineeRestController {
     }
 
 
-    @Operation(summary = "Get favourite active trainers list")
+    @Operation(summary = "Get favourite trainers list")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Trainers list is returned",
                     content = {@Content(mediaType = "application/json",
@@ -119,23 +119,16 @@ public class TraineeRestController {
     })
     @Authenticated
     @GetMapping("/{username}/trainers")
-    public ResponseEntity<List<TrainerSummaryDTO>> getActiveTrainersList(@PathVariable("username") String username,
-                                                                         @RequestParam(defaultValue = "true", name = "inverse") boolean inverse,
-                                                                         @RequestHeader(value = "Authorization") String authHeader) {
+    public ResponseEntity<List<TrainerSummaryDTO>> getTrainersList(@PathVariable("username") String username,
+                                                                   @RequestParam(defaultValue = "false", name = "assigned") Boolean assigned,
+                                                                   @RequestParam(defaultValue = "true", name = "active") Boolean active,
+                                                                   @RequestHeader(value = "Authorization") String authHeader) {
         Optional<Trainee> optionalTrainee = traineeService.getTraineeByUsername(username);
         if (!optionalTrainee.isPresent()) {
             return ResponseEntity.notFound().build();
         }
 
-        List<Trainer> trainers;
-
-        if (inverse) {
-            trainers = traineeService.findActiveTrainersNotAssignedToTrainee(username);
-        } else {
-            trainers = optionalTrainee.get().getTrainers().stream()
-                    .filter(Trainer::isActive)
-                    .collect(Collectors.toList());
-        }
+        List<Trainer> trainers = traineeService.findTraineeTrainers(username, assigned, active);
 
         List<TrainerSummaryDTO> trainerSummaryDTOS = trainers.stream()
                 .map(trainerMapper::trainerToTrainerSummaryDTO)

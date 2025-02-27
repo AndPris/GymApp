@@ -164,7 +164,20 @@ public class TraineeServiceImp implements TraineeService {
     }
 
     @Override
-    public List<Trainer> findActiveTrainersNotAssignedToTrainee(String username) {
-        return traineeRepository.findActiveTrainersNotAssignedToTrainee(username);
+    public List<Trainer> findTraineeTrainers(String username, Boolean assigned, Boolean active) {
+        List<Trainer> trainers;
+
+        if (assigned) {
+            Trainee trainee = traineeRepository.findByUsername(username)
+                    .orElseThrow(() -> new TraineeNotFoundException("There's no trainee with such username: " + username));
+
+            trainers = trainee.getTrainers().stream()
+                    .filter(trainer -> trainer.isActive() == active)
+                    .collect(Collectors.toList());
+        } else {
+            trainers = traineeRepository.findTrainersNotAssignedToTrainee(username, active);
+        }
+
+        return trainers;
     }
 }

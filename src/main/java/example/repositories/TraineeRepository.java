@@ -24,5 +24,5 @@ public interface TraineeRepository {
     List<Training> findTrainingList(String username, Date fromDate, Date toDate, String trainerFirstName,
                                     String trainerLastName, Long trainingType);
 
-    List<Trainer> findActiveTrainersNotAssignedToTrainee(String username);
+    List<Trainer> findTrainersNotAssignedToTrainee(String username, Boolean active);
 }
