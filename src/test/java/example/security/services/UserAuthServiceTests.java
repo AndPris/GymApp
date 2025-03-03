@@ -3,7 +3,6 @@ package example.security.services;
 import example.entities.Trainee;
 import example.entities.User;
 import example.repositories.UserRepository;
-import example.repositories.imp.UserRepositoryImp;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -21,7 +20,7 @@ public class UserAuthServiceTests {
 
     @BeforeEach
     public void setUp() {
-        userRepository = mock(UserRepositoryImp.class);
+        userRepository = mock(UserRepository.class);
         userAuthService = new UserAuthService(userRepository);
     }
 

@@ -8,7 +8,6 @@ import example.entities.Training;
 import example.exceptions.TraineeNotFoundException;
 import example.exceptions.TrainerNotFoundException;
 import example.repositories.TraineeRepository;
-import example.repositories.imp.TraineeRepositoryImp;
 import example.services.imp.TraineeServiceImp;
 import example.services.imp.TrainerServiceImp;
 import example.utils.password.PasswordGenerator;
@@ -46,7 +45,7 @@ public class TraineeServiceTests {
         when(usernameGenerator.generateUsername(any())).thenReturn("username");
 
         customValidator = mock(CustomValidator.class);
-        traineeRepository = mock(TraineeRepositoryImp.class);
+        traineeRepository = mock(TraineeRepository.class);
         trainerService = mock(TrainerServiceImp.class);
 
         traineeService = new TraineeServiceImp();

@@ -2,7 +2,6 @@ package example.services;
 
 import example.entities.Training;
 import example.repositories.TrainingRepository;
-import example.repositories.imp.TrainingRepositoryImp;
 import example.services.imp.TrainingServiceImp;
 import example.validation.CustomValidator;
 import org.junit.jupiter.api.BeforeEach;
@@ -23,7 +22,7 @@ public class TrainingServiceTests {
 
     @BeforeEach
     public void init() {
-        trainingRepository = mock(TrainingRepositoryImp.class);
+        trainingRepository = mock(TrainingRepository.class);
         customValidator = mock(CustomValidator.class);
         trainingService = new TrainingServiceImp(trainingRepository, customValidator);
     }

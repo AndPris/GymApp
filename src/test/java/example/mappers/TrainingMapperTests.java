@@ -71,7 +71,7 @@ public class TrainingMapperTests {
         createDTO.setTrainingDuration(60);
 
         Trainee trainee = new Trainee();
-        TrainingType trainingType = new TrainingType("Yoga");
+        TrainingType trainingType = new TrainingType(1L, "Yoga");
 
         when(traineeService.getTraineeByUsername("jane.smith")).thenReturn(Optional.of(trainee));
         when(trainingTypeService.findById(1L)).thenReturn(trainingType);
@@ -103,7 +103,7 @@ public class TrainingMapperTests {
         trainer.setFirstName("John");
         trainer.setLastName("Doe");
 
-        TrainingType trainingType = new TrainingType("Yoga");
+        TrainingType trainingType = new TrainingType(1L, "Yoga");
         trainingType.setId(1L);
 
         Training training = new Training();

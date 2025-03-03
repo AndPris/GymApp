@@ -1,11 +1,7 @@
 package example.repositories;
 
 import example.entities.Training;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.List;
-
-public interface TrainingRepository {
-    Training save(Training training);
-
-    List<Training> findAll();
+public interface TrainingRepository extends JpaRepository<Training, Long> {
 }

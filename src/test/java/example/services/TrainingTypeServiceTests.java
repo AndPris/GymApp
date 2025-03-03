@@ -3,7 +3,6 @@ package example.services;
 import example.entities.TrainingType;
 import example.exceptions.TrainingTypeNotFoundException;
 import example.repositories.TrainingTypeRepository;
-import example.repositories.imp.TrainingTypeRepositoryImp;
 import example.services.imp.TrainingTypeServiceImp;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -24,7 +23,7 @@ public class TrainingTypeServiceTests {
 
     @BeforeEach
     public void init() {
-        trainingTypeRepository = mock(TrainingTypeRepositoryImp.class);
+        trainingTypeRepository = mock(TrainingTypeRepository.class);
         trainingTypeService = new TrainingTypeServiceImp(trainingTypeRepository);
     }
 

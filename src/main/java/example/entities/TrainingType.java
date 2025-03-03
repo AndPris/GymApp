@@ -13,7 +13,6 @@ import java.util.List;
 @NoArgsConstructor
 public class TrainingType {
     @Id
-//    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     @Column(nullable = false)

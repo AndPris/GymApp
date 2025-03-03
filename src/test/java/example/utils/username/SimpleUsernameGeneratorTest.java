@@ -4,8 +4,6 @@ import example.entities.Trainee;
 import example.entities.Trainer;
 import example.repositories.TraineeRepository;
 import example.repositories.TrainerRepository;
-import example.repositories.imp.TraineeRepositoryImp;
-import example.repositories.imp.TrainerRepositoryImp;
 import example.utils.username.imp.SimpleUsernameGenerator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -24,8 +22,8 @@ public class SimpleUsernameGeneratorTest {
 
     @BeforeEach
     public void init() {
-        traineeRepository = mock(TraineeRepositoryImp.class);
-        trainerRepository = mock(TrainerRepositoryImp.class);
+        traineeRepository = mock(TraineeRepository.class);
+        trainerRepository = mock(TrainerRepository.class);
 
         usernameGenerator = new SimpleUsernameGenerator();
         usernameGenerator.setTraineeRepository(traineeRepository);
