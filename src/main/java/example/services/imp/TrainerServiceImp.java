@@ -1,17 +1,17 @@
 package example.services.imp;
 
+import example.dtos.trainer.TrainerUpdateDTO;
 import example.entities.Trainer;
 import example.entities.Training;
+import example.entities.TrainingType;
+import example.exceptions.TrainerNotFoundException;
 import example.repositories.TrainerRepository;
 import example.services.TrainerService;
+import example.services.TrainingTypeService;
 import example.utils.password.PasswordGenerator;
 import example.utils.username.UsernameGenerator;
-import jakarta.validation.ConstraintViolation;
-import jakarta.validation.Validation;
-import jakarta.validation.ValidationException;
-import jakarta.validation.Validator;
+import example.validation.CustomValidator;
 import lombok.Setter;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,12 +25,16 @@ public class TrainerServiceImp implements TrainerService {
     @Setter
     private TrainerRepository trainerRepository;
 
+    private TrainingTypeService trainingTypeService;
+
     private PasswordGenerator passwordGenerator;
     private UsernameGenerator usernameGenerator;
-    private Validator validator;
 
-    public TrainerServiceImp() {
-        validator = Validation.buildDefaultValidatorFactory().getValidator();
+    private CustomValidator customValidator;
+
+    @Autowired
+    public void setTrainingTypeService(TrainingTypeService trainingTypeService) {
+        this.trainingTypeService = trainingTypeService;
     }
 
     @Autowired
@@ -43,6 +47,10 @@ public class TrainerServiceImp implements TrainerService {
         this.usernameGenerator = usernameGenerator;
     }
 
+    @Autowired
+    public void setCustomValidator(CustomValidator customValidator) {
+        this.customValidator = customValidator;
+    }
 
     @Override
     public Trainer createTrainer(Trainer trainer) {
@@ -50,44 +58,27 @@ public class TrainerServiceImp implements TrainerService {
             throw new IllegalArgumentException("Cannot create a trainer: trainer is null");
         }
 
-        validateTrainer(trainer);
+        customValidator.validate(trainer);
 
         trainer.setPassword(passwordGenerator.generatePassword());
         trainer.setUsername(usernameGenerator.generateUsername(trainer));
         return trainerRepository.save(trainer);
     }
 
-    private void validateTrainer(Trainer trainer) {
-        for (ConstraintViolation<Trainer> violation : validator.validate(trainer)) {
-            throw new ValidationException("Validation error: " + violation.getMessage());
-        }
-    }
-
     @Override
-    public Trainer updateTrainer(Trainer updates) {
-        validateTrainerForUpdate(updates);
+    public Trainer updateTrainer(String username, TrainerUpdateDTO trainerUpdateDTO) {
+        Trainer trainer = trainerRepository.findByUsername(username)
+                .orElseThrow(() -> new TrainerNotFoundException("There's no trainer with such username: " + username));
 
-        Trainer existing = trainerRepository.findById(updates.getId()).get();
-        updateTrainerFields(existing, updates);
+        trainer.setFirstName(trainerUpdateDTO.getFirstName());
+        trainer.setLastName(trainerUpdateDTO.getLastName());
+        trainer.setActive(trainerUpdateDTO.isActive());
+        TrainingType trainingType = trainingTypeService.findById(trainerUpdateDTO.getSpecialization());
+        trainer.setSpecialization(trainingType);
 
-        return trainerRepository.save(existing);
-    }
+        customValidator.validate(trainer);
 
-    private void validateTrainerForUpdate(Trainer trainer) {
-        if (trainer == null || trainer.getId() == null || !trainerRepository.findById(trainer.getId()).isPresent()) {
-            throw new IllegalArgumentException("Cannot update a trainer: invalid data");
-        }
-
-        validateTrainer(trainer);
-    }
-
-    private void updateTrainerFields(Trainer existing, Trainer updates) {
-        Optional.ofNullable(updates.getFirstName()).filter(StringUtils::isNoneBlank).ifPresent(existing::setFirstName);
-        Optional.ofNullable(updates.getLastName()).filter(StringUtils::isNoneBlank).ifPresent(existing::setLastName);
-        Optional.ofNullable(updates.getUsername()).filter(StringUtils::isNoneBlank).ifPresent(existing::setUsername);
-        Optional.ofNullable(updates.getPassword()).filter(StringUtils::isNoneBlank).ifPresent(existing::setPassword);
-        Optional.ofNullable(updates.getSpecialization()).ifPresent(existing::setSpecialization);
-        Optional.ofNullable(updates.isActive()).ifPresent(existing::setActive);
+        return trainerRepository.save(trainer);
     }
 
     @Override
@@ -118,19 +109,9 @@ public class TrainerServiceImp implements TrainerService {
     }
 
     @Override
-    public void changeTrainerPassword(String username, String oldPassword, String newPassword) {
-        Trainer trainer = trainerRepository.findByUsernameAndPassword(username, oldPassword)
-                .orElseThrow(() -> new IllegalArgumentException("There's no trainer with such username and password"));
-
-        trainer.setPassword(newPassword);
-        validateTrainer(trainer);
-        trainerRepository.save(trainer);
-    }
-
-    @Override
-    public boolean toggleTrainerIsActiveStatus(Long id) {
-        Trainer trainer = trainerRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("No trainer with such id: " + id));
+    public boolean toggleTrainerIsActiveStatus(String username) {
+        Trainer trainer = trainerRepository.findByUsername(username)
+                .orElseThrow(() -> new TrainerNotFoundException("No trainer with such username: " + username));
 
         trainer.setActive(!trainer.isActive());
         trainerRepository.save(trainer);

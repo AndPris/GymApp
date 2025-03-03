@@ -1,24 +1,26 @@
 package example.services.imp;
 
+import example.dtos.trainee.TraineeTrainerListUpdateDTO;
+import example.dtos.trainee.TraineeUpdateDTO;
 import example.entities.Trainee;
 import example.entities.Trainer;
 import example.entities.Training;
+import example.exceptions.TraineeNotFoundException;
+import example.exceptions.TrainerNotFoundException;
 import example.repositories.TraineeRepository;
 import example.services.TraineeService;
+import example.services.TrainerService;
 import example.utils.password.PasswordGenerator;
 import example.utils.username.UsernameGenerator;
-import jakarta.validation.ConstraintViolation;
-import jakarta.validation.Validation;
-import jakarta.validation.ValidationException;
-import jakarta.validation.Validator;
+import example.validation.CustomValidator;
 import lombok.Setter;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class TraineeServiceImp implements TraineeService {
@@ -26,14 +28,11 @@ public class TraineeServiceImp implements TraineeService {
     @Setter
     private TraineeRepository traineeRepository;
 
-    private Validator validator;
-
     private PasswordGenerator passwordGenerator;
     private UsernameGenerator usernameGenerator;
 
-    public TraineeServiceImp() {
-        validator = Validation.buildDefaultValidatorFactory().getValidator();
-    }
+    private TrainerService trainerService;
+    private CustomValidator customValidator;
 
     @Autowired
     public void setPasswordGenerator(PasswordGenerator passwordGenerator) {
@@ -45,6 +44,15 @@ public class TraineeServiceImp implements TraineeService {
         this.usernameGenerator = usernameGenerator;
     }
 
+    @Autowired
+    public void setTrainerService(TrainerService trainerService) {
+        this.trainerService = trainerService;
+    }
+
+    @Autowired
+    public void setCustomValidator(CustomValidator customValidator) {
+        this.customValidator = customValidator;
+    }
 
     @Override
     public Trainee createTrainee(Trainee trainee) {
@@ -52,45 +60,27 @@ public class TraineeServiceImp implements TraineeService {
             throw new IllegalArgumentException("Cannot create a trainee: trainee is null");
         }
 
-        validateTrainee(trainee);
+        customValidator.validate(trainee);
 
         trainee.setPassword(passwordGenerator.generatePassword());
         trainee.setUsername(usernameGenerator.generateUsername(trainee));
         return traineeRepository.save(trainee);
     }
 
-    private void validateTrainee(Trainee trainee) {
-        for (ConstraintViolation<Trainee> violation : validator.validate(trainee)) {
-            throw new ValidationException("Validation error: " + violation.getMessage());
-        }
-    }
-
     @Override
-    public Trainee updateTrainee(Trainee updates) {
-        validateTraineeForUpdate(updates);
+    public Trainee updateTrainee(String username, TraineeUpdateDTO traineeUpdateDTO) {
+        Trainee trainee = traineeRepository.findByUsername(username)
+                .orElseThrow(() -> new TraineeNotFoundException("There's no trainee with such username: " + username));
 
-        Trainee existing = traineeRepository.findById(updates.getId()).get();
-        updateTraineeFields(existing, updates);
+        trainee.setFirstName(traineeUpdateDTO.getFirstName());
+        trainee.setLastName(traineeUpdateDTO.getLastName());
+        trainee.setDateOfBirth(traineeUpdateDTO.getDateOfBirth());
+        trainee.setAddress(traineeUpdateDTO.getAddress());
+        trainee.setActive(traineeUpdateDTO.isActive());
 
-        return traineeRepository.save(existing);
-    }
+        customValidator.validate(trainee);
 
-    private void validateTraineeForUpdate(Trainee trainee) {
-        if (trainee == null || trainee.getId() == null || !traineeRepository.findById(trainee.getId()).isPresent()) {
-            throw new IllegalArgumentException("Cannot update a trainee: invalid data");
-        }
-
-        validateTrainee(trainee);
-    }
-
-    private void updateTraineeFields(Trainee existing, Trainee updates) {
-        Optional.ofNullable(updates.getFirstName()).filter(StringUtils::isNoneBlank).ifPresent(existing::setFirstName);
-        Optional.ofNullable(updates.getLastName()).filter(StringUtils::isNoneBlank).ifPresent(existing::setLastName);
-        Optional.ofNullable(updates.getUsername()).filter(StringUtils::isNoneBlank).ifPresent(existing::setUsername);
-        Optional.ofNullable(updates.getPassword()).filter(StringUtils::isNoneBlank).ifPresent(existing::setPassword);
-        Optional.ofNullable(updates.getAddress()).filter(StringUtils::isNoneBlank).ifPresent(existing::setAddress);
-        Optional.ofNullable(updates.getDateOfBirth()).ifPresent(existing::setDateOfBirth);
-        Optional.ofNullable(updates.isActive()).ifPresent(existing::setActive);
+        return traineeRepository.save(trainee);
     }
 
     @Override
@@ -120,19 +110,9 @@ public class TraineeServiceImp implements TraineeService {
     }
 
     @Override
-    public void changeTraineePassword(String username, String oldPassword, String newPassword) {
-        Trainee trainee = traineeRepository.findByUsernameAndPassword(username, oldPassword)
-                .orElseThrow(() -> new IllegalArgumentException("There's no trainee with such username and password"));
-
-        trainee.setPassword(newPassword);
-        validateTrainee(trainee);
-        traineeRepository.save(trainee);
-    }
-
-    @Override
-    public boolean toggleTraineeIsActiveStatus(Long id) {
-        Trainee trainee = traineeRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("No trainee with such id: " + id));
+    public boolean toggleTraineeIsActiveStatus(String username) {
+        Trainee trainee = traineeRepository.findByUsername(username)
+                .orElseThrow(() -> new TraineeNotFoundException("No trainee with such username: " + username));
 
         trainee.setActive(!trainee.isActive());
         traineeRepository.save(trainee);
@@ -141,10 +121,28 @@ public class TraineeServiceImp implements TraineeService {
 
     @Override
     public List<Training> findTraineeTrainingList(String username, Date fromDate, Date toDate, String trainerFirstName,
-                                                  String trainerLastName, String trainingType) {
+                                                  String trainerLastName, Long trainingType) {
 
         return traineeRepository.findTrainingList(username, fromDate, toDate,
                 trainerFirstName, trainerLastName, trainingType);
+    }
+
+    @Override
+    public List<Trainer> updateTraineeTrainerList(String username, TraineeTrainerListUpdateDTO traineeTrainerListUpdateDTO) {
+        Trainee trainee = traineeRepository.findByUsername(username)
+                .orElseThrow(() -> new TraineeNotFoundException("There's no trainee with such username: " + username));
+
+        List<String> trainersUsernames = traineeTrainerListUpdateDTO.getTrainers();
+
+        List<Trainer> trainers = trainersUsernames.stream()
+                .map(trainerUsername -> trainerService.getTrainerByUsername(trainerUsername)
+                        .orElseThrow(() -> new TrainerNotFoundException("There's no trainer with such username: " + trainerUsername)))
+                .collect(Collectors.toList());
+
+        trainee.setTrainers(trainers);
+        traineeRepository.save(trainee);
+
+        return trainers;
     }
 
     @Override
@@ -166,7 +164,20 @@ public class TraineeServiceImp implements TraineeService {
     }
 
     @Override
-    public List<Trainer> findTrainersNotAssignedToTrainee(String username) {
-        return traineeRepository.findTrainersNotAssignedToTrainee(username);
+    public List<Trainer> findTraineeTrainers(String username, Boolean assigned, Boolean active) {
+        List<Trainer> trainers;
+
+        if (assigned) {
+            Trainee trainee = traineeRepository.findByUsername(username)
+                    .orElseThrow(() -> new TraineeNotFoundException("There's no trainee with such username: " + username));
+
+            trainers = trainee.getTrainers().stream()
+                    .filter(trainer -> trainer.isActive() == active)
+                    .collect(Collectors.toList());
+        } else {
+            trainers = traineeRepository.findTrainersNotAssignedToTrainee(username, active);
+        }
+
+        return trainers;
     }
 }

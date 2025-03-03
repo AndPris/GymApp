@@ -1,5 +1,7 @@
 package example.services;
 
+import example.dtos.trainee.TraineeTrainerListUpdateDTO;
+import example.dtos.trainee.TraineeUpdateDTO;
 import example.entities.Trainee;
 import example.entities.Trainer;
 import example.entities.Training;
@@ -11,7 +13,7 @@ import java.util.Optional;
 public interface TraineeService {
     Trainee createTrainee(Trainee trainee);
 
-    Trainee updateTrainee(Trainee updates);
+    Trainee updateTrainee(String username, TraineeUpdateDTO traineeUpdateDTO);
 
     boolean deleteTraineeByUsername(String username);
 
@@ -23,12 +25,12 @@ public interface TraineeService {
 
     boolean existsTraineeById(Long id);
 
-    void changeTraineePassword(String username, String oldPassword, String newPassword);
-
-    boolean toggleTraineeIsActiveStatus(Long id);
+    boolean toggleTraineeIsActiveStatus(String username);
 
     List<Training> findTraineeTrainingList(String username, Date fromDate, Date toDate, String trainerFirstName,
-                                           String trainerLastName, String trainingType);
+                                           String trainerLastName, Long trainingType);
+
+    List<Trainer> updateTraineeTrainerList(String username, TraineeTrainerListUpdateDTO traineeTrainerListUpdateDTO);
 
     void addTrainerToList(Trainee trainee, Trainer trainer);
 
@@ -36,5 +38,5 @@ public interface TraineeService {
 
     void clearTraineeTrainerList(Trainee trainee);
 
-    List<Trainer> findTrainersNotAssignedToTrainee(String username);
+    List<Trainer> findTraineeTrainers(String username, Boolean assigned, Boolean active);
 }

@@ -10,6 +10,8 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Optional;
 
+import static example.logs.TransactionLogger.getTransactionId;
+
 @Repository
 public class TrainingTypeRepositoryImp implements TrainingTypeRepository {
     private static final Logger logger = LogManager.getLogger(TrainingTypeRepositoryImp.class);
@@ -22,7 +24,7 @@ public class TrainingTypeRepositoryImp implements TrainingTypeRepository {
 
     @Override
     public List<TrainingType> findAll() {
-        logger.info("Find all training types");
+        logger.info("[Transaction ID: {}] Find all training types", getTransactionId());
         return entityManager.createQuery("select t from TrainingType t")
                 .getResultList();
     }
@@ -30,6 +32,7 @@ public class TrainingTypeRepositoryImp implements TrainingTypeRepository {
     @Override
     public Optional<TrainingType> findById(Long id) {
         TrainingType trainingType = entityManager.find(TrainingType.class, id);
+        logger.info("[Transaction ID: {}] Find training type by id {}. Result: {}", getTransactionId(), id, trainingType);
         return Optional.ofNullable(trainingType);
     }
 }

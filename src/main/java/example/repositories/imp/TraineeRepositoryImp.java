@@ -15,6 +15,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+import static example.logs.TransactionLogger.getTransactionId;
+
 @Repository
 public class TraineeRepositoryImp implements TraineeRepository {
     private static final Logger logger = LogManager.getLogger(TraineeRepositoryImp.class);
@@ -34,18 +36,18 @@ public class TraineeRepositoryImp implements TraineeRepository {
 
             if (trainee.getId() == null) {
                 entityManager.persist(trainee);
-                logger.info("Creating a new trainee: {}", trainee);
+                logger.info("[Transaction ID: {}] Creating a new trainee: {}", getTransactionId(), trainee);
             } else {
                 entityManager.merge(trainee);
-                logger.info("Updating a trainee {}", trainee);
+                logger.info("[Transaction ID: {}] Updating a trainee {}", getTransactionId(), trainee);
             }
 
             transaction.commit();
-            logger.info("Operation successfully performed");
+            logger.info("[Transaction ID: {}] Operation successfully performed", getTransactionId());
             return trainee;
         } catch (Exception e) {
             transaction.rollback();
-            logger.error(e.getMessage());
+            logger.error("[Transaction ID: {}] {}", getTransactionId(), e.getMessage());
         }
 
         return null;
@@ -54,7 +56,7 @@ public class TraineeRepositoryImp implements TraineeRepository {
     @Override
     public Optional<Trainee> findById(Long id) {
         Trainee trainee = entityManager.find(Trainee.class, id);
-        logger.info("Find trainer by id: {}. Result: {}", id, trainee);
+        logger.info("[Transaction ID: {}] Find trainer by id: {}. Result: {}", getTransactionId(), id, trainee);
         return Optional.ofNullable(trainee);
     }
 
@@ -64,7 +66,7 @@ public class TraineeRepositoryImp implements TraineeRepository {
         query.setParameter("username", username);
 
         List<Trainee> result = query.getResultList();
-        logger.info("Find trainee with username {}. Result: {}", username, result);
+        logger.info("[Transaction ID: {}] Find trainee with username {}. Result: {}", getTransactionId(), username, result);
         return Optional.ofNullable(result.isEmpty() ? null : result.get(0));
     }
 
@@ -75,13 +77,13 @@ public class TraineeRepositoryImp implements TraineeRepository {
         query.setParameter("password", password);
 
         List<Trainee> result = query.getResultList();
-        logger.info("Find trainee with username {} and password {}. Result: {}", username, password, result);
+        logger.info("[Transaction ID: {}] Find trainee with username {} and password {}. Result: {}", getTransactionId(), username, password, result);
         return Optional.ofNullable(result.isEmpty() ? null : result.get(0));
     }
 
     @Override
     public List<Trainee> findAll() {
-        logger.info("Find all trainees");
+        logger.info("[Transaction ID: {}] Find all trainees", getTransactionId());
         return entityManager.createQuery("select t from Trainee t " +
                         "left outer join Training tr on t.id=tr.trainee.id")
                 .getResultList();
@@ -93,24 +95,24 @@ public class TraineeRepositoryImp implements TraineeRepository {
 
         try {
             transaction.begin();
-            logger.info("Deleting a trainee with username {}", username);
+            logger.info("[Transaction ID: {}] Deleting a trainee with username {}", getTransactionId(), username);
             int result = entityManager.createQuery("delete from Trainee t where t.username=:username")
                     .setParameter("username", username)
                     .executeUpdate();
 
             transaction.commit();
-            logger.info("Result: {}", result);
+            logger.info("[Transaction ID: {}] Result: {}", getTransactionId(), result);
             return result != 0;
         } catch (Exception e) {
             transaction.rollback();
-            logger.error(e.getMessage());
+            logger.error("[Transaction ID: {}] {}", getTransactionId(), e.getMessage());
             return false;
         }
     }
 
     @Override
     public List<Training> findTrainingList(String username, Date fromDate, Date toDate, String trainerFirstName,
-                                           String trainerLastName, String trainingType) {
+                                           String trainerLastName, Long trainingType) {
 
         Query query = entityManager.createQuery("select t from Training t " +
                 "where t.trainee.username=:username " +
@@ -118,7 +120,7 @@ public class TraineeRepositoryImp implements TraineeRepository {
                 "and (:toDate is null or t.trainingDate < :toDate) " +
                 "and (:trainerFirstName is null or t.trainer.firstName=:trainerFirstName) " +
                 "and (:trainerLastName is null or t.trainer.lastName=:trainerLastName) " +
-                "and (:trainingType is null or t.trainingType.name=:trainingType)");
+                "and (:trainingType is null or t.trainingType.id=:trainingType)");
 
         query.setParameter("username", username);
         query.setParameter("fromDate", fromDate);
@@ -128,20 +130,23 @@ public class TraineeRepositoryImp implements TraineeRepository {
         query.setParameter("trainingType", trainingType);
 
         List<Training> result = query.getResultList();
-        logger.info("Find training list of trainee with username {}, from date {}, to date {}," +
+        logger.info("[Transaction ID: {}] Find training list of trainee with username {}, from date {}, to date {}," +
                         " trainer first name {}, trainer last name {}, training type {}. Result: {}",
-                username, fromDate, toDate, trainerFirstName, trainerLastName, trainingType, result);
+                getTransactionId(), username, fromDate, toDate, trainerFirstName, trainerLastName, trainingType, result);
         return result;
     }
 
     @Override
-    public List<Trainer> findTrainersNotAssignedToTrainee(String username) {
+    public List<Trainer> findTrainersNotAssignedToTrainee(String username, Boolean active) {
         Query query = entityManager.createQuery("select tr from Trainer tr " +
-                "where tr not in (select t.trainers from Trainee t where t.username=:username)");
+                "where tr not in (select t.trainers from Trainee t where t.username=:username) " +
+                "and tr.active=:active");
         query.setParameter("username", username);
+        query.setParameter("active", active);
 
         List<Trainer> result = query.getResultList();
-        logger.info("Find trainers not assigned to trainee with username {}. Result: {}", username, result);
+        logger.info("[Transaction ID: {}] Find trainers not assigned to trainee with username {}. Result: {}",
+                getTransactionId(), username, result);
         return result;
     }
 }

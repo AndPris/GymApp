@@ -22,7 +22,7 @@ public interface TraineeRepository {
     boolean deleteByUsername(String username);
 
     List<Training> findTrainingList(String username, Date fromDate, Date toDate, String trainerFirstName,
-                                    String trainerLastName, String trainingType);
+                                    String trainerLastName, Long trainingType);
 
-    List<Trainer> findTrainersNotAssignedToTrainee(String username);
+    List<Trainer> findTrainersNotAssignedToTrainee(String username, Boolean active);
 }

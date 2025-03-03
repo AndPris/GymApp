@@ -1,6 +1,7 @@
 package example.services;
 
 import example.entities.TrainingType;
+import example.exceptions.TrainingTypeNotFoundException;
 import example.repositories.TrainingTypeRepository;
 import example.repositories.imp.TrainingTypeRepositoryImp;
 import example.services.imp.TrainingTypeServiceImp;
@@ -46,11 +47,12 @@ public class TrainingTypeServiceTests {
     }
 
     @Test
-    public void findById_ShouldReturnEmptyOptional() {
+    public void findById_ShouldThrow() {
         when(trainingTypeRepository.findById(any(Long.class))).thenReturn(Optional.empty());
 
-        Optional<TrainingType> result = trainingTypeService.findById(1L);
-        assertFalse(result.isPresent());
+        TrainingTypeNotFoundException exception = assertThrows(TrainingTypeNotFoundException.class,
+                () -> trainingTypeService.findById(1L));
+        assertEquals("There's no training type with such id: 1", exception.getMessage());
     }
 
     @Test
@@ -58,8 +60,7 @@ public class TrainingTypeServiceTests {
         TrainingType trainingType = new TrainingType();
         when(trainingTypeRepository.findById(any(Long.class))).thenReturn(Optional.of(trainingType));
 
-        Optional<TrainingType> result = trainingTypeService.findById(1L);
-        assertTrue(result.isPresent());
-        assertEquals(trainingType, result.get());
+        TrainingType result = trainingTypeService.findById(1L);
+        assertEquals(trainingType, result);
     }
 }

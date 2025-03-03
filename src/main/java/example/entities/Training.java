@@ -3,6 +3,7 @@ package example.entities;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -19,27 +20,33 @@ public class Training {
 
     @ManyToOne
     @JoinColumn(name = "traineeId")
+    @NotNull(message = "Trainee must be provided")
     private Trainee trainee;
 
     @ManyToOne
     @JoinColumn(name = "trainerId")
+    @NotNull(message = "Trainer must be provided")
     private Trainer trainer;
 
     @Column(nullable = false)
     @Size(min = 2, max = 20, message = "Training name must be from 2 to 20 characters")
+    @NotNull(message = "Training name must be provided")
     private String trainingName;
 
     @ManyToOne
     @JoinColumn(name = "trainingTypeId")
+    @NotNull(message = "Training type must be provided")
     private TrainingType trainingType;
 
     @Column(nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
+    @NotNull(message = "Training date must be provided")
     private Date trainingDate;
 
     @Column(nullable = false)
     @Min(value = 20, message = "Minimal training duration is 20 minutes")
     @Max(value = 180, message = "Maximal training duration is 180 minutes")
+    @NotNull(message = "Training duration must be provided")
     private Integer trainingDuration;
 
     public Training(Trainee trainee, Trainer trainer, String trainingName, TrainingType trainingType, Date trainingDate, Integer trainingDuration) {

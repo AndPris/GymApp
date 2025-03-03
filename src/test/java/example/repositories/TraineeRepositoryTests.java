@@ -38,25 +38,25 @@ public class TraineeRepositoryTests {
 
     @Test
     public void saveIdNullTest_ShouldPersist() {
-        Trainee training = new Trainee();
+        Trainee trainee = new Trainee();
 
-        Trainee savedTrainee = traineeRepository.save(training);
+        Trainee savedTrainee = traineeRepository.save(trainee);
 
         verify(transaction).begin();
-        verify(entityManager).persist(training);
+        verify(entityManager).persist(trainee);
         verify(transaction).commit();
         assertNotNull(savedTrainee);
     }
 
     @Test
     public void saveIdNotNullTest_ShouldMerge() {
-        Trainee training = new Trainee();
-        training.setId(1L);
+        Trainee trainee = new Trainee();
+        trainee.setId(1L);
 
-        Trainee savedTrainee = traineeRepository.save(training);
+        Trainee savedTrainee = traineeRepository.save(trainee);
 
         verify(transaction).begin();
-        verify(entityManager).merge(training);
+        verify(entityManager).merge(trainee);
         verify(transaction).commit();
         assertNotNull(savedTrainee);
         assertEquals(1L, savedTrainee.getId());
@@ -64,12 +64,12 @@ public class TraineeRepositoryTests {
 
     @Test
     public void saveExceptionThrownTest_ShouldRollback() {
-        Trainee training = new Trainee();
-        training.setId(null);
+        Trainee trainee = new Trainee();
+        trainee.setId(null);
 
         doThrow(RuntimeException.class).when(entityManager).persist(any(Trainee.class));
 
-        Trainee savedTrainee = traineeRepository.save(training);
+        Trainee savedTrainee = traineeRepository.save(trainee);
 
         verify(transaction).begin();
         verify(transaction).rollback();
@@ -228,7 +228,7 @@ public class TraineeRepositoryTests {
                 "and (:toDate is null or t.trainingDate < :toDate) " +
                 "and (:trainerFirstName is null or t.trainer.firstName=:trainerFirstName) " +
                 "and (:trainerLastName is null or t.trainer.lastName=:trainerLastName) " +
-                "and (:trainingType is null or t.trainingType.name=:trainingType)";
+                "and (:trainingType is null or t.trainingType.id=:trainingType)";
         when(entityManager.createQuery(eq(jpql))).thenReturn(query);
         when(query.getResultList()).thenReturn(new ArrayList<Trainee>());
 
@@ -247,7 +247,7 @@ public class TraineeRepositoryTests {
                 "and (:toDate is null or t.trainingDate < :toDate) " +
                 "and (:trainerFirstName is null or t.trainer.firstName=:trainerFirstName) " +
                 "and (:trainerLastName is null or t.trainer.lastName=:trainerLastName) " +
-                "and (:trainingType is null or t.trainingType.name=:trainingType)";
+                "and (:trainingType is null or t.trainingType.id=:trainingType)";
 
         when(entityManager.createQuery(eq(jpql))).thenReturn(query);
         when(query.getResultList()).thenReturn(Arrays.asList(training));

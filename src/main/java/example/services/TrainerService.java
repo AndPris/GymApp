@@ -1,5 +1,6 @@
 package example.services;
 
+import example.dtos.trainer.TrainerUpdateDTO;
 import example.entities.Trainer;
 import example.entities.Training;
 
@@ -10,7 +11,7 @@ import java.util.Optional;
 public interface TrainerService {
     Trainer createTrainer(Trainer trainer);
 
-    Trainer updateTrainer(Trainer updates);
+    Trainer updateTrainer(String username, TrainerUpdateDTO trainerUpdateDTO);
 
     Iterable<Trainer> getAllTrainers();
 
@@ -22,9 +23,7 @@ public interface TrainerService {
 
     boolean existsTrainerByUsername(String username);
 
-    void changeTrainerPassword(String username, String oldPassword, String newPassword);
-
-    boolean toggleTrainerIsActiveStatus(Long id);
+    boolean toggleTrainerIsActiveStatus(String username);
 
     List<Training> findTrainerTrainingList(String username, Date fromDate, Date toDate,
                                            String traineeFirstName, String traineeLastName);

@@ -14,6 +14,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+import static example.logs.TransactionLogger.getTransactionId;
+
 @Repository
 public class TrainerRepositoryImp implements TrainerRepository {
     private static final Logger logger = LogManager.getLogger(TrainerRepositoryImp.class);
@@ -33,18 +35,18 @@ public class TrainerRepositoryImp implements TrainerRepository {
 
             if (trainer.getId() == null) {
                 entityManager.persist(trainer);
-                logger.info("Creating a new trainer: {}", trainer);
+                logger.info("[Transaction ID: {}] Creating a new trainer: {}", getTransactionId(), trainer);
             } else {
                 entityManager.merge(trainer);
-                logger.info("Updating a trainer {}", trainer);
+                logger.info("[Transaction ID: {}] Updating a trainer {}", getTransactionId(), trainer);
             }
 
             transaction.commit();
-            logger.info("Operation successfully performed");
+            logger.info("[Transaction ID: {}] Operation successfully performed", getTransactionId());
             return trainer;
         } catch (Exception e) {
             transaction.rollback();
-            logger.error(e.getMessage());
+            logger.error("[Transaction ID: {}] {}", getTransactionId(), e.getMessage());
         }
 
         return null;
@@ -52,7 +54,7 @@ public class TrainerRepositoryImp implements TrainerRepository {
 
     @Override
     public List<Trainer> findAll() {
-        logger.info("Find all trainers");
+        logger.info("[Transaction ID: {}] Find all trainers", getTransactionId());
         return entityManager.createQuery("select t from Trainer t " +
                         "left outer join Training tr on t.id=tr.trainee.id")
                 .getResultList();
@@ -61,7 +63,7 @@ public class TrainerRepositoryImp implements TrainerRepository {
     @Override
     public Optional<Trainer> findById(Long id) {
         Trainer trainer = entityManager.find(Trainer.class, id);
-        logger.info("Find trainer by id: {}. Result: {}", id, trainer);
+        logger.info("[Transaction ID: {}] Find trainer by id: {}. Result: {}", getTransactionId(), id, trainer);
         return Optional.ofNullable(trainer);
     }
 
@@ -71,7 +73,7 @@ public class TrainerRepositoryImp implements TrainerRepository {
         query.setParameter("username", username);
 
         List<Trainer> result = query.getResultList();
-        logger.info("Find trainer with username {}. Result: {}", username, result);
+        logger.info("[Transaction ID: {}] Find trainer with username {}. Result: {}", getTransactionId(), username, result);
         return Optional.ofNullable(result.isEmpty() ? null : result.get(0));
     }
 
@@ -82,7 +84,8 @@ public class TrainerRepositoryImp implements TrainerRepository {
         query.setParameter("password", password);
 
         List<Trainer> result = query.getResultList();
-        logger.info("Find trainer with username {} and password {}. Result: {}", username, password, result);
+        logger.info("[Transaction ID: {}] Find trainer with username {} and password {}. Result: {}",
+                getTransactionId(), username, password, result);
         return Optional.ofNullable(result.isEmpty() ? null : result.get(0));
     }
 
@@ -104,9 +107,9 @@ public class TrainerRepositoryImp implements TrainerRepository {
         query.setParameter("traineeLastName", traineeLastName);
 
         List<Training> result = query.getResultList();
-        logger.info("Find training list of trainee with username {}, from date {}, to date {}," +
+        logger.info("[Transaction ID: {}] Find training list of trainee with username {}, from date {}, to date {}," +
                         " trainee first name {}, trainee last name {}. Result: {}",
-                username, fromDate, toDate, traineeFirstName, traineeLastName, result);
+                getTransactionId(), username, fromDate, toDate, traineeFirstName, traineeLastName, result);
         return result;
     }
 }
