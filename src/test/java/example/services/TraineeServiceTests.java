@@ -173,7 +173,7 @@ public class TraineeServiceTests {
 
     @Test
     public void deleteTraineeByUsernameTest_ShouldReturnFalse() {
-        when(traineeRepository.deleteByUsername(any(String.class))).thenReturn(false);
+        when(traineeRepository.deleteByUsername(any(String.class))).thenReturn(0);
 
         boolean result = traineeService.deleteTraineeByUsername("test");
         assertFalse(result);
@@ -181,7 +181,7 @@ public class TraineeServiceTests {
 
     @Test
     public void deleteTraineeByUsernameTest_ShouldReturnTrue() {
-        when(traineeRepository.deleteByUsername(any(String.class))).thenReturn(true);
+        when(traineeRepository.deleteByUsername(any(String.class))).thenReturn(1);
 
         boolean result = traineeService.deleteTraineeByUsername("test");
         assertTrue(result);

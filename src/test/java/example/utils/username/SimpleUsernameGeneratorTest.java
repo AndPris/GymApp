@@ -2,8 +2,7 @@ package example.utils.username;
 
 import example.entities.Trainee;
 import example.entities.Trainer;
-import example.repositories.TraineeRepository;
-import example.repositories.TrainerRepository;
+import example.repositories.UserRepository;
 import example.utils.username.imp.SimpleUsernameGenerator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -17,23 +16,19 @@ import static org.mockito.Mockito.when;
 
 public class SimpleUsernameGeneratorTest {
     private SimpleUsernameGenerator usernameGenerator;
-    private TraineeRepository traineeRepository;
-    private TrainerRepository trainerRepository;
+    private UserRepository userRepository;
 
     @BeforeEach
     public void init() {
-        traineeRepository = mock(TraineeRepository.class);
-        trainerRepository = mock(TrainerRepository.class);
+        userRepository = mock(UserRepository.class);
 
         usernameGenerator = new SimpleUsernameGenerator();
-        usernameGenerator.setTraineeRepository(traineeRepository);
-        usernameGenerator.setTrainerRepository(trainerRepository);
+        usernameGenerator.setUserRepository(userRepository);
     }
 
     @Test
     public void generateUsernameTest_ShouldGenerateWithoutSerialNumber() {
-        when(traineeRepository.findAll()).thenReturn(new ArrayList<>());
-        when(trainerRepository.findAll()).thenReturn(new ArrayList<>());
+        when(userRepository.findAll()).thenReturn(new ArrayList<>());
 
         Trainee trainee = new Trainee();
         trainee.setFirstName("test");
@@ -44,23 +39,24 @@ public class SimpleUsernameGeneratorTest {
 
     @Test
     public void generateUsernameTest_ShouldGenerateWithSerialNumber() {
-        Trainee trainee = new Trainee();
-        trainee.setFirstName("test");
-        trainee.setLastName("test");
-        trainee.setUsername("test.test");
+        Trainee trainee1 = new Trainee();
+        trainee1.setUsername("test.test");
 
-        Trainer trainer = new Trainer();
-        trainer.setFirstName("test");
-        trainer.setLastName("test");
-        trainer.setUsername("test.test2");
+        Trainee trainee2 = new Trainee();
+        trainee2.setUsername("another.username");
 
-        when(traineeRepository.findAll()).thenReturn(Arrays.asList(trainee));
-        when(trainerRepository.findAll()).thenReturn(Arrays.asList(trainer));
+        Trainer trainer1 = new Trainer();
+        trainer1.setUsername("test.test2");
+
+        Trainer trainer2 = new Trainer();
+        trainer2.setUsername("test.testt3");
+
+        when(userRepository.findAll()).thenReturn(Arrays.asList(trainee1, trainee2, trainer1, trainer2));
 
         Trainee user = new Trainee();
         user.setFirstName("test");
         user.setLastName("test");
 
-        assertEquals("test.test3", usernameGenerator.generateUsername(trainee));
+        assertEquals("test.test3", usernameGenerator.generateUsername(user));
     }
 }
