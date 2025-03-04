@@ -13,9 +13,7 @@ import java.util.Optional;
 public interface TraineeRepository extends JpaRepository<Trainee, Long> {
     Optional<Trainee> findByUsername(String username);
 
-    Optional<Trainee> findByUsernameAndPassword(String username, String password);
-
-    boolean deleteByUsername(String username);
+    Integer deleteByUsername(String username);
 
     @Query("select t from Training t " +
             "where t.trainee.username=:username " +

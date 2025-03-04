@@ -12,8 +12,6 @@ import java.util.Optional;
 public interface TrainerRepository extends JpaRepository<Trainer, Long> {
     Optional<Trainer> findByUsername(String username);
 
-    Optional<Trainer> findByUsernameAndPassword(String username, String password);
-
     @Query("select t from Training t " +
                   "where t.trainer.username=:username " +
                   "and (:fromDate is null or t.trainingDate > :fromDate) " +
