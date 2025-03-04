@@ -10,12 +10,19 @@ import java.lang.management.MemoryUsage;
 
 @Component
 public class MemoryHealthIndicator implements HealthIndicator {
+    private MemoryUsage heapMemoryUsage;
+
+    public MemoryHealthIndicator() {
+        MemoryMXBean memoryBean = ManagementFactory.getMemoryMXBean();
+        heapMemoryUsage = memoryBean.getHeapMemoryUsage();
+    }
+
+    public void setHeapMemoryUsage(MemoryUsage heapMemoryUsage) {
+        this.heapMemoryUsage = heapMemoryUsage;
+    }
 
     @Override
     public Health health() {
-        MemoryMXBean memoryBean = ManagementFactory.getMemoryMXBean();
-        MemoryUsage heapMemoryUsage = memoryBean.getHeapMemoryUsage();
-
         long usedMemory = heapMemoryUsage.getUsed();
         long maxMemory = heapMemoryUsage.getMax();
 
