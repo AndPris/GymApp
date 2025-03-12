@@ -1,6 +1,8 @@
 package example.config;
 
+import example.exceptions.IPAddressBlockedException;
 import example.repositories.UserRepository;
+import example.security.LoginAttemptService;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -43,9 +45,14 @@ public class SecurityConfig {
     }
 
     @Bean
-    public UserDetailsService userDetailsService(UserRepository userRepository) {
-        return username ->
-            userRepository.findByUsername(username)
+    public UserDetailsService userDetailsService(LoginAttemptService loginAttemptService, UserRepository userRepository) {
+        return username -> {
+            if(loginAttemptService.isBlocked()) {
+                throw new IPAddressBlockedException("Try to login later, please");
+            }
+
+            return userRepository.findByUsername(username)
                     .orElseThrow(() -> new UsernameNotFoundException("There's no user with such username: " + username));
+        };
     }
 }

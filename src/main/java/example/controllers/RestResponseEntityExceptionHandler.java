@@ -1,5 +1,6 @@
 package example.controllers;
 
+import example.exceptions.IPAddressBlockedException;
 import example.exceptions.TraineeNotFoundException;
 import example.exceptions.TrainerNotFoundException;
 import example.exceptions.TrainingTypeNotFoundException;
@@ -7,6 +8,7 @@ import jakarta.validation.ValidationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
@@ -19,5 +21,11 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
     protected ResponseEntity<Object> handleInvalidRequests(RuntimeException ex, WebRequest webRequest) {
         String body = ex.getMessage();
         return handleExceptionInternal(ex, body, new HttpHeaders(), HttpStatus.UNPROCESSABLE_ENTITY, webRequest);
+    }
+
+    @ExceptionHandler(value = {IPAddressBlockedException.class, InternalAuthenticationServiceException.class})
+    protected ResponseEntity<Object> handleIPAddressBlock(RuntimeException ex, WebRequest webRequest) {
+        String body = ex.getMessage();
+        return handleExceptionInternal(ex, body, new HttpHeaders(), HttpStatus.SERVICE_UNAVAILABLE, webRequest);
     }
 }
