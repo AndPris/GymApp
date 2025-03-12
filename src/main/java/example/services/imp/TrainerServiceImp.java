@@ -13,6 +13,7 @@ import example.utils.username.UsernameGenerator;
 import example.validation.CustomValidator;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -31,6 +32,8 @@ public class TrainerServiceImp implements TrainerService {
     private UsernameGenerator usernameGenerator;
 
     private CustomValidator customValidator;
+
+    private PasswordEncoder passwordEncoder;
 
     @Autowired
     public void setTrainingTypeService(TrainingTypeService trainingTypeService) {
@@ -52,6 +55,11 @@ public class TrainerServiceImp implements TrainerService {
         this.customValidator = customValidator;
     }
 
+    @Autowired
+    public void setPasswordEncoder(PasswordEncoder passwordEncoder) {
+        this.passwordEncoder = passwordEncoder;
+    }
+
     @Override
     public Trainer createTrainer(Trainer trainer) {
         if (trainer == null) {
@@ -60,9 +68,13 @@ public class TrainerServiceImp implements TrainerService {
 
         customValidator.validate(trainer);
 
-        trainer.setPassword(passwordGenerator.generatePassword());
+        String actualPassword = passwordGenerator.generatePassword();
+        trainer.setPassword(passwordEncoder.encode(actualPassword));
         trainer.setUsername(usernameGenerator.generateUsername(trainer));
-        return trainerRepository.save(trainer);
+        Trainer savedTrainer = trainerRepository.save(trainer);
+
+        savedTrainer.setPassword(actualPassword);
+        return savedTrainer;
     }
 
     @Override

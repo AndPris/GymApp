@@ -5,12 +5,18 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import java.util.Collection;
+import java.util.List;
 
 @Data
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 @NoArgsConstructor
-public abstract class User {
+public abstract class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -30,7 +36,7 @@ public abstract class User {
     private String username;
 
     @Column(nullable = false)
-    @Size(min = 6, max = 20, message = "Password must be from 6 to 20 characters")
+    @Size(min = 6, message = "Password must be at least 6 characters long")
     private String password;
 
     @Column(nullable = false)
@@ -44,6 +50,11 @@ public abstract class User {
 
     public Boolean isActive() {
         return active;
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority("ROLE_USER"));
     }
 
     @Override
