@@ -8,6 +8,7 @@ import example.services.imp.UserServiceImp;
 import example.validation.CustomValidator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Optional;
 
@@ -19,14 +20,16 @@ import static org.mockito.Mockito.when;
 public class UserServiceTests {
     private UserRepository userRepository;
     private CustomValidator customValidator;
+    private PasswordEncoder passwordEncoder;
     private UserService userService;
 
     @BeforeEach
     public void setUp() {
         userRepository = mock(UserRepository.class);
         customValidator = mock(CustomValidator.class);
+        passwordEncoder = mock(PasswordEncoder.class);
 
-        userService = new UserServiceImp(userRepository, customValidator);
+        userService = new UserServiceImp(userRepository, customValidator, passwordEncoder);
     }
 
     @Test
