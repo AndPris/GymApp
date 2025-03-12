@@ -18,7 +18,7 @@ class TrainingTypeMapperTests {
 
     @Test
     void testTrainingTypeToTrainingTypeDTO_ShouldMapCorrectly() {
-        TrainingType trainingType = new TrainingType("Strength Training");
+        TrainingType trainingType = new TrainingType(1L, "Strength Training");
         trainingType.setId(1L);
 
         TrainingTypeDTO trainingTypeDTO = trainingTypeMapper.trainingTypeToTrainingTypeDTO(trainingType);

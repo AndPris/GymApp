@@ -13,7 +13,6 @@ import java.util.List;
 @NoArgsConstructor
 public class TrainingType {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     @Column(nullable = false)
@@ -26,7 +25,8 @@ public class TrainingType {
     @OneToMany(mappedBy = "trainingType")
     private List<Training> trainings = new ArrayList<>();
 
-    public TrainingType(String name) {
+    public TrainingType(Long id, String name) {
+        this.id = id;
         this.name = name;
     }
 

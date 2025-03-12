@@ -4,7 +4,6 @@ import example.entities.Trainee;
 import example.entities.User;
 import example.exceptions.UserNotFoundException;
 import example.repositories.UserRepository;
-import example.repositories.imp.UserRepositoryImp;
 import example.services.imp.UserServiceImp;
 import example.validation.CustomValidator;
 import org.junit.jupiter.api.BeforeEach;
@@ -24,7 +23,7 @@ public class UserServiceTests {
 
     @BeforeEach
     public void setUp() {
-        userRepository = mock(UserRepositoryImp.class);
+        userRepository = mock(UserRepository.class);
         customValidator = mock(CustomValidator.class);
 
         userService = new UserServiceImp(userRepository, customValidator);

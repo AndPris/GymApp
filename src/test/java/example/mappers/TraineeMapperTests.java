@@ -37,7 +37,7 @@ class TraineeMapperTests {
         date = new Date();
         trainee = new Trainee("John", "Doe", "123 Main St", date);
 
-        TrainingType trainingType = new TrainingType("Pilates");
+        TrainingType trainingType = new TrainingType(1L, "Pilates");
         trainingType.setId(1L);
 
         Trainer trainer = new Trainer("Jane", "Smith", trainingType);

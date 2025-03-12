@@ -1,35 +1,27 @@
 package example.utils.username.imp;
 
 import example.entities.User;
-import example.repositories.TraineeRepository;
-import example.repositories.TrainerRepository;
+import example.repositories.UserRepository;
 import example.utils.username.UsernameGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.Collection;
+import java.util.List;
 
 
 @Component
 public class SimpleUsernameGenerator implements UsernameGenerator {
-    private TrainerRepository trainerRepository;
-    private TraineeRepository traineeRepository;
+    private UserRepository userRepository;
 
     @Autowired
-    public void setTrainerRepository(TrainerRepository trainerRepository) {
-        this.trainerRepository = trainerRepository;
+    public void setUserRepository(UserRepository userRepository) {
+        this.userRepository = userRepository;
     }
-
-    @Autowired
-    public void setTraineeRepository(TraineeRepository traineeRepository) {
-        this.traineeRepository = traineeRepository;
-    }
-
 
     @Override
     public String generateUsername(User user) {
         String baseUsername = formatUsername(user);
-        int serialNumber = getUsernameSerialNumber(user);
+        int serialNumber = getUsernameSerialNumber(userRepository.findAll(), user);
         return serialNumber == 0 ? baseUsername : baseUsername + serialNumber;
     }
 
@@ -37,21 +29,12 @@ public class SimpleUsernameGenerator implements UsernameGenerator {
         return user.getFirstName() + "." + user.getLastName();
     }
 
-    private int getUsernameSerialNumber(User user) {
-        return Math.max(getUsernameSerialNumber(traineeRepository.findAll(), user),
-                getUsernameSerialNumber(trainerRepository.findAll(), user));
-    }
-
-    private <T extends User> int getUsernameSerialNumber(Collection<T> users, User user) {
+    private int getUsernameSerialNumber(List<User> users, User user) {
         int maxSerial = -1;
 
         for (User currentUser : users) {
-            if (!hasSameFullName(currentUser, user)) {
-                continue;
-            }
-
-            String actualUsername = currentUser.getUsername();
             String expectedUsername = formatUsername(user);
+            String actualUsername = currentUser.getUsername();
 
             if (!actualUsername.startsWith(expectedUsername)) {
                 continue;
@@ -62,12 +45,6 @@ public class SimpleUsernameGenerator implements UsernameGenerator {
         }
 
         return maxSerial + 1;
-    }
-
-    private boolean hasSameFullName(User user1, User user2) {
-        boolean hasSameFirstName = user1.getFirstName().equals(user2.getFirstName());
-        boolean hasSameLastName = user1.getLastName().equals(user2.getLastName());
-        return hasSameFirstName && hasSameLastName;
     }
 
     private int extractSerialNumber(String actualUsername, String expectedUsername) {

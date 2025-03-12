@@ -13,6 +13,7 @@ import example.services.TrainerService;
 import example.utils.password.PasswordGenerator;
 import example.utils.username.UsernameGenerator;
 import example.validation.CustomValidator;
+import jakarta.transaction.Transactional;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -84,8 +85,9 @@ public class TraineeServiceImp implements TraineeService {
     }
 
     @Override
+    @Transactional
     public boolean deleteTraineeByUsername(String username) {
-        return traineeRepository.deleteByUsername(username);
+        return traineeRepository.deleteByUsername(username) != 0;
     }
 
     @Override

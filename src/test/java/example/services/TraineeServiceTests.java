@@ -8,7 +8,6 @@ import example.entities.Training;
 import example.exceptions.TraineeNotFoundException;
 import example.exceptions.TrainerNotFoundException;
 import example.repositories.TraineeRepository;
-import example.repositories.imp.TraineeRepositoryImp;
 import example.services.imp.TraineeServiceImp;
 import example.services.imp.TrainerServiceImp;
 import example.utils.password.PasswordGenerator;
@@ -46,7 +45,7 @@ public class TraineeServiceTests {
         when(usernameGenerator.generateUsername(any())).thenReturn("username");
 
         customValidator = mock(CustomValidator.class);
-        traineeRepository = mock(TraineeRepositoryImp.class);
+        traineeRepository = mock(TraineeRepository.class);
         trainerService = mock(TrainerServiceImp.class);
 
         traineeService = new TraineeServiceImp();
@@ -174,7 +173,7 @@ public class TraineeServiceTests {
 
     @Test
     public void deleteTraineeByUsernameTest_ShouldReturnFalse() {
-        when(traineeRepository.deleteByUsername(any(String.class))).thenReturn(false);
+        when(traineeRepository.deleteByUsername(any(String.class))).thenReturn(0);
 
         boolean result = traineeService.deleteTraineeByUsername("test");
         assertFalse(result);
@@ -182,7 +181,7 @@ public class TraineeServiceTests {
 
     @Test
     public void deleteTraineeByUsernameTest_ShouldReturnTrue() {
-        when(traineeRepository.deleteByUsername(any(String.class))).thenReturn(true);
+        when(traineeRepository.deleteByUsername(any(String.class))).thenReturn(1);
 
         boolean result = traineeService.deleteTraineeByUsername("test");
         assertTrue(result);

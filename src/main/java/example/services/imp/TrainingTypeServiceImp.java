@@ -18,7 +18,7 @@ public class TrainingTypeServiceImp implements TrainingTypeService {
 
     @Override
     public List<TrainingType> findAll() {
-        return trainingTypeRepository.findAll();
+        return (List) trainingTypeRepository.findAll();
     }
 
     @Override
