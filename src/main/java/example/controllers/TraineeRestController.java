@@ -14,6 +14,7 @@ import example.entities.Training;
 import example.mappers.TraineeMapper;
 import example.mappers.TrainerMapper;
 import example.mappers.TrainingMapper;
+import example.services.AuthorizationService;
 import example.services.TraineeService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -38,13 +39,16 @@ public class TraineeRestController {
     private final TraineeMapper traineeMapper;
     private final TrainerMapper trainerMapper;
     private final TrainingMapper trainingMapper;
+    private final AuthorizationService authorizationService;
 
     public TraineeRestController(TraineeService traineeService, TraineeMapper traineeMapper,
-                                 TrainerMapper trainerMapper, TrainingMapper trainingMapper) {
+                                 TrainerMapper trainerMapper, TrainingMapper trainingMapper,
+                                 AuthorizationService authorizationService) {
         this.traineeService = traineeService;
         this.traineeMapper = traineeMapper;
         this.trainerMapper = trainerMapper;
         this.trainingMapper = trainingMapper;
+        this.authorizationService = authorizationService;
     }
 
 
@@ -177,6 +181,7 @@ public class TraineeRestController {
     })
     @DeleteMapping("/{username}")
     public ResponseEntity<?> deleteTraineeByUsername(@PathVariable("username") String username) {
+        authorizationService.authorize(username);
         if (traineeService.deleteTraineeByUsername(username)) {
             return new ResponseEntity<>(HttpStatus.OK);
         }
@@ -199,6 +204,7 @@ public class TraineeRestController {
     })
     @PatchMapping("/{username}/active")
     public ResponseEntity<ActiveStatusDTO> toggleTraineeActiveStatus(@PathVariable("username") String username) {
+        authorizationService.authorize(username);
         Boolean active = traineeService.toggleTraineeIsActiveStatus(username);
         return ResponseEntity.ok(new ActiveStatusDTO(active));
     }
@@ -221,6 +227,7 @@ public class TraineeRestController {
     @PutMapping("/{username}")
     public ResponseEntity<TraineeDTO> updateTrainee(@PathVariable("username") String username,
                                                     @RequestBody TraineeUpdateDTO traineeUpdateDTO) {
+        authorizationService.authorize(username);
         Trainee trainee = traineeService.updateTrainee(username, traineeUpdateDTO);
         TraineeDTO traineeDTO = traineeMapper.traineeToTraineeDTO(trainee);
         return ResponseEntity.ok(traineeDTO);
@@ -244,6 +251,7 @@ public class TraineeRestController {
     @PutMapping("/{username}/trainers")
     public ResponseEntity<List<TrainerSummaryDTO>> updateTraineeTrainerList(@PathVariable("username") String username,
                                                                             @RequestBody TraineeTrainerListUpdateDTO traineeTrainerListUpdateDTO) {
+        authorizationService.authorize(username);
         Optional<Trainee> optionalTrainee = traineeService.getTraineeByUsername(username);
         if (!optionalTrainee.isPresent()) {
             return ResponseEntity.notFound().build();

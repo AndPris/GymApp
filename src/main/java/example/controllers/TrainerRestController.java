@@ -12,6 +12,7 @@ import example.entities.Training;
 import example.exceptions.TrainerNotFoundException;
 import example.mappers.TrainerMapper;
 import example.mappers.TrainingMapper;
+import example.services.AuthorizationService;
 import example.services.TrainerService;
 import example.services.TrainingService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -37,13 +38,16 @@ public class TrainerRestController {
     private final TrainingService trainingService;
     private final TrainerMapper trainerMapper;
     private final TrainingMapper trainingMapper;
+    private final AuthorizationService authorizationService;
 
     public TrainerRestController(TrainerService trainerService, TrainingService trainingService,
-                                 TrainerMapper trainerMapper, TrainingMapper trainingMapper) {
+                                 TrainerMapper trainerMapper, TrainingMapper trainingMapper,
+                                 AuthorizationService authorizationService) {
         this.trainerService = trainerService;
         this.trainingService = trainingService;
         this.trainerMapper = trainerMapper;
         this.trainingMapper = trainingMapper;
+        this.authorizationService = authorizationService;
     }
 
 
@@ -118,6 +122,7 @@ public class TrainerRestController {
     @PostMapping("/{username}/trainings")
     public ResponseEntity<?> createTraining(@PathVariable("username") String username,
                                             @RequestBody TrainingCreateDTO trainingCreateDTO) {
+        authorizationService.authorize(username);
         Training training = trainingMapper.trainingCreateDTOToTraining(trainingCreateDTO);
         Trainer trainer = trainerService.getTrainerByUsername(username)
                 .orElseThrow(() -> new TrainerNotFoundException("There's no trainer with such username: " + username));
@@ -174,6 +179,7 @@ public class TrainerRestController {
     })
     @PatchMapping("/{username}/active")
     public ResponseEntity<ActiveStatusDTO> toggleTrainerActiveStatus(@PathVariable("username") String username) {
+        authorizationService.authorize(username);
         Boolean active = trainerService.toggleTrainerIsActiveStatus(username);
         return ResponseEntity.ok(new ActiveStatusDTO(active));
     }
@@ -196,6 +202,7 @@ public class TrainerRestController {
     @PutMapping("/{username}")
     public ResponseEntity<TrainerDTO> updateTrainer(@PathVariable("username") String username,
                                                     @RequestBody TrainerUpdateDTO trainerUpdateDTO) {
+        authorizationService.authorize(username);
         Trainer trainer = trainerService.updateTrainer(username, trainerUpdateDTO);
         TrainerDTO trainerDTO = trainerMapper.trainerToTrainerDTO(trainer);
         return ResponseEntity.ok(trainerDTO);

@@ -1,9 +1,6 @@
 package example.controllers;
 
-import example.exceptions.IPAddressBlockedException;
-import example.exceptions.TraineeNotFoundException;
-import example.exceptions.TrainerNotFoundException;
-import example.exceptions.TrainingTypeNotFoundException;
+import example.exceptions.*;
 import jakarta.validation.ValidationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -27,5 +24,11 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
     protected ResponseEntity<Object> handleIPAddressBlock(RuntimeException ex, WebRequest webRequest) {
         String body = ex.getMessage();
         return handleExceptionInternal(ex, body, new HttpHeaders(), HttpStatus.SERVICE_UNAVAILABLE, webRequest);
+    }
+
+    @ExceptionHandler(value = {AuthorizationException.class})
+    protected ResponseEntity<Object> handleAuthorizationFail(RuntimeException ex, WebRequest webRequest) {
+        String body = ex.getMessage();
+        return handleExceptionInternal(ex, body, new HttpHeaders(), HttpStatus.FORBIDDEN, webRequest);
     }
 }

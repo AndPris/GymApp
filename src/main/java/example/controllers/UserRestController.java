@@ -1,6 +1,7 @@
 package example.controllers;
 
 import example.dtos.ChangePasswordDTO;
+import example.services.AuthorizationService;
 import example.services.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -14,9 +15,11 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/users")
 public class UserRestController {
     private final UserService userService;
+    private final AuthorizationService authorizationService;
 
-    public UserRestController(UserService userService) {
+    public UserRestController(UserService userService, AuthorizationService authorizationService) {
         this.userService = userService;
+        this.authorizationService = authorizationService;
     }
 
 
@@ -36,6 +39,7 @@ public class UserRestController {
     @PutMapping("/{username}/password")
     public ResponseEntity<?> changeUserPassword(@PathVariable("username") String username,
                                                 @RequestBody ChangePasswordDTO changePasswordDTO) {
+        authorizationService.authorize(username);
         String oldPassword = changePasswordDTO.getOldPassword();
 
         if (!userService.existsUserByUsernameAndPassword(username, oldPassword)) {
