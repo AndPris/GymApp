@@ -1,6 +1,7 @@
 package example.config;
 
 import example.repositories.UserRepository;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -29,8 +30,14 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.POST, "/trainees").permitAll()
                         .requestMatchers(HttpMethod.POST, "/trainers").permitAll()
+                        .requestMatchers("/").permitAll()
                         .anyRequest().authenticated()
-                ).httpBasic(Customizer.withDefaults());
+                ).httpBasic(Customizer.withDefaults())
+                .logout(logout -> logout
+                        .logoutSuccessHandler((request, response, authentication) -> {
+                            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                            response.getWriter().write("Logged out — close and reopen the browser to clear credentials.");
+                        }));
 
         return http.build();
     }
