@@ -92,7 +92,7 @@ class TraineeRestControllerTests {
         when(traineeService.getTraineeByUsername("test")).thenReturn(Optional.of(trainee));
         when(traineeMapper.traineeToTraineeDTO(trainee)).thenReturn(traineeDTO);
 
-        ResponseEntity<TraineeDTO> response = traineeRestController.getTraineeByUsername("test", "test");
+        ResponseEntity<TraineeDTO> response = traineeRestController.getTraineeByUsername("test");
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(traineeDTO, response.getBody());
@@ -102,7 +102,7 @@ class TraineeRestControllerTests {
     void getTraineeByUsername_ShouldReturnNotFoundIfAbsent() {
         when(traineeService.getTraineeByUsername("unknownUser")).thenReturn(Optional.empty());
 
-        ResponseEntity<TraineeDTO> response = traineeRestController.getTraineeByUsername("unknownUser", "test");
+        ResponseEntity<TraineeDTO> response = traineeRestController.getTraineeByUsername("unknownUser");
 
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }
@@ -111,7 +111,7 @@ class TraineeRestControllerTests {
     void deleteTraineeByUsername_ShouldReturnOkIfDeleted() {
         when(traineeService.deleteTraineeByUsername("test")).thenReturn(true);
 
-        ResponseEntity<?> response = traineeRestController.deleteTraineeByUsername("test", "test");
+        ResponseEntity<?> response = traineeRestController.deleteTraineeByUsername("test");
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
     }
@@ -120,7 +120,7 @@ class TraineeRestControllerTests {
     void deleteTraineeByUsername_ShouldReturnNotFoundIfNotDeleted() {
         when(traineeService.deleteTraineeByUsername("test")).thenReturn(false);
 
-        ResponseEntity<?> response = traineeRestController.deleteTraineeByUsername("test", "test");
+        ResponseEntity<?> response = traineeRestController.deleteTraineeByUsername("test");
 
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }
@@ -128,14 +128,13 @@ class TraineeRestControllerTests {
     @Test
     void getTrainersList_returnsTrainers() {
         String username = "test";
-        String authHeader = "test";
         Trainer trainer = new Trainer();
         trainer.setActive(true);
 
         when(traineeService.getTraineeByUsername(username)).thenReturn(Optional.of(new Trainee()));
         when(traineeService.findTraineeTrainers(any(String.class), any(Boolean.class), any(Boolean.class))).thenReturn(Arrays.asList(trainer));
 
-        ResponseEntity<List<TrainerSummaryDTO>> response = traineeRestController.getTrainersList(username, true, true, authHeader);
+        ResponseEntity<List<TrainerSummaryDTO>> response = traineeRestController.getTrainersList(username, true, true);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(1, response.getBody().size());
@@ -144,11 +143,10 @@ class TraineeRestControllerTests {
     @Test
     void getTrainersList_returnsNotFound() {
         String username = "test";
-        String authHeader = "test";
 
         when(traineeService.getTraineeByUsername(username)).thenReturn(Optional.empty());
 
-        ResponseEntity<?> response = traineeRestController.getTrainersList(any(String.class), true, true, authHeader);
+        ResponseEntity<?> response = traineeRestController.getTrainersList(any(String.class), true, true);
 
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }
@@ -156,11 +154,10 @@ class TraineeRestControllerTests {
     @Test
     void getTrainingsList_returnsNotFound() {
         String username = "test";
-        String authHeader = "test";
 
         when(traineeService.getTraineeByUsername(any(String.class))).thenReturn(Optional.empty());
 
-        ResponseEntity<?> response = traineeRestController.getTrainingsList(username, null, null, null, null, null, authHeader);
+        ResponseEntity<?> response = traineeRestController.getTrainingsList(username, null, null, null, null, null);
 
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }
@@ -168,14 +165,13 @@ class TraineeRestControllerTests {
     @Test
     void getTrainingsList_returnsTrainingList() {
         String username = "test";
-        String authHeader = "test";
         Training training = new Training();
 
         when(traineeService.getTraineeByUsername(username)).thenReturn(Optional.of(new Trainee()));
         when(traineeService.findTraineeTrainingList(eq(username), any(), any(), any(), any(), any())).thenReturn(Arrays.asList(training));
         when(trainingMapper.trainingToTrainingTraineeDTO(training)).thenReturn(new TrainingTraineeDTO());
 
-        ResponseEntity<List<TrainingTraineeDTO>> response = traineeRestController.getTrainingsList(username, null, null, null, null, null, authHeader);
+        ResponseEntity<List<TrainingTraineeDTO>> response = traineeRestController.getTrainingsList(username, null, null, null, null, null);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(1, response.getBody().size());
@@ -184,11 +180,10 @@ class TraineeRestControllerTests {
     @Test
     void toggleTraineeActiveStatus_updatesStatus() {
         String username = "test";
-        String authHeader = "test";
 
         when(traineeService.toggleTraineeIsActiveStatus(username)).thenReturn(true);
 
-        ResponseEntity<?> response = traineeRestController.toggleTraineeActiveStatus(username, authHeader);
+        ResponseEntity<?> response = traineeRestController.toggleTraineeActiveStatus(username);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertTrue(((ActiveStatusDTO) response.getBody()).getActive());
@@ -197,7 +192,6 @@ class TraineeRestControllerTests {
     @Test
     void updateTrainee_updatesTraineeDetails() {
         String username = "test";
-        String authHeader = "test";
         TraineeUpdateDTO updateDTO = new TraineeUpdateDTO();
         Trainee trainee = new Trainee();
         TraineeDTO traineeDTO = new TraineeDTO();
@@ -205,7 +199,7 @@ class TraineeRestControllerTests {
         when(traineeService.updateTrainee(username, updateDTO)).thenReturn(trainee);
         when(traineeMapper.traineeToTraineeDTO(trainee)).thenReturn(traineeDTO);
 
-        ResponseEntity<TraineeDTO> response = traineeRestController.updateTrainee(username, updateDTO, authHeader);
+        ResponseEntity<TraineeDTO> response = traineeRestController.updateTrainee(username, updateDTO);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(traineeDTO, response.getBody());
@@ -214,11 +208,10 @@ class TraineeRestControllerTests {
     @Test
     void updateTraineeTrainerList_ShouldReturnNotFound() {
         String username = "test";
-        String authHeader = "test";
 
         when(traineeService.getTraineeByUsername(username)).thenReturn(Optional.empty());
 
-        ResponseEntity<?> response = traineeRestController.updateTraineeTrainerList(username, null, authHeader);
+        ResponseEntity<?> response = traineeRestController.updateTraineeTrainerList(username, null);
 
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }
@@ -226,7 +219,6 @@ class TraineeRestControllerTests {
     @Test
     void updateTraineeTrainerList_updatesTrainerList() {
         String username = "test";
-        String authHeader = "test";
         TraineeTrainerListUpdateDTO updateDTO = new TraineeTrainerListUpdateDTO();
         Trainer trainer = new Trainer();
 
@@ -234,7 +226,7 @@ class TraineeRestControllerTests {
         when(traineeService.updateTraineeTrainerList(username, updateDTO)).thenReturn(Arrays.asList(trainer));
         when(trainerMapper.trainerToTrainerSummaryDTO(trainer)).thenReturn(new TrainerSummaryDTO());
 
-        ResponseEntity<List<TrainerSummaryDTO>> response = traineeRestController.updateTraineeTrainerList(username, updateDTO, authHeader);
+        ResponseEntity<List<TrainerSummaryDTO>> response = traineeRestController.updateTraineeTrainerList(username, updateDTO);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(1, response.getBody().size());

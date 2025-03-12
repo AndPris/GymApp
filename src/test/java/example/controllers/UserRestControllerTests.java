@@ -31,7 +31,6 @@ public class UserRestControllerTests {
         String username = "test";
         String oldPassword = "oldPass";
         String newPassword = "newPass";
-        String authHeader = "test";
 
         ChangePasswordDTO changePasswordDTO = new ChangePasswordDTO();
         changePasswordDTO.setOldPassword(oldPassword);
@@ -39,7 +38,7 @@ public class UserRestControllerTests {
 
         when(userService.existsUserByUsernameAndPassword(username, oldPassword)).thenReturn(true);
 
-        ResponseEntity<?> response = userRestController.changeUserPassword(username, changePasswordDTO, authHeader);
+        ResponseEntity<?> response = userRestController.changeUserPassword(username, changePasswordDTO);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
     }
@@ -49,7 +48,6 @@ public class UserRestControllerTests {
         String username = "test";
         String oldPassword = "wrongPass";
         String newPassword = "newPass";
-        String authHeader = "test";
 
         ChangePasswordDTO changePasswordDTO = new ChangePasswordDTO();
         changePasswordDTO.setOldPassword(oldPassword);
@@ -57,7 +55,7 @@ public class UserRestControllerTests {
 
         when(userService.existsUserByUsernameAndPassword(username, oldPassword)).thenReturn(false);
 
-        ResponseEntity<?> response = userRestController.changeUserPassword(username, changePasswordDTO, authHeader);
+        ResponseEntity<?> response = userRestController.changeUserPassword(username, changePasswordDTO);
 
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
         verify(userService, never()).changeUserPassword(anyString(), anyString(), anyString());

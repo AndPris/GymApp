@@ -12,8 +12,6 @@ import example.entities.Training;
 import example.exceptions.TrainerNotFoundException;
 import example.mappers.TrainerMapper;
 import example.mappers.TrainingMapper;
-import example.security.annotations.Authenticated;
-import example.security.annotations.Authorized;
 import example.services.TrainerService;
 import example.services.TrainingService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -94,10 +92,8 @@ public class TrainerRestController {
             @ApiResponse(responseCode = "404", description = "Trainer not found",
                     content = @Content)
     })
-    @Authenticated
     @GetMapping("/{username}")
-    public ResponseEntity<TrainerDTO> getTrainerByUsername(@PathVariable("username") String username,
-                                                           @RequestHeader(value = "Authorization") String authHeader) {
+    public ResponseEntity<TrainerDTO> getTrainerByUsername(@PathVariable("username") String username) {
         Optional<Trainer> optionalTrainer = trainerService.getTrainerByUsername(username);
         if (!optionalTrainer.isPresent()) {
             return ResponseEntity.notFound().build();
@@ -119,12 +115,9 @@ public class TrainerRestController {
             @ApiResponse(responseCode = "422", description = "Invalid request body",
                     content = @Content)
     })
-    @Authenticated
-    @Authorized
     @PostMapping("/{username}/trainings")
     public ResponseEntity<?> createTraining(@PathVariable("username") String username,
-                                            @RequestBody TrainingCreateDTO trainingCreateDTO,
-                                            @RequestHeader(value = "Authorization") String authHeader) {
+                                            @RequestBody TrainingCreateDTO trainingCreateDTO) {
         Training training = trainingMapper.trainingCreateDTOToTraining(trainingCreateDTO);
         Trainer trainer = trainerService.getTrainerByUsername(username)
                 .orElseThrow(() -> new TrainerNotFoundException("There's no trainer with such username: " + username));
@@ -145,15 +138,13 @@ public class TrainerRestController {
             @ApiResponse(responseCode = "404", description = "No trainer with such username",
                     content = @Content)
     })
-    @Authenticated
     @GetMapping("/{username}/trainings")
     public ResponseEntity<List<TrainingTrainerDTO>> getTrainingsList(
             @PathVariable("username") String username,
             @RequestParam(name = "from", required = false) @DateTimeFormat(pattern = "dd.MM.yyyy") Date from,
             @RequestParam(name = "to", required = false) @DateTimeFormat(pattern = "dd.MM.yyyy") Date to,
             @RequestParam(name = "traineeFirstName", required = false) String traineeFirstName,
-            @RequestParam(name = "traineeLastName", required = false) String traineeLastName,
-            @RequestHeader(value = "Authorization") String authHeader) {
+            @RequestParam(name = "traineeLastName", required = false) String traineeLastName) {
 
         if (!trainerService.getTrainerByUsername(username).isPresent()) {
             return ResponseEntity.notFound().build();
@@ -181,11 +172,8 @@ public class TrainerRestController {
             @ApiResponse(responseCode = "404", description = "No trainer with such username",
                     content = @Content)
     })
-    @Authenticated
-    @Authorized
     @PatchMapping("/{username}/active")
-    public ResponseEntity<ActiveStatusDTO> toggleTrainerActiveStatus(@PathVariable("username") String username,
-                                                                     @RequestHeader(value = "Authorization") String authHeader) {
+    public ResponseEntity<ActiveStatusDTO> toggleTrainerActiveStatus(@PathVariable("username") String username) {
         Boolean active = trainerService.toggleTrainerIsActiveStatus(username);
         return ResponseEntity.ok(new ActiveStatusDTO(active));
     }
@@ -205,12 +193,9 @@ public class TrainerRestController {
             @ApiResponse(responseCode = "422", description = "Invalid request body",
                     content = @Content)
     })
-    @Authenticated
-    @Authorized
     @PutMapping("/{username}")
     public ResponseEntity<TrainerDTO> updateTrainer(@PathVariable("username") String username,
-                                                    @RequestBody TrainerUpdateDTO trainerUpdateDTO,
-                                                    @RequestHeader(value = "Authorization") String authHeader) {
+                                                    @RequestBody TrainerUpdateDTO trainerUpdateDTO) {
         Trainer trainer = trainerService.updateTrainer(username, trainerUpdateDTO);
         TrainerDTO trainerDTO = trainerMapper.trainerToTrainerDTO(trainer);
         return ResponseEntity.ok(trainerDTO);

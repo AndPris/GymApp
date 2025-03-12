@@ -85,12 +85,11 @@ public class TrainerRestControllerTests {
         String username = "test";
         Trainer trainer = new Trainer();
         TrainerDTO trainerDTO = new TrainerDTO();
-        String authHeader = "test";
 
         when(trainerService.getTrainerByUsername(username)).thenReturn(Optional.of(trainer));
         when(trainerMapper.trainerToTrainerDTO(trainer)).thenReturn(trainerDTO);
 
-        ResponseEntity<TrainerDTO> response = trainerRestController.getTrainerByUsername(username, authHeader);
+        ResponseEntity<TrainerDTO> response = trainerRestController.getTrainerByUsername(username);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(trainerDTO, response.getBody());
@@ -99,11 +98,10 @@ public class TrainerRestControllerTests {
     @Test
     void getTrainerByUsername_ShouldReturnNotFound() {
         String username = "test";
-        String authHeader = "test";
 
         when(trainerService.getTrainerByUsername(username)).thenReturn(Optional.empty());
 
-        ResponseEntity<TrainerDTO> response = trainerRestController.getTrainerByUsername(username, authHeader);
+        ResponseEntity<TrainerDTO> response = trainerRestController.getTrainerByUsername(username);
 
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }
@@ -111,7 +109,6 @@ public class TrainerRestControllerTests {
     @Test
     void createTraining_ShouldReturnCreatedStatus() {
         String username = "test";
-        String authHeader = "test";
         TrainingCreateDTO trainingCreateDTO = new TrainingCreateDTO();
         Trainer trainer = new Trainer();
         Training training = new Training();
@@ -119,7 +116,7 @@ public class TrainerRestControllerTests {
         when(trainerService.getTrainerByUsername(username)).thenReturn(Optional.of(trainer));
         when(trainingMapper.trainingCreateDTOToTraining(trainingCreateDTO)).thenReturn(training);
 
-        ResponseEntity<?> response = trainerRestController.createTraining(username, trainingCreateDTO, authHeader);
+        ResponseEntity<?> response = trainerRestController.createTraining(username, trainingCreateDTO);
 
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
     }
@@ -127,13 +124,12 @@ public class TrainerRestControllerTests {
     @Test
     void createTraining_ShouldThrowTrainerNotFoundException() {
         String username = "test";
-        String authHeader = "test";
         TrainingCreateDTO trainingCreateDTO = new TrainingCreateDTO();
 
         when(trainerService.getTrainerByUsername(username)).thenReturn(Optional.empty());
 
         TrainerNotFoundException e = assertThrows(TrainerNotFoundException.class, () -> {
-            trainerRestController.createTraining(username, trainingCreateDTO, authHeader);
+            trainerRestController.createTraining(username, trainingCreateDTO);
         });
         assertEquals("There's no trainer with such username: test", e.getMessage());
     }
@@ -141,14 +137,13 @@ public class TrainerRestControllerTests {
     @Test
     void getTrainingsList_ShouldReturnTrainingList() {
         String username = "test";
-        String authHeader = "test";
         List<Training> trainings = Arrays.asList(new Training(), new Training());
 
         when(trainerService.getTrainerByUsername(username)).thenReturn(Optional.of(new Trainer()));
         when(trainerService.findTrainerTrainingList(eq(username), any(), any(), any(), any())).thenReturn(trainings);
         when(trainingMapper.trainingToTrainingTrainerDTO(any(Training.class))).thenReturn(new TrainingTrainerDTO());
 
-        ResponseEntity<List<TrainingTrainerDTO>> response = trainerRestController.getTrainingsList(username, null, null, null, null, authHeader);
+        ResponseEntity<List<TrainingTrainerDTO>> response = trainerRestController.getTrainingsList(username, null, null, null, null);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(trainings.size(), response.getBody().size());
@@ -157,11 +152,10 @@ public class TrainerRestControllerTests {
     @Test
     void getTrainingsList_ShouldReturnNotFound() {
         String username = "test";
-        String authHeader = "test";
 
         when(trainerService.getTrainerByUsername(username)).thenReturn(Optional.empty());
 
-        ResponseEntity<?> response = trainerRestController.getTrainingsList(username, null, null, null, null, authHeader);
+        ResponseEntity<?> response = trainerRestController.getTrainingsList(username, null, null, null, null);
 
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }
@@ -169,12 +163,11 @@ public class TrainerRestControllerTests {
     @Test
     void toggleTrainerActiveStatus_ShouldReturnActiveStatus() {
         String username = "test";
-        String authHeader = "test";
         boolean active = true;
 
         when(trainerService.toggleTrainerIsActiveStatus(username)).thenReturn(active);
 
-        ResponseEntity<?> response = trainerRestController.toggleTrainerActiveStatus(username, authHeader);
+        ResponseEntity<?> response = trainerRestController.toggleTrainerActiveStatus(username);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertTrue(((ActiveStatusDTO) response.getBody()).getActive());
@@ -183,7 +176,6 @@ public class TrainerRestControllerTests {
     @Test
     void updateTrainer_ShouldReturnTrainerDTO() {
         String username = "test";
-        String authHeader = "test";
         TrainerUpdateDTO trainerUpdateDTO = new TrainerUpdateDTO();
         Trainer trainer = new Trainer();
         TrainerDTO trainerDTO = new TrainerDTO();
@@ -191,7 +183,7 @@ public class TrainerRestControllerTests {
         when(trainerService.updateTrainer(username, trainerUpdateDTO)).thenReturn(trainer);
         when(trainerMapper.trainerToTrainerDTO(trainer)).thenReturn(trainerDTO);
 
-        ResponseEntity<TrainerDTO> response = trainerRestController.updateTrainer(username, trainerUpdateDTO, authHeader);
+        ResponseEntity<TrainerDTO> response = trainerRestController.updateTrainer(username, trainerUpdateDTO);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(trainerDTO, response.getBody());

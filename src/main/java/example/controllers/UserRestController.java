@@ -1,8 +1,6 @@
 package example.controllers;
 
 import example.dtos.ChangePasswordDTO;
-import example.security.annotations.Authenticated;
-import example.security.annotations.Authorized;
 import example.services.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -35,12 +33,9 @@ public class UserRestController {
             @ApiResponse(responseCode = "422", description = "Invalid request body",
                     content = @Content)
     })
-    @Authenticated
-    @Authorized
     @PutMapping("/{username}/password")
     public ResponseEntity<?> changeUserPassword(@PathVariable("username") String username,
-                                                @RequestBody ChangePasswordDTO changePasswordDTO,
-                                                @RequestHeader(value = "Authorization") String authHeader) {
+                                                @RequestBody ChangePasswordDTO changePasswordDTO) {
         String oldPassword = changePasswordDTO.getOldPassword();
 
         if (!userService.existsUserByUsernameAndPassword(username, oldPassword)) {
