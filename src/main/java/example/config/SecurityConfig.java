@@ -1,7 +1,7 @@
 package example.config;
 
-import example.security.jwt.JwtTokenFilter;
 import example.repositories.UserRepository;
+import example.security.jwt.JwtTokenFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -82,7 +82,7 @@ public class SecurityConfig {
     @Bean
     public UserDetailsService userDetailsService(UserRepository userRepository) {
         return username ->
-            userRepository.findByUsername(username)
-                    .orElseThrow(() -> new UsernameNotFoundException("There's no user with such username: " + username));
+                userRepository.findByUsername(username)
+                        .orElseThrow(() -> new UsernameNotFoundException("There's no user with such username: " + username));
     }
 }

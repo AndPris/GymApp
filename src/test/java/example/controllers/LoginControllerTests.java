@@ -1,11 +1,11 @@
 package example.controllers;
 
 import example.dtos.CredentialsDTO;
-import example.exceptions.IPAddressBlockedException;
-import example.security.LoginAttemptService;
-import example.security.BlacklistService;
-import example.security.jwt.JwtTokenUtil;
 import example.entities.User;
+import example.exceptions.IPAddressBlockedException;
+import example.security.BlacklistService;
+import example.security.LoginAttemptService;
+import example.security.jwt.JwtTokenUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.junit.jupiter.api.BeforeEach;

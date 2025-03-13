@@ -3,9 +3,9 @@ package example.controllers;
 import example.dtos.CredentialsDTO;
 import example.entities.User;
 import example.exceptions.IPAddressBlockedException;
+import example.security.BlacklistService;
 import example.security.LoginAttemptService;
 import example.security.jwt.JwtTokenUtil;
-import example.security.BlacklistService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -58,7 +58,7 @@ public class LoginController {
     })
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody CredentialsDTO credentialsDTO) {
-        if(loginAttemptService.isBlocked()) {
+        if (loginAttemptService.isBlocked()) {
             throw new IPAddressBlockedException("Try to login later, please");
         }
 
@@ -94,7 +94,7 @@ public class LoginController {
     @PostMapping("/jwt-logout")
     public ResponseEntity<String> logout(@RequestHeader("Authorization") String token, Authentication authentication,
                                          HttpServletRequest request, HttpServletResponse response) {
-        if(token == null || token.isBlank() || !token.startsWith("Bearer ")) {
+        if (token == null || token.isBlank() || !token.startsWith("Bearer ")) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid authorization header");
         }
 

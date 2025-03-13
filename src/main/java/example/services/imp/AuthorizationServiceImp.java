@@ -11,7 +11,7 @@ public class AuthorizationServiceImp implements AuthorizationService {
     @Override
     public void authorize(String username) {
         String authenticatedUsername = SecurityContextHolder.getContext().getAuthentication().getName();
-        if(!username.equals(authenticatedUsername)) {
+        if (!username.equals(authenticatedUsername)) {
             throw new AuthorizationException("You are not allowed to perform this operation!");
         }
     }

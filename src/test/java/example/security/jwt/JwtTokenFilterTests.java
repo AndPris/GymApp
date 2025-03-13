@@ -18,7 +18,8 @@ import org.springframework.http.HttpHeaders;
 import java.io.IOException;
 import java.util.Optional;
 
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 class JwtTokenFilterTests {
 
