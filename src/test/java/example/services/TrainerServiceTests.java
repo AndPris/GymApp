@@ -15,6 +15,7 @@ import example.utils.username.imp.SimpleUsernameGenerator;
 import example.validation.CustomValidator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -33,6 +34,7 @@ public class TrainerServiceTests {
     private TrainerServiceImp trainerService;
     private CustomValidator customValidator;
     private TrainingTypeService trainingTypeService;
+    private PasswordEncoder passwordEncoder;
 
     @BeforeEach
     public void init() {
@@ -41,6 +43,9 @@ public class TrainerServiceTests {
 
         usernameGenerator = mock(SimpleUsernameGenerator.class);
         when(usernameGenerator.generateUsername(any())).thenReturn("username");
+
+        passwordEncoder = mock(PasswordEncoder.class);
+        when(passwordEncoder.encode("password")).thenReturn("encoded");
 
         trainerRepository = mock(TrainerRepository.class);
         customValidator = mock(CustomValidator.class);
@@ -52,6 +57,7 @@ public class TrainerServiceTests {
         trainerService.setPasswordGenerator(passwordGenerator);
         trainerService.setUsernameGenerator(usernameGenerator);
         trainerService.setTrainingTypeService(trainingTypeService);
+        trainerService.setPasswordEncoder(passwordEncoder);
     }
 
     @Test

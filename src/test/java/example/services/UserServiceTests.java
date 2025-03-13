@@ -33,21 +33,48 @@ public class UserServiceTests {
     }
 
     @Test
+    public void existsUserByUsernameAndPasswordTest_ShouldThrow() {
+        when(userRepository.findByUsername(any(String.class))).thenReturn(Optional.empty());
+        Exception ex = assertThrows(UserNotFoundException.class,
+                () -> userService.existsUserByUsernameAndPassword("test", "test"));
+        assertEquals(ex.getMessage(), "There's no user with such username");
+    }
+
+    @Test
     public void existsUserByUsernameAndPasswordTest_ShouldReturnFalse() {
-        when(userRepository.findByUsernameAndPassword(any(String.class), any(String.class))).thenReturn(Optional.empty());
+        User user = new Trainee();
+        when(userRepository.findByUsername(any(String.class))).thenReturn(Optional.of(user));
+        when(passwordEncoder.matches(any(String.class), any(String.class))).thenReturn(false);
+
         assertFalse(userService.existsUserByUsernameAndPassword("test", "test"));
     }
 
     @Test
     public void existsUserByUsernameAndPasswordTest_ShouldReturnTrue() {
         User user = new Trainee();
-        when(userRepository.findByUsernameAndPassword(any(String.class), any(String.class))).thenReturn(Optional.of(user));
+        user.setPassword("test")
+        ;
+        when(userRepository.findByUsername(any(String.class))).thenReturn(Optional.of(user));
+        when(passwordEncoder.matches(any(String.class), any(String.class))).thenReturn(true);
+
         assertTrue(userService.existsUserByUsernameAndPassword("test", "test"));
     }
 
     @Test
-    public void changeUserPassword_ShouldThrowUserNotFoundException() {
-        when(userRepository.findByUsernameAndPassword(any(String.class), any(String.class))).thenReturn(Optional.empty());
+    public void changeUserPassword_ShouldThrowUserNotFoundException1() {
+        when(userRepository.findByUsername(any(String.class))).thenReturn(Optional.empty());
+
+        Exception e = assertThrows(UserNotFoundException.class,
+                () -> userService.changeUserPassword("1", "1", "1"));
+        assertEquals("There's no user with such username and password", e.getMessage());
+    }
+
+    @Test
+    public void changeUserPassword_ShouldThrowUserNotFoundException2() {
+        User user = new Trainee();
+        user.setPassword("test");
+        when(userRepository.findByUsername(any(String.class))).thenReturn(Optional.of(user));
+        when(passwordEncoder.matches(any(String.class), any(String.class))).thenReturn(false);
 
         Exception e = assertThrows(UserNotFoundException.class,
                 () -> userService.changeUserPassword("1", "1", "1"));
@@ -59,9 +86,12 @@ public class UserServiceTests {
         User user = new Trainee();
         user.setUsername("username");
         user.setPassword("password");
-        when(userRepository.findByUsernameAndPassword(any(String.class), any(String.class))).thenReturn(Optional.of(user));
+
+        when(userRepository.findByUsername(any(String.class))).thenReturn(Optional.of(user));
+        when(passwordEncoder.matches(any(String.class), any(String.class))).thenReturn(true);
+        when(passwordEncoder.encode("newPass")).thenReturn("encoded");
 
         userService.changeUserPassword("username", "password", "newPass");
-        assertEquals("newPass", user.getPassword());
+        assertEquals("encoded", user.getPassword());
     }
 }

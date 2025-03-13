@@ -14,6 +14,7 @@ import example.entities.Training;
 import example.mappers.TraineeMapper;
 import example.mappers.TrainerMapper;
 import example.mappers.TrainingMapper;
+import example.services.AuthorizationService;
 import example.services.TraineeService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -47,6 +48,9 @@ class TraineeRestControllerTests {
 
     @Mock
     private TrainingMapper trainingMapper;
+
+    @Mock
+    private AuthorizationService authorizationService;
 
     @BeforeEach
     void setUp() {

@@ -12,6 +12,7 @@ import example.entities.Training;
 import example.exceptions.TrainerNotFoundException;
 import example.mappers.TrainerMapper;
 import example.mappers.TrainingMapper;
+import example.services.AuthorizationService;
 import example.services.TrainerService;
 import example.services.TrainingService;
 import org.junit.jupiter.api.BeforeEach;
@@ -45,6 +46,9 @@ public class TrainerRestControllerTests {
 
     @Mock
     private TrainingMapper trainingMapper;
+
+    @Mock
+    private AuthorizationService authorizationService;
 
     @BeforeEach
     void setUp() {

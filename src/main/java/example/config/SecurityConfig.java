@@ -19,7 +19,6 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import java.util.Arrays;
 import java.util.List;
 
 @Configuration
@@ -30,9 +29,7 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
-    /*
-        To test: run curl -X GET http://localhost:8080/ -H "Origin: http://localhost:3000"
-     */
+    // To test: run curl -X GET http://localhost:8080/ -H "Origin: http://localhost:3000"
     @Bean
     public UrlBasedCorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();

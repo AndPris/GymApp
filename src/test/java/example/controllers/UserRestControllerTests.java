@@ -1,6 +1,7 @@
 package example.controllers;
 
 import example.dtos.ChangePasswordDTO;
+import example.services.AuthorizationService;
 import example.services.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,6 +21,9 @@ public class UserRestControllerTests {
 
     @Mock
     private UserService userService;
+
+    @Mock
+    private AuthorizationService authorizationService;
 
     @BeforeEach
     void setUp() {
