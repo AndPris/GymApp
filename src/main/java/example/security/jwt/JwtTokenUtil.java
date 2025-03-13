@@ -32,10 +32,6 @@ public class JwtTokenUtil {
         }
     }
 
-    private Jws<Claims> parseToken(String token) {
-        return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token);
-    }
-
     public String getUsername(String token) {
         Jws<Claims> jws;
 
@@ -45,6 +41,22 @@ public class JwtTokenUtil {
         } catch (JwtException e) {
             return null;
         }
+    }
+
+    public boolean isTokenExpired(String token) {
+        Jws<Claims> jws;
+
+        try {
+            jws = parseToken(token);
+            Date expiration = jws.getPayload().getExpiration();
+            return expiration.before(new Date());
+        } catch (Exception e) {
+            return true;
+        }
+    }
+
+    private Jws<Claims> parseToken(String token) {
+        return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token);
     }
 
     public String generateAccessToken(User user, long expirationTimeInMs) {

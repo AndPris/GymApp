@@ -1,7 +1,7 @@
 package example.security.jwt;
 
 import example.repositories.UserRepository;
-import example.security.LoginAttemptService;
+import example.security.BlacklistService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -21,13 +21,13 @@ import java.util.List;
 public class JwtTokenFilter extends OncePerRequestFilter {
     private final JwtTokenUtil jwtTokenUtil;
     private final UserRepository userRepository;
-    private final LoginAttemptService loginAttemptService;
+    private final BlacklistService blacklistService;
 
     public JwtTokenFilter(JwtTokenUtil jwtTokenUtil, UserRepository userRepository,
-                          LoginAttemptService loginAttemptService) {
+                          BlacklistService blacklistService) {
         this.jwtTokenUtil = jwtTokenUtil;
         this.userRepository = userRepository;
-        this.loginAttemptService = loginAttemptService;
+        this.blacklistService = blacklistService;
     }
 
     @Override
@@ -39,7 +39,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
         }
 
         final String token = header.split(" ")[1].trim();
-        if (!jwtTokenUtil.validate(token)) {
+        if (!jwtTokenUtil.validate(token) || blacklistService.isTokenBlacklisted(token)) {
             filterChain.doFilter(request, response);
             return;
         }
