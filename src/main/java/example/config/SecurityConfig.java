@@ -1,9 +1,7 @@
 package example.config;
 
 import example.security.jwt.JwtTokenFilter;
-import example.exceptions.IPAddressBlockedException;
 import example.repositories.UserRepository;
-import example.security.LoginAttemptService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -67,32 +65,23 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/swagger-ui/**").permitAll()
+                        .requestMatchers("/v3/api-docs/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/trainees").permitAll()
                         .requestMatchers(HttpMethod.POST, "/trainers").permitAll()
                         .requestMatchers(HttpMethod.POST, "/login").permitAll()
                         .requestMatchers("/").permitAll()
                         .anyRequest().authenticated()
                 )
-//                .logout(logout -> logout
-//                        .logoutSuccessHandler((request, response, authentication) -> {
-//                            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-//                            response.getWriter().write("Logged out — close and reopen the browser to clear credentials.");
-//                        }))
                 .addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
 
     @Bean
-    public UserDetailsService userDetailsService(LoginAttemptService loginAttemptService, UserRepository userRepository) {
-        return username -> {
-            System.out.println("In user detail service");
-            if(loginAttemptService.isBlocked()) {
-                throw new IPAddressBlockedException("Try to login later, please");
-            }
-
-            return userRepository.findByUsername(username)
+    public UserDetailsService userDetailsService(UserRepository userRepository) {
+        return username ->
+            userRepository.findByUsername(username)
                     .orElseThrow(() -> new UsernameNotFoundException("There's no user with such username: " + username));
-        };
     }
 }

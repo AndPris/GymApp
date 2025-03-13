@@ -21,7 +21,9 @@ public class LoginAttemptService {
     @Autowired
     private HttpServletRequest request;
 
-    public void loginFailed(String key) {
+    public void loginFailed() {
+        String key = getClientIP();
+
         int attempts = attemptsCache.getOrDefault(key, 0);
         ++attempts;
         attemptsCache.put(key, attempts);
@@ -32,7 +34,6 @@ public class LoginAttemptService {
 
     public boolean isBlocked() {
         String key = getClientIP();
-
         if (!lockCache.containsKey(key)) {
             return false;
         }

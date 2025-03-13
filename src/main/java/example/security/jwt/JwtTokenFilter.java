@@ -1,6 +1,5 @@
 package example.security.jwt;
 
-import example.exceptions.IPAddressBlockedException;
 import example.repositories.UserRepository;
 import example.security.LoginAttemptService;
 import jakarta.servlet.FilterChain;
@@ -33,10 +32,6 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        if(loginAttemptService.isBlocked()) {
-                throw new IPAddressBlockedException("Try to login later, please");
-            }
-
         final String header = request.getHeader(HttpHeaders.AUTHORIZATION);
         if(header == null || header.isBlank() || !header.startsWith("Bearer ")) {
             filterChain.doFilter(request, response);
