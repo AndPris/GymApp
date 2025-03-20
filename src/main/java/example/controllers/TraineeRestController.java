@@ -14,8 +14,7 @@ import example.entities.Training;
 import example.mappers.TraineeMapper;
 import example.mappers.TrainerMapper;
 import example.mappers.TrainingMapper;
-import example.security.annotations.Authenticated;
-import example.security.annotations.Authorized;
+import example.services.AuthorizationService;
 import example.services.TraineeService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -40,13 +39,16 @@ public class TraineeRestController {
     private final TraineeMapper traineeMapper;
     private final TrainerMapper trainerMapper;
     private final TrainingMapper trainingMapper;
+    private final AuthorizationService authorizationService;
 
     public TraineeRestController(TraineeService traineeService, TraineeMapper traineeMapper,
-                                 TrainerMapper trainerMapper, TrainingMapper trainingMapper) {
+                                 TrainerMapper trainerMapper, TrainingMapper trainingMapper,
+                                 AuthorizationService authorizationService) {
         this.traineeService = traineeService;
         this.traineeMapper = traineeMapper;
         this.trainerMapper = trainerMapper;
         this.trainingMapper = trainingMapper;
+        this.authorizationService = authorizationService;
     }
 
 
@@ -93,10 +95,8 @@ public class TraineeRestController {
             @ApiResponse(responseCode = "404", description = "Trainee not found",
                     content = @Content)
     })
-    @Authenticated
     @GetMapping("/{username}")
-    public ResponseEntity<TraineeDTO> getTraineeByUsername(@PathVariable("username") String username,
-                                                           @RequestHeader(value = "Authorization") String authHeader) {
+    public ResponseEntity<TraineeDTO> getTraineeByUsername(@PathVariable("username") String username) {
         Optional<Trainee> optionalTrainee = traineeService.getTraineeByUsername(username);
         if (!optionalTrainee.isPresent()) {
             return ResponseEntity.notFound().build();
@@ -117,12 +117,10 @@ public class TraineeRestController {
             @ApiResponse(responseCode = "404", description = "No trainee with such username",
                     content = @Content)
     })
-    @Authenticated
     @GetMapping("/{username}/trainers")
     public ResponseEntity<List<TrainerSummaryDTO>> getTrainersList(@PathVariable("username") String username,
                                                                    @RequestParam(defaultValue = "false", name = "assigned") Boolean assigned,
-                                                                   @RequestParam(defaultValue = "true", name = "active") Boolean active,
-                                                                   @RequestHeader(value = "Authorization") String authHeader) {
+                                                                   @RequestParam(defaultValue = "true", name = "active") Boolean active) {
         Optional<Trainee> optionalTrainee = traineeService.getTraineeByUsername(username);
         if (!optionalTrainee.isPresent()) {
             return ResponseEntity.notFound().build();
@@ -147,7 +145,6 @@ public class TraineeRestController {
             @ApiResponse(responseCode = "404", description = "No trainee with such username",
                     content = @Content)
     })
-    @Authenticated
     @GetMapping("/{username}/trainings")
     public ResponseEntity<List<TrainingTraineeDTO>> getTrainingsList(
             @PathVariable("username") String username,
@@ -155,8 +152,7 @@ public class TraineeRestController {
             @RequestParam(name = "to", required = false) @DateTimeFormat(pattern = "dd.MM.yyyy") Date to,
             @RequestParam(name = "trainerFirstName", required = false) String trainerFirstName,
             @RequestParam(name = "trainerLastName", required = false) String trainerLastName,
-            @RequestParam(name = "trainingType", required = false) Long trainingType,
-            @RequestHeader(value = "Authorization") String authHeader) {
+            @RequestParam(name = "trainingType", required = false) Long trainingType) {
 
         if (!traineeService.getTraineeByUsername(username).isPresent()) {
             return ResponseEntity.notFound().build();
@@ -183,11 +179,9 @@ public class TraineeRestController {
             @ApiResponse(responseCode = "404", description = "No trainee with such username",
                     content = @Content)
     })
-    @Authenticated
-    @Authorized
     @DeleteMapping("/{username}")
-    public ResponseEntity<?> deleteTraineeByUsername(@PathVariable("username") String username,
-                                                     @RequestHeader(value = "Authorization") String authHeader) {
+    public ResponseEntity<?> deleteTraineeByUsername(@PathVariable("username") String username) {
+        authorizationService.authorize(username);
         if (traineeService.deleteTraineeByUsername(username)) {
             return new ResponseEntity<>(HttpStatus.OK);
         }
@@ -208,11 +202,9 @@ public class TraineeRestController {
             @ApiResponse(responseCode = "404", description = "No trainee with such username",
                     content = @Content)
     })
-    @Authenticated
-    @Authorized
     @PatchMapping("/{username}/active")
-    public ResponseEntity<ActiveStatusDTO> toggleTraineeActiveStatus(@PathVariable("username") String username,
-                                                                     @RequestHeader(value = "Authorization") String authHeader) {
+    public ResponseEntity<ActiveStatusDTO> toggleTraineeActiveStatus(@PathVariable("username") String username) {
+        authorizationService.authorize(username);
         Boolean active = traineeService.toggleTraineeIsActiveStatus(username);
         return ResponseEntity.ok(new ActiveStatusDTO(active));
     }
@@ -232,12 +224,10 @@ public class TraineeRestController {
             @ApiResponse(responseCode = "422", description = "Invalid request body",
                     content = @Content)
     })
-    @Authenticated
-    @Authorized
     @PutMapping("/{username}")
     public ResponseEntity<TraineeDTO> updateTrainee(@PathVariable("username") String username,
-                                                    @RequestBody TraineeUpdateDTO traineeUpdateDTO,
-                                                    @RequestHeader(value = "Authorization") String authHeader) {
+                                                    @RequestBody TraineeUpdateDTO traineeUpdateDTO) {
+        authorizationService.authorize(username);
         Trainee trainee = traineeService.updateTrainee(username, traineeUpdateDTO);
         TraineeDTO traineeDTO = traineeMapper.traineeToTraineeDTO(trainee);
         return ResponseEntity.ok(traineeDTO);
@@ -258,12 +248,10 @@ public class TraineeRestController {
             @ApiResponse(responseCode = "422", description = "Invalid request body",
                     content = @Content)
     })
-    @Authenticated
-    @Authorized
     @PutMapping("/{username}/trainers")
     public ResponseEntity<List<TrainerSummaryDTO>> updateTraineeTrainerList(@PathVariable("username") String username,
-                                                                            @RequestBody TraineeTrainerListUpdateDTO traineeTrainerListUpdateDTO,
-                                                                            @RequestHeader(value = "Authorization") String authHeader) {
+                                                                            @RequestBody TraineeTrainerListUpdateDTO traineeTrainerListUpdateDTO) {
+        authorizationService.authorize(username);
         Optional<Trainee> optionalTrainee = traineeService.getTraineeByUsername(username);
         if (!optionalTrainee.isPresent()) {
             return ResponseEntity.notFound().build();

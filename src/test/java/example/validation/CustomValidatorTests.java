@@ -32,9 +32,6 @@ public class CustomValidatorTests {
         Trainee trainee1 = new Trainee("test", "test", null, null);
         trainee1.setPassword("1");
 
-        Trainee trainee2 = new Trainee("test", "test", null, null);
-        trainee2.setPassword("1111111111111111111111111111111111111111111");
-
         Trainee trainee3 = new Trainee("test", "test", null, null);
         trainee3.setUsername("1");
 
@@ -59,8 +56,7 @@ public class CustomValidatorTests {
                         "Validation error: Last name must be from 2 to 20 characters"),
                 Arguments.of(new Trainee("first", "lllllllllllllllllllllllllllllllllllllllllllllll", null, null),
                         "Validation error: Last name must be from 2 to 20 characters"),
-                Arguments.of(trainee1, "Validation error: Password must be from 6 to 20 characters"),
-                Arguments.of(trainee2, "Validation error: Password must be from 6 to 20 characters"),
+                Arguments.of(trainee1, "Validation error: Password must be at least 6 characters long"),
                 Arguments.of(trainee3, "Validation error: Username must be from 2 to 50 characters"),
                 Arguments.of(trainee4, "Validation error: Username must be from 2 to 50 characters"),
                 Arguments.of(trainee5, "Validation error: Active must be provided")

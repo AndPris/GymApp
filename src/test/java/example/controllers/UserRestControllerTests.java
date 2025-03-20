@@ -1,6 +1,7 @@
 package example.controllers;
 
 import example.dtos.ChangePasswordDTO;
+import example.services.AuthorizationService;
 import example.services.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -21,6 +22,9 @@ public class UserRestControllerTests {
     @Mock
     private UserService userService;
 
+    @Mock
+    private AuthorizationService authorizationService;
+
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
@@ -31,7 +35,6 @@ public class UserRestControllerTests {
         String username = "test";
         String oldPassword = "oldPass";
         String newPassword = "newPass";
-        String authHeader = "test";
 
         ChangePasswordDTO changePasswordDTO = new ChangePasswordDTO();
         changePasswordDTO.setOldPassword(oldPassword);
@@ -39,7 +42,7 @@ public class UserRestControllerTests {
 
         when(userService.existsUserByUsernameAndPassword(username, oldPassword)).thenReturn(true);
 
-        ResponseEntity<?> response = userRestController.changeUserPassword(username, changePasswordDTO, authHeader);
+        ResponseEntity<?> response = userRestController.changeUserPassword(username, changePasswordDTO);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
     }
@@ -49,7 +52,6 @@ public class UserRestControllerTests {
         String username = "test";
         String oldPassword = "wrongPass";
         String newPassword = "newPass";
-        String authHeader = "test";
 
         ChangePasswordDTO changePasswordDTO = new ChangePasswordDTO();
         changePasswordDTO.setOldPassword(oldPassword);
@@ -57,7 +59,7 @@ public class UserRestControllerTests {
 
         when(userService.existsUserByUsernameAndPassword(username, oldPassword)).thenReturn(false);
 
-        ResponseEntity<?> response = userRestController.changeUserPassword(username, changePasswordDTO, authHeader);
+        ResponseEntity<?> response = userRestController.changeUserPassword(username, changePasswordDTO);
 
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
         verify(userService, never()).changeUserPassword(anyString(), anyString(), anyString());

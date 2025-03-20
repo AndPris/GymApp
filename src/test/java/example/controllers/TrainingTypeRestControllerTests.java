@@ -44,9 +44,7 @@ public class TrainingTypeRestControllerTests {
         when(trainingTypeMapper.trainingTypeToTrainingTypeDTO(type1)).thenReturn(dto1);
         when(trainingTypeMapper.trainingTypeToTrainingTypeDTO(type2)).thenReturn(dto2);
 
-        String authHeader = "test";
-
-        ResponseEntity<List<TrainingTypeDTO>> response = trainingTypeRestController.getTrainingTypes(authHeader);
+        ResponseEntity<List<TrainingTypeDTO>> response = trainingTypeRestController.getTrainingTypes();
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         List<TrainingTypeDTO> dtos = response.getBody();

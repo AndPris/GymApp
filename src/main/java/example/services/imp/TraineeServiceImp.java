@@ -16,6 +16,7 @@ import example.validation.CustomValidator;
 import jakarta.transaction.Transactional;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -34,6 +35,8 @@ public class TraineeServiceImp implements TraineeService {
 
     private TrainerService trainerService;
     private CustomValidator customValidator;
+
+    private PasswordEncoder passwordEncoder;
 
     @Autowired
     public void setPasswordGenerator(PasswordGenerator passwordGenerator) {
@@ -55,6 +58,11 @@ public class TraineeServiceImp implements TraineeService {
         this.customValidator = customValidator;
     }
 
+    @Autowired
+    public void setPasswordEncoder(PasswordEncoder passwordEncoder) {
+        this.passwordEncoder = passwordEncoder;
+    }
+
     @Override
     public Trainee createTrainee(Trainee trainee) {
         if (trainee == null) {
@@ -63,9 +71,13 @@ public class TraineeServiceImp implements TraineeService {
 
         customValidator.validate(trainee);
 
-        trainee.setPassword(passwordGenerator.generatePassword());
+        String actualPassword = passwordGenerator.generatePassword();
+        trainee.setPassword(passwordEncoder.encode(actualPassword));
         trainee.setUsername(usernameGenerator.generateUsername(trainee));
-        return traineeRepository.save(trainee);
+        Trainee savedTrainee = traineeRepository.save(trainee);
+
+        savedTrainee.setPassword(actualPassword);
+        return savedTrainee;
     }
 
     @Override

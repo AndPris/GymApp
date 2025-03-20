@@ -18,6 +18,7 @@ import example.validation.CustomValidator;
 import jakarta.validation.ValidationException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -35,6 +36,7 @@ public class TraineeServiceTests {
     private TraineeRepository traineeRepository;
     private TraineeServiceImp traineeService;
     private TrainerService trainerService;
+    private PasswordEncoder passwordEncoder;
 
     @BeforeEach
     public void init() {
@@ -43,6 +45,9 @@ public class TraineeServiceTests {
 
         usernameGenerator = mock(SimpleUsernameGenerator.class);
         when(usernameGenerator.generateUsername(any())).thenReturn("username");
+
+        passwordEncoder = mock(PasswordEncoder.class);
+        when(passwordEncoder.encode("password")).thenReturn("encoded");
 
         customValidator = mock(CustomValidator.class);
         traineeRepository = mock(TraineeRepository.class);
@@ -54,6 +59,7 @@ public class TraineeServiceTests {
         traineeService.setTraineeRepository(traineeRepository);
         traineeService.setPasswordGenerator(passwordGenerator);
         traineeService.setUsernameGenerator(usernameGenerator);
+        traineeService.setPasswordEncoder(passwordEncoder);
     }
 
     @Test
